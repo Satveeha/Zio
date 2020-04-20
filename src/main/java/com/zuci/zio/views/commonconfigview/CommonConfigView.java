@@ -25,7 +25,7 @@ import com.zuci.zio.views.main.MainView;
 @Route(value = "commons", layout = MainView.class)
 @PageTitle("Commons")
 //@CssImport("styles/views/commonconfigview/commons-run-console-run-console-view.css")
-@CssImport(value = "./styles/my-grid-styles.css", themeFor="vaadin-grid")
+@CssImport(value = "./styles/my-grid-styles.css", themeFor = "vaadin-grid")
 public class CommonConfigView extends Div implements AfterNavigationObserver {
 
 	@Autowired
@@ -42,10 +42,10 @@ public class CommonConfigView extends Div implements AfterNavigationObserver {
 
 	private Binder<CommonConfig> binder;
 
-	//private SplitLayout splitLayout;
+	// private SplitLayout splitLayout;
 
 	private CommonConfig commonConfig;
-	
+
 	private HorizontalLayout horizontalLayout;
 
 	public CommonConfigView(CommonConfigDao commonConfigDao) {
@@ -62,7 +62,6 @@ public class CommonConfigView extends Div implements AfterNavigationObserver {
 		commons.getStyle().set("border", "none");
 		commons.addThemeVariants(GridVariant.LUMO_ROW_STRIPES);
 		commons.setHeightByRows(true);
-		commons.setHeightFull();
 		commons.addColumn(CommonConfig::getVariable).setHeader(new Html(
 				"<div style='font-weight:bold;font-size:16px;text-orientation: mixed;background:#002f5d;color:#fff'>Variable</div>"));
 		commons.addColumn(CommonConfig::getValue).setHeader(new Html(
@@ -103,15 +102,16 @@ public class CommonConfigView extends Div implements AfterNavigationObserver {
 
 		add.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 		add.getStyle().set("margin-left", "90%");
-        add.getStyle().set("background", "#002f5d");
+		add.getStyle().set("background", "#002f5d");
+		add.getStyle().set("border-radius", "6px");
 		add.addClickListener(e -> {
 			populateForm(new CommonConfig());
 			commons.asSingleSelect().clear();
 		});
 
-		//splitLayout = new SplitLayout();
-		//splitLayout.setSizeFull();
-		
+		// splitLayout = new SplitLayout();
+		// splitLayout.setSizeFull();
+
 		horizontalLayout = new HorizontalLayout();
 		horizontalLayout.setHeightFull();
 		horizontalLayout.setWidthFull();
@@ -149,6 +149,8 @@ public class CommonConfigView extends Div implements AfterNavigationObserver {
 
 		cancel.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
 		save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+		save.getStyle().set("background", "#002f5d");
+		save.getStyle().set("border-radius", "6px");
 
 		buttonLayout.add(cancel, save);
 
@@ -186,7 +188,7 @@ public class CommonConfigView extends Div implements AfterNavigationObserver {
 	private void populateForm(CommonConfig value) {
 
 		// Value can be null as well, that clears the form
-		//createEditorLayout(horizontalLayout);
+		// createEditorLayout(horizontalLayout);
 
 		binder.readBean(value);
 

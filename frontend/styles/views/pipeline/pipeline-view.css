@@ -13,6 +13,8 @@
 #editor-layout {
   padding: var(--lumo-space-l);
   width: 400px;
+  overflow:hidden;
+  margin-top: -10px;
 }
 
 #button-layout {

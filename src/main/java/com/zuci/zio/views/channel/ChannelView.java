@@ -64,15 +64,12 @@ public class ChannelView extends Div implements AfterNavigationObserver {
         // Configure Grid
         channel = new Grid<>();
         channel.addThemeVariants(GridVariant.LUMO_NO_BORDER);
-        channel.setHeightFull();
-        channel.addThemeVariants(GridVariant.LUMO_NO_BORDER);
 		channel.setWidth("90%");
 		channel.getStyle().set("font-family", "Lato, sans-serif");
-		channel.getStyle().set("margin-left", "85px");
+		channel.getStyle().set("margin-left", "50px");
 		channel.getStyle().set("border", "none");
 		channel.addThemeVariants(GridVariant.LUMO_ROW_STRIPES);
 		channel.setHeightByRows(true);
-		channel.setHeightFull();
         channel.addColumn(ChannelConfig::getInstance).setHeader(new Html(
 				"<div style='font-weight:bold;font-size:16px;text-orientation: mixed;background:#002f5d;color:#fff'>Channel</div>"));
         channel.addColumn(ChannelConfig::getProcess).setHeader(new Html(
@@ -120,12 +117,22 @@ public class ChannelView extends Div implements AfterNavigationObserver {
     	editChannelConfig = new Grid<>();
     	editChannelConfig.setItems(channelConfigDao.findByChannel(instance));
     	editChannelConfig.addThemeVariants(GridVariant.LUMO_NO_BORDER);
-    	editChannelConfig.setHeightFull();
-    	editChannelConfig.addColumn(ChannelConfig::getInstance).setHeader("Channel");
-    	editChannelConfig.addColumn(ChannelConfig::getProcess).setHeader("Pipeline");
-    	editChannelConfig.addColumn(ChannelConfig::getVariable).setHeader("Variable");
-    	editChannelConfig.addColumn(ChannelConfig::getAlias).setHeader("Alias");
-    	editChannelConfig.addColumn(ChannelConfig::getValue).setHeader("Value");
+    	editChannelConfig.setWidth("90%");
+    	editChannelConfig.getStyle().set("font-family", "Lato, sans-serif");
+    	editChannelConfig.getStyle().set("margin-left", "2px");
+    	editChannelConfig.getStyle().set("border", "none");
+    	editChannelConfig.addThemeVariants(GridVariant.LUMO_ROW_STRIPES);
+    	editChannelConfig.setHeightByRows(true);
+    	editChannelConfig.addColumn(ChannelConfig::getInstance).setHeader(new Html(
+				"<div style='font-weight:bold;font-size:16px;text-orientation: mixed;background:#002f5d;color:#fff'>Channel</div>"));
+    	editChannelConfig.addColumn(ChannelConfig::getProcess).setHeader(new Html(
+				"<div style='font-weight:bold;font-size:16px;text-orientation: mixed;background:#002f5d;color:#fff'>Pipeline</div>"));
+    	editChannelConfig.addColumn(ChannelConfig::getVariable).setHeader(new Html(
+				"<div style='font-weight:bold;font-size:16px;text-orientation: mixed;background:#002f5d;color:#fff'>Variable</div>"));
+    	editChannelConfig.addColumn(ChannelConfig::getAlias).setHeader(new Html(
+				"<div style='font-weight:bold;font-size:16px;text-orientation: mixed;background:#002f5d;color:#fff'>Alias</div>"));
+    	editChannelConfig.addColumn(ChannelConfig::getValue).setHeader(new Html(
+				"<div style='font-weight:bold;font-size:16px;text-orientation: mixed;background:#002f5d;color:#fff'>Value</div>"));
     	
     	editChannelConfig.asSingleSelect().addValueChangeListener(event -> {
     		populateForm(event.getValue());
@@ -181,7 +188,8 @@ public class ChannelView extends Div implements AfterNavigationObserver {
         
         add.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         add.getStyle().set("margin-left", "80%");
-        
+        add.getStyle().set("background", "#002f5d");
+        add.getStyle().set("border-radius", "6px");
         wrapper.add(add);
         wrapper.add(editChannelConfig);
     }
@@ -206,6 +214,8 @@ public class ChannelView extends Div implements AfterNavigationObserver {
         buttonLayout.setSpacing(true);
         cancel.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
         save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+        save.getStyle().set("background", "#002f5d");
+        save.getStyle().set("border-radius", "6px");
         buttonLayout.add(cancel, save);
         editorDiv.add(buttonLayout);
     }
