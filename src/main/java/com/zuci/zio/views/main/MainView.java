@@ -5,6 +5,7 @@ import java.util.Optional;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.HasComponents;
 import com.vaadin.flow.component.Text;
+import com.vaadin.flow.component.accordion.Accordion;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.contextmenu.MenuItem;
@@ -13,6 +14,7 @@ import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.dependency.JsModule;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.menubar.MenuBar;
+import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.component.tabs.TabsVariant;
@@ -25,6 +27,7 @@ import com.zuci.zio.dao.CommonConfigDao;
 import com.zuci.zio.views.audittrail.AuditTrailView;
 import com.zuci.zio.views.channel.ChannelView;
 import com.zuci.zio.views.commonconfigview.CommonConfigView;
+import com.zuci.zio.views.edit.EditView;
 import com.zuci.zio.views.pipeline.PipelineView;
 import com.zuci.zio.views.runconsole.RunConsoleView;
 
@@ -55,7 +58,7 @@ public class MainView extends AppLayout {
 //		return tabs;
 //	}
 
-	private Component getMenuBar() {
+	/*private Component getMenuBar() {
 		MenuBar menuBar = new MenuBar();
 		Text selected = new Text("");
 		Div message = new Div(new Text("Selected: "), selected);
@@ -80,6 +83,43 @@ public class MainView extends AppLayout {
 		MenuItem runConsole = manageRunSubMenu.addItem("Run Console");
 		runConsole.addClickListener(e -> menuBar.getUI().ifPresent(ui -> ui.navigate(RunConsoleView.class)));
 		return menuBar;
+
+	}*/
+	
+	private Component getMenuBar() {
+		
+		Accordion accordion = new Accordion();
+
+		VerticalLayout define = new VerticalLayout();
+		define.add(createTab("Edit", EditView.class));
+		
+		accordion.add("Define", define);
+		
+		VerticalLayout config = new VerticalLayout();
+		config.add(
+				createTab("Commons", CommonConfigView.class),
+				createTab("Pipeline", PipelineView.class),
+				createTab("Channels", ChannelView.class)
+				);
+		
+		accordion.add("Config", config);
+		
+		VerticalLayout manageResource = new VerticalLayout();
+		manageResource.add(
+				createTab("Add/Modify RDBMS", CommonConfigView.class)
+				);
+		
+		accordion.add("Manage Resource", manageResource);
+		
+		VerticalLayout manageRunChannel = new VerticalLayout();
+		manageRunChannel.add(
+				createTab("Audit Trail", AuditTrailView.class),
+				createTab("Run Console", RunConsoleView.class)
+				);
+		
+		accordion.add("Manage/Run Channel", manageRunChannel);
+		
+		return accordion;
 
 	}
 
