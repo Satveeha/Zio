@@ -95,13 +95,15 @@ public class ChannelView extends Div implements AfterNavigationObserver {
             Notification.show("Not implemented");
         });
 
-        SplitLayout splitLayout = new SplitLayout();
-        splitLayout.setSizeFull();
+        //SplitLayout splitLayout = new SplitLayout();
+        //splitLayout.setSizeFull();
+        
+        HorizontalLayout horizontalLayout = new HorizontalLayout();
 
-        createGridLayout(splitLayout);
+        createGridLayout(horizontalLayout);
         //createEditorLayout(splitLayout);
 
-        add(splitLayout);
+        add(horizontalLayout);
     }
     
     private void openDialog(String instance) {
@@ -111,8 +113,10 @@ public class ChannelView extends Div implements AfterNavigationObserver {
     	Div content = new Div();
     	content.addClassName("my-style");
     	
-    	SplitLayout splitLayout = new SplitLayout();
-        splitLayout.setSizeFull();
+    	//SplitLayout splitLayout = new SplitLayout();
+        //splitLayout.setSizeFull();
+    	
+    	HorizontalLayout horizontalLayout = new HorizontalLayout();
     	
     	editChannelConfig = new Grid<>();
     	editChannelConfig.setItems(channelConfigDao.findByChannel(instance));
@@ -136,17 +140,17 @@ public class ChannelView extends Div implements AfterNavigationObserver {
     	
     	editChannelConfig.asSingleSelect().addValueChangeListener(event -> {
     		populateForm(event.getValue());
-    		createEditorLayout(splitLayout);
+    		//createEditorLayout(horizontalLayout);
     	});
     	
     	add.addClickListener(e -> {
-        	createEditorLayout(splitLayout);
         	editChannelConfig.asSingleSelect().clear();
         });
     	
-        createPopupGridLayout(splitLayout);
+        createPopupGridLayout(horizontalLayout);
+        createEditorLayout(horizontalLayout);
 
-    	dialog.add(splitLayout);
+    	dialog.add(horizontalLayout);
     	dialog.setWidth("800px");
     	dialog.setHeight("500px");
     	
@@ -178,13 +182,13 @@ public class ChannelView extends Div implements AfterNavigationObserver {
     	dialog.open();
     }
     
-    private void createPopupGridLayout(SplitLayout splitLayout) {
+    private void createPopupGridLayout(HorizontalLayout horizontalLayout) {
         
     	Div wrapper = new Div();
         wrapper.setId("wrapper");
         wrapper.setWidthFull();
         
-        splitLayout.addToPrimary(wrapper);
+        horizontalLayout.add(wrapper);
         
         add.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         add.getStyle().set("margin-left", "80%");
@@ -194,7 +198,7 @@ public class ChannelView extends Div implements AfterNavigationObserver {
         wrapper.add(editChannelConfig);
     }
 
-    private void createEditorLayout(SplitLayout splitLayout) {
+    private void createEditorLayout(HorizontalLayout horizontalLayout) {
         Div editorDiv = new Div();
         editorDiv.setId("editor-layout");
         FormLayout formLayout = new FormLayout();
@@ -204,7 +208,7 @@ public class ChannelView extends Div implements AfterNavigationObserver {
         addFormItem(editorDiv, formLayout, alias, "Alias");
         addFormItem(editorDiv, formLayout, value, "Value");
         createButtonLayout(editorDiv);
-        splitLayout.addToSecondary(editorDiv);
+        horizontalLayout.add(editorDiv);
     }
 
     private void createButtonLayout(Div editorDiv) {
@@ -220,11 +224,11 @@ public class ChannelView extends Div implements AfterNavigationObserver {
         editorDiv.add(buttonLayout);
     }
 
-    private void createGridLayout(SplitLayout splitLayout) {
+    private void createGridLayout(HorizontalLayout horizontalLayout) {
         Div wrapper = new Div();
         wrapper.setId("wrapper");
         wrapper.setWidthFull();
-        splitLayout.addToPrimary(wrapper);
+        horizontalLayout.add(wrapper);
         wrapper.add(channel);
     }
 

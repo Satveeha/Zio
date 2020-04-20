@@ -49,7 +49,9 @@ public class PipelineView extends Div implements AfterNavigationObserver {
 	private Button addCancel = new Button("Cancel");
 	private Button addSave = new Button("Save");
 
-	private SplitLayout splitLayout;
+	//private SplitLayout splitLayout;
+	
+	private HorizontalLayout horizontalLayout;
 
 	private Binder<EditPipelineConfig> binder;
 
@@ -86,15 +88,19 @@ public class PipelineView extends Div implements AfterNavigationObserver {
 		add.getStyle().set("background", "#002f5d");
 		add.getStyle().set("border-radius", "6px");
 		add.addClickListener(e -> {
-			createAddLayout(splitLayout);
+			createAddLayout(horizontalLayout);
 		});
 
-		splitLayout = new SplitLayout();
-		splitLayout.setSizeFull();
+		//splitLayout = new SplitLayout();
+		//splitLayout.setSizeFull();
+		
+		horizontalLayout = new HorizontalLayout();
+		horizontalLayout.setHeightFull();
+		horizontalLayout.setWidthFull();
 
-		createGridLayout(splitLayout);
+		createGridLayout(horizontalLayout);
 
-		add(splitLayout);
+		add(horizontalLayout);
 	}
 
 	private void openDialog(String process) {
@@ -122,12 +128,12 @@ public class PipelineView extends Div implements AfterNavigationObserver {
 
 		editPipelineConfig.asSingleSelect().addValueChangeListener(event -> populateForm(event.getValue()));
 
-		SplitLayout splitLayout = new SplitLayout();
-		splitLayout.setSizeFull();
+		HorizontalLayout horizontalLayout = new HorizontalLayout();
+		horizontalLayout.setSizeFull();
 
-		createPopupGridLayout(splitLayout);
+		createPopupGridLayout(horizontalLayout);
 
-		dialog.add(splitLayout);
+		dialog.add(horizontalLayout);
 		dialog.setWidth("800px");
 		dialog.setHeight("500px");
 
@@ -151,12 +157,12 @@ public class PipelineView extends Div implements AfterNavigationObserver {
 			}
 		});
 
-		createEditorLayout(splitLayout);
+		createEditorLayout(horizontalLayout);
 
 		dialog.open();
 	}
 
-	private void createEditorLayout(SplitLayout splitLayout) {
+	private void createEditorLayout(HorizontalLayout horizontalLayout) {
 
 		Div editorDiv = new Div();
 		editorDiv.setId("editor-layout");
@@ -169,7 +175,7 @@ public class PipelineView extends Div implements AfterNavigationObserver {
 		addFormItem(editorDiv, formLayout, shortName, "Short Name");
 
 		createButtonLayout(editorDiv);
-		splitLayout.addToSecondary(editorDiv);
+		horizontalLayout.add(editorDiv);
 	}
 
 	private void createAddButtonLayout(Div editorDiv) {
@@ -185,7 +191,7 @@ public class PipelineView extends Div implements AfterNavigationObserver {
 		editorDiv.add(buttonLayout);
 	}
 
-	private void createAddLayout(SplitLayout splitLayout) {
+	private void createAddLayout(HorizontalLayout horizontalLayout) {
 
 		Div editorDiv = new Div();
 		editorDiv.setId("editor-layout");
@@ -235,7 +241,7 @@ public class PipelineView extends Div implements AfterNavigationObserver {
 			this.pipeline.setItems(pipelineConfigDao.findAll());
 		});
 
-		splitLayout.addToSecondary(editorDiv);
+		horizontalLayout.add(editorDiv);
 	}
 
 	private void createButtonLayout(Div editorDiv) {
@@ -255,25 +261,25 @@ public class PipelineView extends Div implements AfterNavigationObserver {
 		editorDiv.add(buttonLayout);
 	}
 
-	private void createGridLayout(SplitLayout splitLayout) {
+	private void createGridLayout(HorizontalLayout horizontalLayout) {
 
 		Div wrapper = new Div();
 		wrapper.setId("wrapper");
 		wrapper.setWidthFull();
 
-		splitLayout.addToPrimary(wrapper);
+		horizontalLayout.add(wrapper);
 
 		wrapper.add(add);
 		wrapper.add(pipeline);
 	}
 
-	private void createPopupGridLayout(SplitLayout splitLayout) {
+	private void createPopupGridLayout(HorizontalLayout horizontalLayout) {
 
 		Div wrapper = new Div();
 		wrapper.setId("wrapper");
 		wrapper.setWidthFull();
 
-		splitLayout.addToPrimary(wrapper);
+		horizontalLayout.add(wrapper);
 
 		wrapper.add(editPipelineConfig);
 	}
