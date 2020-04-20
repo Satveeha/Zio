@@ -37,26 +37,23 @@ import com.zuci.zio.views.runconsole.RunConsoleView;
 @CssImport(value = "./styles/menubar.css", themeFor = "vaadin-menu-bar")
 public class MainView extends AppLayout {
 
-	private final Tabs menu;
-
 	public MainView(CommonConfigDao commonConfigDao) {
 		setPrimarySection(Section.DRAWER);
 		addToNavbar(true, new DrawerToggle());
-		menu = createMenuTabs();
 		addToDrawer(getMenuBar());
 	}
 
-	private static Tabs createMenuTabs() {
-		final Tabs tabs = new Tabs();
-		tabs.setOrientation(Tabs.Orientation.VERTICAL);
-		tabs.addThemeVariants(TabsVariant.LUMO_MINIMAL);
-		tabs.setId("tabs");
-		// tabs.add(getAvailableTabs());
-		// tabs.addComponentAtIndex(0, new Label("Define"));
-		// tabs.addComponentAtIndex(2, new Label("Config"));
-		// tabs.addComponentAtIndex(6, new Label("Manage/Run"));
-		return tabs;
-	}
+//	private static Tabs createMenuTabs() {
+//		final Tabs tabs = new Tabs();
+//		tabs.setOrientation(Tabs.Orientation.VERTICAL);
+//		tabs.addThemeVariants(TabsVariant.LUMO_MINIMAL);
+//		tabs.setId("tabs");
+//		// tabs.add(getAvailableTabs());
+//		// tabs.addComponentAtIndex(0, new Label("Define"));
+//		// tabs.addComponentAtIndex(2, new Label("Config"));
+//		// tabs.addComponentAtIndex(6, new Label("Manage/Run"));
+//		return tabs;
+//	}
 
 	private Component getMenuBar() {
 		MenuBar menuBar = new MenuBar();
@@ -132,11 +129,11 @@ public class MainView extends AppLayout {
 		 * }).findFirst(); tabToSelect.ifPresent(tab -> menu.setSelectedTab((Tab) tab));
 		 */
 
-		String target = RouteConfiguration.forSessionScope().getUrl(getContent().getClass());
-		Optional<Component> tabToSelect = menu.getChildren().filter(tab -> {
-			Component child = tab.getChildren().findFirst().get().getChildren().findFirst().get();
-			return child instanceof RouterLink && ((RouterLink) child).getHref().equals(target);
-		}).findFirst();
-		tabToSelect.ifPresent(tab -> menu.setSelectedTab((Tab) tab));
+//		String target = RouteConfiguration.forSessionScope().getUrl(getContent().getClass());
+//		Optional<Component> tabToSelect = menu.getChildren().filter(tab -> {
+//			Component child = tab.getChildren().findFirst().get().getChildren().findFirst().get();
+//			return child instanceof RouterLink && ((RouterLink) child).getHref().equals(target);
+//		}).findFirst();
+//		tabToSelect.ifPresent(tab -> menu.setSelectedTab((Tab) tab));
 	}
 }
