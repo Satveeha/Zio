@@ -1,0 +1,14 @@
+.header{	
+  background:#002f5d !important;
+  color:#fff;
+  text-orientation: mixed;
+  writing-mode: Horizontal-lr;
+  fontweight:bold;
+  font-size:22px;
+  font-weight:bold;
+}
+
+:host(:not([theme~="no-row-borders"])) [part="row"]:first-child [part~="header-cell"] {
+     background:#002f5d !important;
+     color:#fff !important;
+}

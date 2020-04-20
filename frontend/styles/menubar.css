@@ -5,6 +5,7 @@
     flex-wrap: nowrap;
     overflow: hidden;
     margin-left: 36px !important;
+    color:#fff !important;
 }
 
 #button {
@@ -17,6 +18,7 @@
     text-transform: none;
     text-indent: 0px;
     text-shadow: none;
+    
     display: inline-block;
     text-align: center;
     align-items: flex-start;
@@ -36,5 +38,54 @@
 	background:none;
 	border: 1px solid #fff;
 	cursor:pointer;
+	margin-top:20px !important;
 	
+}
+
+[part="label"] ::slotted(vaadin-context-menu-item) {
+    justify-content: left !important;
+    height: var(--lumo-button-size);
+    margin: 0 calc((var(--lumo-size-m) / 3 + var(--lumo-border-radius) / 2) * -1);
+    padding-left: calc(var(--lumo-size-m) / 3 + var(--lumo-border-radius) / 2);
+    padding-right: calc(var(--lumo-size-m) / 3 + var(--lumo-border-radius) / 2);
+}
+
+:host([theme~="padding"]) {
+    padding: 0px !imporatnt;
+    margin-left: 25px !imporatnt;
+    margin-top: -8px !imporatnt;
+}
+
+[part="summary"] {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    outline: none;
+    font-family: var(--lumo-font-family);
+    font-size: var(--lumo-font-size-m);
+    font-weight: 500;
+    line-height: var(--lumo-line-height-xs);
+    color: #fff !important;
+    background-color: inherit;
+    border-radius: var(--lumo-border-radius-m);
+    cursor: default;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+:host ::slotted(a) {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    height: 100%;
+    margin-left:10px;
+    outline: none;
+    text-decoration: none !important;
+    color: white !important;
+}
+
+:host(:not([orientation="vertical"])) ::slotted(a[href]) {
+    justify-content: center;
+    color: white !important;
 }

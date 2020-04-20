@@ -1,5 +1,5 @@
 :host([theme~="padding"]) {
-    padding: var(--lumo-space-m);
+    padding:0px;
     color: blue;
     background-color: aliceblue;
     font-size: 15px;
@@ -102,4 +102,19 @@
 .menu-buttons {
   background-color: #F0F0F0 !important;
 }
+
+
+
+:host ::slotted(a) {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    height: 100%;
+    margin: -0.5rem -0.75rem;
+    padding-left:0.5rem !important;
+    outline: none;
+    text-decoration: none !important;
+    color: inherit !important;
+}
+
 

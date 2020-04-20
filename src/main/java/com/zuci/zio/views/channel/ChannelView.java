@@ -8,6 +8,7 @@ import com.zuci.zio.dao.CommonConfigDao;
 import com.zuci.zio.model.ChannelConfig;
 import com.zuci.zio.model.EditPipelineConfig;
 import com.vaadin.flow.component.AbstractField;
+import com.vaadin.flow.component.Html;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dependency.CssImport;
@@ -32,6 +33,7 @@ import com.zuci.zio.views.pipeline.PipelineView;
 @Route(value = "channel", layout = MainView.class)
 @PageTitle("Channel")
 @CssImport("styles/views/channel/channel-view.css")
+@CssImport(value = "./styles/my-grid-styles.css", themeFor="vaadin-grid")
 public class ChannelView extends Div implements AfterNavigationObserver {
     
 	@Autowired
@@ -63,9 +65,20 @@ public class ChannelView extends Div implements AfterNavigationObserver {
         channel = new Grid<>();
         channel.addThemeVariants(GridVariant.LUMO_NO_BORDER);
         channel.setHeightFull();
-        channel.addColumn(ChannelConfig::getInstance).setHeader("Channel");
-        channel.addColumn(ChannelConfig::getProcess).setHeader("Pipeline");
-        channel.addColumn(ChannelConfig::getAlias).setHeader("Alias");
+        channel.addThemeVariants(GridVariant.LUMO_NO_BORDER);
+		channel.setWidth("90%");
+		channel.getStyle().set("font-family", "Lato, sans-serif");
+		channel.getStyle().set("margin-left", "85px");
+		channel.getStyle().set("border", "none");
+		channel.addThemeVariants(GridVariant.LUMO_ROW_STRIPES);
+		channel.setHeightByRows(true);
+		channel.setHeightFull();
+        channel.addColumn(ChannelConfig::getInstance).setHeader(new Html(
+				"<div style='font-weight:bold;font-size:16px;text-orientation: mixed;background:#002f5d;color:#fff'>Channel</div>"));
+        channel.addColumn(ChannelConfig::getProcess).setHeader(new Html(
+				"<div style='font-weight:bold;font-size:16px;text-orientation: mixed;background:#002f5d;color:#fff'>Pipeline</div>"));
+        channel.addColumn(ChannelConfig::getAlias).setHeader(new Html(
+				"<div style='font-weight:bold;font-size:16px;text-orientation: mixed;background:#002f5d;color:#fff'>Alias</div>"));
 
         //when a row is selected or deselected, populate form
         channel.asSingleSelect().addValueChangeListener(event -> openDialog(event.getValue().getInstance()));

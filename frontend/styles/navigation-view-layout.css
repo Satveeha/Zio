@@ -1,0 +1,118 @@
+.logo{
+	height:45%;
+    width:12.5%;
+}
+
+body{
+	background:#f4f9fe !important;
+}
+
+.nav-bg-color {
+	background-color: #f4f9fe;
+	font-family: Lato, sans-serif;
+	height:100%;
+	margin-bottom:0%;
+	margin-top:0%;
+}
+
+.nav-bar-title{
+	color: #0b6aa7;
+	font-weight: bold;
+	font-size: 1.8rem;
+	text-align: left;
+	margin-top: 1rem !important;
+	font-weight: 400 !important;
+	margin-bottom: 1%;
+	font-family: Lato, sans-serif;
+	line-height: 1.2;
+	letter-spacing: 1px !important;
+	text-alignment:center;
+}
+
+.nav-bar-user{
+	color: #00457e !important;
+	font-size: 1rem;
+	color: #212529;
+	text-align: left;
+	letter-spacing: 1px !important;
+	font-family: Lato, sans-serif;
+	margin-left:15%;
+}
+
+.notification-bell-icon{
+	width: 35px;
+	height:35px;
+	color:#002f5d;
+	margin-left:5%;
+	margin-bottom:-5px;
+}
+
+.logout{
+	color: #00457e !important;
+	font-size: 1rem;
+	color: #212529;
+	text-align: left;
+	letter-spacing: 1px !important;
+	font-family: Lato, sans-serif;
+	margin-left:5%;
+}
+
+.nav-drawer{
+	background-color: white ! important;
+	text-align: left;
+	padding: 0 !important;
+	color: #fff !important;
+	font-family: Lato, sans-serif;
+	letter-spacing: 1px !important;
+	position: relative;
+	font-size: 0.8rem;
+}
+
+.nav-drawer-line {
+	border-top: 1px solid #FFFFFF;
+	font-family: Lato, sans-serif;
+	width:80%;
+	alignment:center;
+}
+
+.nav-drawer-menu{
+	font-size: 18px;
+	font-weight: 500;
+	color: #fff !important;
+	font-family: Lato, sans-serif;
+	letter-spacing: 1px !important;
+	text-alignment:left;
+	margin-left:16px;
+}
+
+.nav-drawer-menus{
+	font-size: 18px;
+	font-weight: 500;
+	font-family: Lato, sans-serif;
+	letter-spacing: 1px !important;
+	text-alignment:left;
+	margin-left:16px;
+	color: #fff !important;
+	
+}
+
+
+[part="input-field"], [part="input-field"] ::slotted(textarea) {
+    padding-top: calc((var(--lumo-text-field-size) - 1em * var(--lumo-line-height-s)) / 2);
+    padding-bottom: calc((var(--lumo-text-field-size) - 1em * var(--lumo-line-height-s)) / 2);
+    height: auto;
+    box-sizing: border-box;
+    transition: background-color 0.1s;
+    line-height: var(--lumo-line-height-s);
+    width: 820px !important;
+    border-radius: var(--lumo-border-radius);
+    padding: 0 calc(0.375em + var(--lumo-border-radius) / 4 - 1px);
+    font-weight: 500;
+    line-height: 1;
+    position: relative;
+    cursor: text;
+    background: transparent;
+    border: 2px solid rgba(0,0,0,.15);
+    color: #000;
+    font-size: 13px;
+}

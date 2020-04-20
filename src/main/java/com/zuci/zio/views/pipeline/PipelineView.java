@@ -5,6 +5,7 @@ import com.zuci.zio.dao.PipelineConfigDao;
 import com.zuci.zio.model.EditPipelineConfig;
 import com.zuci.zio.model.PipelineConfig;
 import com.vaadin.flow.component.AbstractField;
+import com.vaadin.flow.component.Html;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dependency.CssImport;
@@ -64,8 +65,18 @@ public class PipelineView extends Div implements AfterNavigationObserver {
         pipeline = new Grid<>();
         pipeline.addThemeVariants(GridVariant.LUMO_NO_BORDER);
         pipeline.setHeightFull();
-        pipeline.addColumn(PipelineConfig::getProcess).setHeader("Pipeline");
-        pipeline.addColumn(PipelineConfig::getPipelineCount).setHeader("Pipeline Count");
+        pipeline.addThemeVariants(GridVariant.LUMO_NO_BORDER);
+		pipeline.setWidth("90%");
+		pipeline.getStyle().set("font-family", "Lato, sans-serif");
+		pipeline.getStyle().set("margin-left", "85px");
+		pipeline.getStyle().set("border", "none");
+		pipeline.addThemeVariants(GridVariant.LUMO_ROW_STRIPES);
+		pipeline.setHeightByRows(true);
+		pipeline.setHeightFull();
+        pipeline.addColumn(PipelineConfig::getProcess).setHeader(new Html(
+				"<div style='font-weight:bold;font-size:16px;text-orientation: mixed;background:#002f5d;color:#fff'>Pipeline</div>"));
+        pipeline.addColumn(PipelineConfig::getPipelineCount).setHeader(new Html(
+				"<div style='font-weight:bold;font-size:16px;text-orientation: mixed;background:#002f5d;color:#fff'>Pipeline Count</div>"));
 
         //when a row is selected or deselected, populate form
         pipeline.asSingleSelect().addValueChangeListener(event -> openDialog(event.getValue().getProcess()));
@@ -75,6 +86,7 @@ public class PipelineView extends Div implements AfterNavigationObserver {
     	
     	add.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         add.getStyle().set("margin-left", "90%");
+        add.getStyle().set("background", "#002f5d");
         add.addClickListener(e -> {
         	createAddLayout(splitLayout);});
 

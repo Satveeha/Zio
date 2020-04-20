@@ -1,0 +1,4 @@
+:host(:not([overlay])) [part="drawer"] {
+    border-right: 1px solid var(--lumo-contrast-10pct);
+    background: #373735;
+}

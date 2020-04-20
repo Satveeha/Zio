@@ -37,6 +37,7 @@ import com.zuci.zio.views.runconsole.RunConsoleView;
 @JsModule("./styles/shared-styles.js")
 @PWA(name = "Zio", shortName = "Zio")
 @Theme(value = Lumo.class, variant = Lumo.LIGHT)
+@CssImport(value = "./styles/navigation-view-layout.css")
 @CssImport(value = "./styles/menubar.css", themeFor = "vaadin-menu-bar")
 public class MainView extends AppLayout {
 
@@ -58,68 +59,74 @@ public class MainView extends AppLayout {
 //		return tabs;
 //	}
 
-	/*private Component getMenuBar() {
-		MenuBar menuBar = new MenuBar();
-		Text selected = new Text("");
-		Div message = new Div(new Text("Selected: "), selected);
-		MenuItem define = menuBar.addItem("Define");
-		MenuItem config = menuBar.addItem("Config");
-		MenuItem manageRun = menuBar.addItem("Manage/Run");
+	/*
+	 * private Component getMenuBar() { MenuBar menuBar = new MenuBar(); Text
+	 * selected = new Text(""); Div message = new Div(new Text("Selected: "),
+	 * selected); MenuItem define = menuBar.addItem("Define"); MenuItem config =
+	 * menuBar.addItem("Config"); MenuItem manageRun =
+	 * menuBar.addItem("Manage/Run");
+	 * 
+	 * define.isVisible(); SubMenu defineSubMenu = define.getSubMenu(); MenuItem
+	 * edit = defineSubMenu.addItem("Edit");
+	 * 
+	 * SubMenu configSubMenu = config.getSubMenu(); MenuItem commons =
+	 * configSubMenu.addItem("Commons"); commons.addClickListener(e ->
+	 * menuBar.getUI().ifPresent(ui -> ui.navigate(CommonConfigView.class)));
+	 * MenuItem pipeline = configSubMenu.addItem("Pipeline");
+	 * pipeline.addClickListener(e -> menuBar.getUI().ifPresent(ui ->
+	 * ui.navigate(PipelineView.class))); MenuItem channels =
+	 * configSubMenu.addItem("Channels"); channels.addClickListener(e ->
+	 * menuBar.getUI().ifPresent(ui -> ui.navigate(ChannelView.class))); SubMenu
+	 * manageRunSubMenu = manageRun.getSubMenu(); MenuItem auditTrail =
+	 * manageRunSubMenu.addItem("Audit Trail"); auditTrail.addClickListener(e ->
+	 * menuBar.getUI().ifPresent(ui -> ui.navigate(AuditTrailView.class))); MenuItem
+	 * runConsole = manageRunSubMenu.addItem("Run Console");
+	 * runConsole.addClickListener(e -> menuBar.getUI().ifPresent(ui ->
+	 * ui.navigate(RunConsoleView.class))); return menuBar;
+	 * 
+	 * }
+	 */
 
-		define.isVisible();
-		SubMenu defineSubMenu = define.getSubMenu();
-		MenuItem edit = defineSubMenu.addItem("Edit");
-
-		SubMenu configSubMenu = config.getSubMenu();
-		MenuItem commons = configSubMenu.addItem("Commons");
-		commons.addClickListener(e -> menuBar.getUI().ifPresent(ui -> ui.navigate(CommonConfigView.class)));
-		MenuItem pipeline = configSubMenu.addItem("Pipeline");
-		pipeline.addClickListener(e -> menuBar.getUI().ifPresent(ui -> ui.navigate(PipelineView.class)));
-		MenuItem channels = configSubMenu.addItem("Channels");
-		channels.addClickListener(e -> menuBar.getUI().ifPresent(ui -> ui.navigate(ChannelView.class)));
-		SubMenu manageRunSubMenu = manageRun.getSubMenu();
-		MenuItem auditTrail = manageRunSubMenu.addItem("Audit Trail");
-		auditTrail.addClickListener(e -> menuBar.getUI().ifPresent(ui -> ui.navigate(AuditTrailView.class)));
-		MenuItem runConsole = manageRunSubMenu.addItem("Run Console");
-		runConsole.addClickListener(e -> menuBar.getUI().ifPresent(ui -> ui.navigate(RunConsoleView.class)));
-		return menuBar;
-
-	}*/
-	
 	private Component getMenuBar() {
-		
+		VerticalLayout scrollableLayout = new VerticalLayout();
+		scrollableLayout.setHeight("100%");
+		scrollableLayout.addClassName("nav-drawer");
+		scrollableLayout.setHeightFull();
+		scrollableLayout.setPadding(false);
+		scrollableLayout.setSpacing(false);
 		Accordion accordion = new Accordion();
 
 		VerticalLayout define = new VerticalLayout();
 		define.add(createTab("Edit", EditView.class));
-		
+		define.setPadding(false);
+		define.getStyle().set("margin-left", "25px");
+
 		accordion.add("Define", define);
-		
+
 		VerticalLayout config = new VerticalLayout();
-		config.add(
-				createTab("Commons", CommonConfigView.class),
-				createTab("Pipeline", PipelineView.class),
-				createTab("Channels", ChannelView.class)
-				);
-		
+		config.setPadding(false);
+		config.getStyle().set("margin-left", "25px");
+		config.add(createTab("Commons", CommonConfigView.class), createTab("Pipeline", PipelineView.class),
+				createTab("Channels", ChannelView.class));
+
 		accordion.add("Config", config);
-		
+
 		VerticalLayout manageResource = new VerticalLayout();
-		manageResource.add(
-				createTab("Add/Modify RDBMS", CommonConfigView.class)
-				);
-		
+		manageResource.setPadding(false);
+		manageResource.getStyle().set("margin-left", "25px");
+		manageResource.add(createTab("Add/Modify RDBMS", CommonConfigView.class));
+
 		accordion.add("Manage Resource", manageResource);
-		
+
 		VerticalLayout manageRunChannel = new VerticalLayout();
-		manageRunChannel.add(
-				createTab("Audit Trail", AuditTrailView.class),
-				createTab("Run Console", RunConsoleView.class)
-				);
-		
+		manageRunChannel.setPadding(false);
+		manageRunChannel.getStyle().set("margin-left", "25px");
+		manageRunChannel.add(createTab("Audit Trail", AuditTrailView.class),
+				createTab("Run Console", RunConsoleView.class));
+
 		accordion.add("Manage/Run Channel", manageRunChannel);
-		
-		return accordion;
+		scrollableLayout.add(accordion);
+		return scrollableLayout;
 
 	}
 

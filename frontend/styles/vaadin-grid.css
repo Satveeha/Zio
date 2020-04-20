@@ -1,0 +1,13 @@
+[part~="header-cell"] {
+  text-orientation: mixed;
+  writing-mode: vertical-rl;	
+  background:red;
+  height:20px;
+}
+
+ :host(.my-grid) [part="row"] {
+        min-height: 30px;
+        height:20px;
+        line-height:20px;
+      }
+   
