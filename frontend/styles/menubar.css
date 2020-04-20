@@ -1,0 +1,40 @@
+[part="container"] {
+    position: absolute;
+    display: inline-grid !important;
+    width: 60% !important;
+    flex-wrap: nowrap;
+    overflow: hidden;
+    margin-left: 36px !important;
+}
+
+#button {
+    -webkit-appearance: button;
+    -webkit-writing-mode: horizontal-tb !important;
+    text-rendering: auto;
+    color: buttontext;
+    letter-spacing: normal;
+    word-spacing: normal;
+    text-transform: none;
+    text-indent: 0px;
+    text-shadow: none;
+    display: inline-block;
+    text-align: center;
+    align-items: flex-start;
+    cursor: default;
+    background-color: transparent;
+    box-sizing: none !important;
+    margin: 0em;
+    font: 400 13.3333px Arial;
+    padding: 1px 6px;
+    border-width: 2px;
+    border-style: outset;
+    border-color: red !important;
+    border-image: initial;
+}
+
+[part="menu-bar-button"]{
+	background:none;
+	border: 1px solid #fff;
+	cursor:pointer;
+	
+}
