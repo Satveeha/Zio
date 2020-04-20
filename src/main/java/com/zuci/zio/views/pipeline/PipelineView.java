@@ -247,7 +247,9 @@ public class PipelineView extends Div implements AfterNavigationObserver {
 
 		cancel.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
 		save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-
+		save.getStyle().set("background", "#002f5d");
+		save.getStyle().set("border-radius", "6px");
+		
 		buttonLayout.add(cancel, save);
 
 		editorDiv.add(buttonLayout);
