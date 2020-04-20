@@ -42,9 +42,11 @@ public class CommonConfigView extends Div implements AfterNavigationObserver {
 
 	private Binder<CommonConfig> binder;
 
-	private SplitLayout splitLayout;
+	//private SplitLayout splitLayout;
 
 	private CommonConfig commonConfig;
+	
+	private HorizontalLayout horizontalLayout;
 
 	public CommonConfigView(CommonConfigDao commonConfigDao) {
 
@@ -107,15 +109,20 @@ public class CommonConfigView extends Div implements AfterNavigationObserver {
 			commons.asSingleSelect().clear();
 		});
 
-		splitLayout = new SplitLayout();
-		splitLayout.setSizeFull();
+		//splitLayout = new SplitLayout();
+		//splitLayout.setSizeFull();
+		
+		horizontalLayout = new HorizontalLayout();
+		horizontalLayout.setHeightFull();
+		horizontalLayout.setWidthFull();
 
-		createGridLayout(splitLayout);
+		createGridLayout(horizontalLayout);
+		createEditorLayout(horizontalLayout);
 
-		add(splitLayout);
+		add(horizontalLayout);
 	}
 
-	private void createEditorLayout(SplitLayout splitLayout) {
+	private void createEditorLayout(HorizontalLayout horizontalLayout) {
 
 		Div editorDiv = new Div();
 		editorDiv.setId("editor-layout");
@@ -127,7 +134,9 @@ public class CommonConfigView extends Div implements AfterNavigationObserver {
 
 		createButtonLayout(editorDiv);
 
-		splitLayout.addToSecondary(editorDiv);
+		horizontalLayout.setHeightFull();
+		horizontalLayout.setWidthFull();
+		horizontalLayout.add(editorDiv);
 	}
 
 	private void createButtonLayout(Div editorDiv) {
@@ -146,13 +155,13 @@ public class CommonConfigView extends Div implements AfterNavigationObserver {
 		editorDiv.add(buttonLayout);
 	}
 
-	private void createGridLayout(SplitLayout splitLayout) {
+	private void createGridLayout(HorizontalLayout horizontalLayout) {
 
 		Div wrapper = new Div();
 
 		wrapper.setId("wrapper");
 		wrapper.setWidthFull();
-		splitLayout.addToPrimary(wrapper);
+		horizontalLayout.add(wrapper);
 		wrapper.add(add);
 		wrapper.add(commons);
 	}
@@ -177,7 +186,7 @@ public class CommonConfigView extends Div implements AfterNavigationObserver {
 	private void populateForm(CommonConfig value) {
 
 		// Value can be null as well, that clears the form
-		createEditorLayout(splitLayout);
+		//createEditorLayout(horizontalLayout);
 
 		binder.readBean(value);
 
