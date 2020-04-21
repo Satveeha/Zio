@@ -2,22 +2,28 @@ package com.zuci.zio.views.pipeline;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import com.zuci.zio.dao.PipelineConfigDao;
+import com.zuci.zio.model.CommonConfig;
 import com.zuci.zio.model.EditPipelineConfig;
 import com.zuci.zio.model.PipelineConfig;
 import com.vaadin.flow.component.AbstractField;
 import com.vaadin.flow.component.Html;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.charts.model.Label;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.html.NativeButton;
+import com.vaadin.flow.component.icon.Icon;
+import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.splitlayout.SplitLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Binder;
+import com.vaadin.flow.data.provider.ListDataProvider;
 import com.vaadin.flow.router.AfterNavigationEvent;
 import com.vaadin.flow.router.AfterNavigationObserver;
 import com.vaadin.flow.router.PageTitle;
@@ -126,6 +132,9 @@ public class PipelineView extends Div implements AfterNavigationObserver {
 		editPipelineConfig.addColumn(EditPipelineConfig::getValue).setHeader(new Html(
 				"<div style='font-weight:bold;font-size:16px;text-orientation: mixed;background:#002f5d;color:#fff'>Value</div>"));
 
+		editPipelineConfig.addComponentColumn(item -> createTrashIcon(editPipelineConfig, item))
+        .setHeader("");
+		
 		editPipelineConfig.asSingleSelect().addValueChangeListener(event -> populateForm(event.getValue()));
 
 		HorizontalLayout horizontalLayout = new HorizontalLayout();
@@ -134,8 +143,8 @@ public class PipelineView extends Div implements AfterNavigationObserver {
 		createPopupGridLayout(horizontalLayout);
 
 		dialog.add(horizontalLayout);
-		dialog.setWidth("800px");
-		dialog.setHeight("500px");
+		dialog.setWidth("900px");
+		dialog.setHeight("600px");
 
 		cancel.addClickListener(e -> editPipelineConfig.asSingleSelect().clear());
 
@@ -159,6 +168,45 @@ public class PipelineView extends Div implements AfterNavigationObserver {
 
 		createEditorLayout(horizontalLayout);
 
+		dialog.open();
+	}
+	
+	private Icon createTrashIcon(Grid<EditPipelineConfig> grid, EditPipelineConfig item) {
+
+	    Icon trashIcon = new Icon(VaadinIcon.TRASH);
+		trashIcon.addClickListener(
+		        event -> {
+		        	System.out.println(item.getId());
+		        	deleteConfirmDialog(item.getId(), grid, item);
+		        });
+		
+		return trashIcon;
+	}
+	
+	private void deleteConfirmDialog(Long id, Grid<EditPipelineConfig> grid, EditPipelineConfig item) {
+		Dialog dialog = new Dialog();
+
+		dialog.setCloseOnEsc(false);
+		dialog.setCloseOnOutsideClick(false);
+
+		Label messageLabel = new Label();
+
+		NativeButton confirmButton = new NativeButton("Confirm", event -> {
+		    messageLabel.setText("Confirmed!");
+		    this.pipelineConfigDao.deleteById(id);
+		    dialog.close();
+		    
+		    ListDataProvider<EditPipelineConfig> dataProvider = (ListDataProvider<EditPipelineConfig>) grid
+ 	                .getDataProvider();
+ 	        dataProvider.getItems().remove(item);
+ 	        dataProvider.refreshAll();
+		});
+		NativeButton cancelButton = new NativeButton("Cancel", event -> {
+		    messageLabel.setText("Cancelled...");
+		    dialog.close();
+		});
+		dialog.add(confirmButton, cancelButton);
+		
 		dialog.open();
 	}
 

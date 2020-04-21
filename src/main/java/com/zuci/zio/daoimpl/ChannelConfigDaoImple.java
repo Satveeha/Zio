@@ -27,6 +27,8 @@ public class ChannelConfigDaoImple implements ChannelConfigDao{
 	
 	private final String INSERT_DATA = "insert into spw_instance_config (id,instance,process,variable,value,active,version,alias,seedConfig) values (?,?,?,?,?,?,?,?,?) ON DUPLICATE KEY UPDATE instance = ?, process = ?, variable = ?, alias = ?, value = ?";
 	
+	private final String DELETE_BY_ID = "delete from spw_instance_config where id = ?";
+	
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
 
@@ -77,6 +79,12 @@ public class ChannelConfigDaoImple implements ChannelConfigDao{
 		}
 		
 		return channelConfig;
+	}
+
+	@Override
+	public void deleteById(Long id) {
+
+		jdbcTemplate.update(DELETE_BY_ID, id);
 	}
 }
 

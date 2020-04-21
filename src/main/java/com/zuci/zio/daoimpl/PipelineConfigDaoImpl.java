@@ -28,6 +28,8 @@ public class PipelineConfigDaoImpl implements PipelineConfigDao{
 	
 	private final String INSERT_DATA = "insert into spw_process_config (id,process,variable,value,active,version,description,shortName) values (?,?,?,?,?,?,?,?) ON DUPLICATE KEY UPDATE process = ?, description = ?, variable = ?, value = ?, shortName = ?";
 	
+	private final String DELETE_BY_ID = "delete from spw_process_config where id = ?";
+	
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
 	
@@ -35,6 +37,12 @@ public class PipelineConfigDaoImpl implements PipelineConfigDao{
 	public List<PipelineConfig> findAll() {
 		
 		return jdbcTemplate.query(FETCH_ALL, new PipelineConfigMapper());
+	}
+	
+	@Override
+	public void deleteById(Long id) {
+		
+		jdbcTemplate.update(DELETE_BY_ID, id);
 	}
 
 	@Override

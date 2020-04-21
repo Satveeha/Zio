@@ -13,4 +13,6 @@ public interface PipelineConfigDao {
 	public List<EditPipelineConfig> findByPipeline(String process);
 	
 	public EditPipelineConfig insert(final EditPipelineConfig commonConfig);
+	
+	public void deleteById(Long id);
 }

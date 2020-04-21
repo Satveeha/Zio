@@ -75,7 +75,7 @@ public class CommonConfigView extends Div implements AfterNavigationObserver {
 				"<div style='font-weight:bold;font-size:16px;text-orientation: mixed;background:#002f5d;color:#fff'>Value</div>"));
 
 		commons.addComponentColumn(item -> createTrashIcon(commons, item))
-        .setHeader("Actions");
+        .setHeader("");
 		
 		// when a row is selected or deselected, populate form
 		commons.asSingleSelect().addValueChangeListener(event -> populateForm(event.getValue()));

@@ -11,18 +11,23 @@ import com.vaadin.flow.component.AbstractField;
 import com.vaadin.flow.component.Html;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.charts.model.Label;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.html.NativeButton;
+import com.vaadin.flow.component.icon.Icon;
+import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.splitlayout.SplitLayout;
 import com.vaadin.flow.component.textfield.PasswordField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Binder;
+import com.vaadin.flow.data.provider.ListDataProvider;
 import com.vaadin.flow.router.AfterNavigationEvent;
 import com.vaadin.flow.router.AfterNavigationObserver;
 import com.vaadin.flow.router.PageTitle;
@@ -138,6 +143,9 @@ public class ChannelView extends Div implements AfterNavigationObserver {
     	editChannelConfig.addColumn(ChannelConfig::getValue).setHeader(new Html(
 				"<div style='font-weight:bold;font-size:16px;text-orientation: mixed;background:#002f5d;color:#fff'>Value</div>"));
     	
+    	editChannelConfig.addComponentColumn(item -> createTrashIcon(editChannelConfig, item))
+        .setHeader("");
+    	
     	editChannelConfig.asSingleSelect().addValueChangeListener(event -> {
     		populateForm(event.getValue());
     		//createEditorLayout(horizontalLayout);
@@ -151,8 +159,8 @@ public class ChannelView extends Div implements AfterNavigationObserver {
         createEditorLayout(horizontalLayout);
 
     	dialog.add(horizontalLayout);
-    	dialog.setWidth("800px");
-    	dialog.setHeight("500px");
+    	dialog.setWidth("900px");
+    	dialog.setHeight("600px");
     	
     	//cancel.addClickListener(e -> editChannelConfig.asSingleSelect().clear());
 
@@ -181,6 +189,45 @@ public class ChannelView extends Div implements AfterNavigationObserver {
     	
     	dialog.open();
     }
+    
+    private Icon createTrashIcon(Grid<ChannelConfig> grid, ChannelConfig item) {
+
+	    Icon trashIcon = new Icon(VaadinIcon.TRASH);
+		trashIcon.addClickListener(
+		        event -> {
+		        	System.out.println(item.getId());
+		        	deleteConfirmDialog(item.getId(), grid, item);
+		        });
+		
+		return trashIcon;
+	}
+    
+    private void deleteConfirmDialog(Long id, Grid<ChannelConfig> grid, ChannelConfig item) {
+		Dialog dialog = new Dialog();
+
+		dialog.setCloseOnEsc(false);
+		dialog.setCloseOnOutsideClick(false);
+
+		Label messageLabel = new Label();
+
+		NativeButton confirmButton = new NativeButton("Confirm", event -> {
+		    messageLabel.setText("Confirmed!");
+		    this.channelConfigDao.deleteById(id);
+		    dialog.close();
+		    
+		    ListDataProvider<ChannelConfig> dataProvider = (ListDataProvider<ChannelConfig>) grid
+ 	                .getDataProvider();
+ 	        dataProvider.getItems().remove(item);
+ 	        dataProvider.refreshAll();
+		});
+		NativeButton cancelButton = new NativeButton("Cancel", event -> {
+		    messageLabel.setText("Cancelled...");
+		    dialog.close();
+		});
+		dialog.add(confirmButton, cancelButton);
+		
+		dialog.open();
+	}
     
     private void createPopupGridLayout(HorizontalLayout horizontalLayout) {
         
