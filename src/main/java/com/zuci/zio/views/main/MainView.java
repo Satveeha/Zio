@@ -3,10 +3,10 @@ package com.zuci.zio.views.main;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.HasComponents;
 import com.vaadin.flow.component.applayout.AppLayout;
-import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.dependency.JsModule;
 import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.tabs.Tab;
@@ -15,9 +15,12 @@ import com.vaadin.flow.server.PWA;
 import com.vaadin.flow.theme.Theme;
 import com.vaadin.flow.theme.lumo.Lumo;
 import com.zuci.zio.dao.CommonConfigDao;
+import com.zuci.zio.views.audittrail.AuditTrailView;
 import com.zuci.zio.views.channel.ChannelView;
 import com.zuci.zio.views.commonconfigview.CommonConfigView;
+import com.zuci.zio.views.edit.EditView;
 import com.zuci.zio.views.pipeline.PipelineView;
+import com.zuci.zio.views.runconsole.RunConsoleView;
 
 /**
  * The main view is a top-level placeholder for other views.
@@ -25,16 +28,26 @@ import com.zuci.zio.views.pipeline.PipelineView;
 @JsModule("./styles/shared-styles.js")
 @PWA(name = "Zio", shortName = "Zio")
 @Theme(value = Lumo.class, variant = Lumo.LIGHT)
+@CssImport(value = "./styles/app-layout.css", themeFor = "vaadin-app-layout")
+//@CssImport(value = "./styles/my-app-layout.css", themeFor = "vaadin-app-layout")
 @CssImport(value = "./styles/navigation-view-layout.css")
 @CssImport(value = "./styles/menubar.css", themeFor = "vaadin-menu-bar")
 public class MainView extends AppLayout {
 
 	public MainView(CommonConfigDao commonConfigDao) {
+
 		setPrimarySection(Section.DRAWER);
-		addToNavbar(true, new DrawerToggle());
+		// addToNavbar(true, new DrawerToggle());
+
+		setId("main-view");
 		Label logoLabel = new Label();
 		logoLabel.setText("ZIO");
+		addToNavbar(true, logoLabel);
 		logoLabel.addClassName("nav-drawer-menu");
+		logoLabel.getStyle().set("text-align", "center");
+		logoLabel.getStyle().set("margin-left", "auto");
+		logoLabel.getStyle().set("margin-right", "auto");
+		// logoLabel.getStyle().set("text-align", "center");
 
 		addToDrawer(getMenuBar());
 	}
@@ -47,9 +60,22 @@ public class MainView extends AppLayout {
 		scrollableLayout.setPadding(false);
 		scrollableLayout.setSpacing(false);
 
+		VerticalLayout image_layout = new VerticalLayout();
+		image_layout.setPadding(false);
+		image_layout.setMargin(false);
+		image_layout.getStyle().set("margin-bottom", "-65px");
+		Image sidenavimage = new Image();
+		sidenavimage.setSrc("/icons/zio.png");
+		sidenavimage.setWidth("76%");
+		sidenavimage.setHeight("50%");
+		sidenavimage.getStyle().set("margin-left", "25px");
+//		sidenavimage.getStyle().set("margin-top", "-16px");
+//		sidenavimage.getStyle().set("padding", "0px");
+		image_layout.add(sidenavimage);
+
+		Label packageLabel = new Label();
 		Label defineLabel = new Label();
 		defineLabel.setText("Define");
-		defineLabel.getStyle().set("margin-top", "100px");
 		defineLabel.addClassName("nav-drawer-menus");
 
 		Label editLabel = new Label();
@@ -137,7 +163,8 @@ public class MainView extends AppLayout {
 				manageOrRunChannelLabel.addClassName("nav-drawer-menus");
 				auditTrailLabel.addClassName("nav-drawer-menus");
 				runConsoleLabel.addClassName("nav-drawer-menus");
-				//setContent(new EditView().gridView());
+				getUI().get().navigate(EditView.class);
+				// setContent(new EditView().gridView());
 
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -163,7 +190,7 @@ public class MainView extends AppLayout {
 				auditTrailLabel.addClassName("nav-drawer-menus");
 				runConsoleLabel.addClassName("nav-drawer-menus");
 				getUI().get().navigate(CommonConfigView.class);
-				//setContent(new CommonConfigView(commonConfigDao));
+				// setContent(new CommonConfigView(commonConfigDao));
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -188,7 +215,7 @@ public class MainView extends AppLayout {
 				auditTrailLabel.addClassName("nav-drawer-menus");
 				runConsoleLabel.addClassName("nav-drawer-menus");
 				getUI().get().navigate(PipelineView.class);
-				//setContent(new PipelineView(pipelineConfigDao).pipeLineComponent());
+				// setContent(new PipelineView(pipelineConfigDao).pipeLineComponent());
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -213,7 +240,7 @@ public class MainView extends AppLayout {
 				auditTrailLabel.addClassName("nav-drawer-menus");
 				runConsoleLabel.addClassName("nav-drawer-menus");
 				getUI().get().navigate(ChannelView.class);
-				//setContent(new ChannelView(channelConfigDao).channelViewComponent());
+				// setContent(new ChannelView(channelConfigDao).channelViewComponent());
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -237,7 +264,8 @@ public class MainView extends AppLayout {
 				configLabel.addClassName("nav-drawer-menus");
 				runConsoleLabel.addClassName("nav-drawer-menus");
 				commonsLabel.addClassName("nav-drawer-menus");
-				//setContent(new AuditTrailView().auditTrailView());
+				getUI().get().navigate(AuditTrailView.class);
+				// setContent(new AuditTrailView().auditTrailView());
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -261,14 +289,16 @@ public class MainView extends AppLayout {
 				configLabel.addClassName("nav-drawer-menus");
 				auditTrailLabel.addClassName("nav-drawer-menus");
 				commonsLabel.addClassName("nav-drawer-menus");
-				//setContent(new RunConsoleView().runConsoleView());
+				getUI().get().navigate(RunConsoleView.class);
+				// setContent(new RunConsoleView().runConsoleView());
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		});
 
-		scrollableLayout.add(defineLabel, edit_div, configLabel, configCommonsDiv, configPipelineDiv, configChannelDiv,
-				manageResourceLabel, addOrModifyRDBMSLabel, manageOrRunChannelLabel, auditTrailDiv, runConsoleDiv);
+		scrollableLayout.add(image_layout, defineLabel, edit_div, configLabel, configCommonsDiv, configPipelineDiv,
+				configChannelDiv, manageResourceLabel, addOrModifyRDBMSLabel, manageOrRunChannelLabel, auditTrailDiv,
+				runConsoleDiv);
 		return scrollableLayout;
 
 	}

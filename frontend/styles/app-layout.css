@@ -1,4 +1,9 @@
-:host(:not([overlay])) [part="drawer"] {
-    border-right: 1px solid var(--lumo-contrast-10pct);
-    background: #373735;
+:host(:not([theme~="tertiary"])) {
+    background-image: none !important;
+    box-shadow: none !important;
+}
+
+:host{
+	  background-image: none !important;
+    box-shadow: none !important;
 }

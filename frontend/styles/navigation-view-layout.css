@@ -58,7 +58,7 @@ body{
 }
 
 .nav-drawer{
-	background-color: white ! important;
+	background-color: #002f5d !important;
 	text-align: left;
 	padding: 0 !important;
 	color: #fff !important;
@@ -77,8 +77,8 @@ body{
 
 .nav-drawer-menu{
 	font-size: 18px;
-	font-weight: 500;
-	color: #fff !important;
+	font-weight: 800;
+	color: #016460 !important;
 	font-family: Lato, sans-serif;
 	letter-spacing: 1px !important;
 	text-alignment:left;
@@ -115,4 +115,10 @@ body{
     border: 2px solid rgba(0,0,0,.15);
     color: #000;
     font-size: 13px;
+}
+
+
+:host(:not([theme~="tertiary"])) {
+    background-image: none !important;
+    box-shadow: none !important;
 }

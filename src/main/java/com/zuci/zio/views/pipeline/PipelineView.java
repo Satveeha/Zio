@@ -55,8 +55,8 @@ public class PipelineView extends Div implements AfterNavigationObserver {
 	private Button addCancel = new Button("Cancel");
 	private Button addSave = new Button("Save");
 
-	//private SplitLayout splitLayout;
-	
+	// private SplitLayout splitLayout;
+
 	private HorizontalLayout horizontalLayout;
 
 	private Binder<EditPipelineConfig> binder;
@@ -97,9 +97,9 @@ public class PipelineView extends Div implements AfterNavigationObserver {
 			createAddLayout(horizontalLayout);
 		});
 
-		//splitLayout = new SplitLayout();
-		//splitLayout.setSizeFull();
-		
+		// splitLayout = new SplitLayout();
+		// splitLayout.setSizeFull();
+
 		horizontalLayout = new HorizontalLayout();
 		horizontalLayout.setHeightFull();
 		horizontalLayout.setWidthFull();
@@ -132,9 +132,8 @@ public class PipelineView extends Div implements AfterNavigationObserver {
 		editPipelineConfig.addColumn(EditPipelineConfig::getValue).setHeader(new Html(
 				"<div style='font-weight:bold;font-size:16px;text-orientation: mixed;background:#002f5d;color:#fff'>Value</div>"));
 
-		editPipelineConfig.addComponentColumn(item -> createTrashIcon(editPipelineConfig, item))
-        .setHeader("");
-		
+		editPipelineConfig.addComponentColumn(item -> createTrashIcon(editPipelineConfig, item)).setHeader("");
+
 		editPipelineConfig.asSingleSelect().addValueChangeListener(event -> populateForm(event.getValue()));
 
 		HorizontalLayout horizontalLayout = new HorizontalLayout();
@@ -170,19 +169,18 @@ public class PipelineView extends Div implements AfterNavigationObserver {
 
 		dialog.open();
 	}
-	
+
 	private Icon createTrashIcon(Grid<EditPipelineConfig> grid, EditPipelineConfig item) {
 
-	    Icon trashIcon = new Icon(VaadinIcon.TRASH);
-		trashIcon.addClickListener(
-		        event -> {
-		        	System.out.println(item.getId());
-		        	deleteConfirmDialog(grid, item);
-		        });
-		
+		Icon trashIcon = new Icon(VaadinIcon.TRASH);
+		trashIcon.addClickListener(event -> {
+			System.out.println(item.getId());
+			deleteConfirmDialog(grid, item);
+		});
+
 		return trashIcon;
 	}
-	
+
 	private void deleteConfirmDialog(Grid<EditPipelineConfig> grid, EditPipelineConfig item) {
 		Dialog dialog = new Dialog();
 
@@ -192,23 +190,41 @@ public class PipelineView extends Div implements AfterNavigationObserver {
 		Label messageLabel = new Label();
 
 		NativeButton confirmButton = new NativeButton("Confirm", event -> {
-		    messageLabel.setText("Confirmed!");
-		    this.pipelineConfigDao.insertAudit(item);
-		    this.pipelineConfigDao.deleteById(item.getId());
-		    populateForm(new EditPipelineConfig());
-		    dialog.close();
-		    
-		    ListDataProvider<EditPipelineConfig> dataProvider = (ListDataProvider<EditPipelineConfig>) grid
- 	                .getDataProvider();
- 	        dataProvider.getItems().remove(item);
- 	        dataProvider.refreshAll();
+			messageLabel.setText("Confirmed!");
+			this.pipelineConfigDao.insertAudit(item);
+			this.pipelineConfigDao.deleteById(item.getId());
+			populateForm(new EditPipelineConfig());
+			dialog.close();
+
+			ListDataProvider<EditPipelineConfig> dataProvider = (ListDataProvider<EditPipelineConfig>) grid
+					.getDataProvider();
+			dataProvider.getItems().remove(item);
+			dataProvider.refreshAll();
 		});
+		confirmButton.getStyle().set("color", "#fff");
+		confirmButton.getStyle().set("background-color", "#002f5d");
+		confirmButton.getStyle().set("padding", "0.5rem");
+		confirmButton.getStyle().set("border-radius", "6px");
+		confirmButton.getStyle().set("margin", "20px");
+		confirmButton.getStyle().set("font-size", "16px");
+		confirmButton.getStyle().set("border", "none");
+		confirmButton.getStyle().set("font-weight", "600");
+
 		NativeButton cancelButton = new NativeButton("Cancel", event -> {
-		    messageLabel.setText("Cancelled...");
-		    dialog.close();
+			messageLabel.setText("Cancelled...");
+			dialog.close();
 		});
+		cancelButton.getStyle().set("color", "#fff");
+		cancelButton.getStyle().set("background-color", "#002f5d");
+		cancelButton.getStyle().set("padding", "0.5rem");
+		cancelButton.getStyle().set("border-radius", "6px");
+		cancelButton.getStyle().set("font-size", "16px");
+		cancelButton.getStyle().set("margin", "5px");
+		cancelButton.getStyle().set("border", "none");
+		cancelButton.getStyle().set("font-weight", "600");
+
 		dialog.add(confirmButton, cancelButton);
-		
+
 		dialog.open();
 	}
 
@@ -305,7 +321,7 @@ public class PipelineView extends Div implements AfterNavigationObserver {
 		save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 		save.getStyle().set("background", "#002f5d");
 		save.getStyle().set("border-radius", "6px");
-		
+
 		buttonLayout.add(cancel, save);
 
 		editorDiv.add(buttonLayout);
