@@ -29,6 +29,8 @@ public class CommonConfigDaoImpl implements CommonConfigDao{
 	
 	private final String INSERT_DATA = "insert into spw_common_config (id,variable,value,active,version) values (?,?,?,?,?) ON DUPLICATE KEY UPDATE variable = ?, value = ?";
 	
+	private final String DELETE_BY_ID = "delete from spw_common_config where id = ?";
+	
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
 
@@ -115,6 +117,14 @@ public class CommonConfigDaoImpl implements CommonConfigDao{
 	public List<CommonConfig> findAll() {
 		
 		return jdbcTemplate.query(FETCH_ALL, new CommonConfigMapper());
+	}
+
+	@Override
+	public void deleteById(Long id) {
+		
+		//Object[] params = {id};
+		
+		jdbcTemplate.update(DELETE_BY_ID, id);
 	}
 }
 

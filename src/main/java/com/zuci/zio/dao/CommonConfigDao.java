@@ -13,4 +13,6 @@ public interface CommonConfigDao {
 	//public CommonConfig update(final CommonConfig commonConfig);
 
 	public List<CommonConfig> findAll();
+	
+	public void deleteById(Long id); 
 }

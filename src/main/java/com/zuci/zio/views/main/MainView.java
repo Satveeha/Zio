@@ -1,35 +1,23 @@
 package com.zuci.zio.views.main;
 
-import java.util.Optional;
-
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.HasComponents;
-import com.vaadin.flow.component.Text;
-import com.vaadin.flow.component.accordion.Accordion;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
-import com.vaadin.flow.component.contextmenu.MenuItem;
-import com.vaadin.flow.component.contextmenu.SubMenu;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.dependency.JsModule;
 import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.component.menubar.MenuBar;
+import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.tabs.Tab;
-import com.vaadin.flow.component.tabs.Tabs;
-import com.vaadin.flow.component.tabs.TabsVariant;
-import com.vaadin.flow.router.RouteConfiguration;
 import com.vaadin.flow.router.RouterLink;
 import com.vaadin.flow.server.PWA;
 import com.vaadin.flow.theme.Theme;
 import com.vaadin.flow.theme.lumo.Lumo;
 import com.zuci.zio.dao.CommonConfigDao;
-import com.zuci.zio.views.audittrail.AuditTrailView;
 import com.zuci.zio.views.channel.ChannelView;
 import com.zuci.zio.views.commonconfigview.CommonConfigView;
-import com.zuci.zio.views.edit.EditView;
 import com.zuci.zio.views.pipeline.PipelineView;
-import com.zuci.zio.views.runconsole.RunConsoleView;
 
 /**
  * The main view is a top-level placeholder for other views.
@@ -44,48 +32,12 @@ public class MainView extends AppLayout {
 	public MainView(CommonConfigDao commonConfigDao) {
 		setPrimarySection(Section.DRAWER);
 		addToNavbar(true, new DrawerToggle());
+		Label logoLabel = new Label();
+		logoLabel.setText("ZIO");
+		logoLabel.addClassName("nav-drawer-menu");
+
 		addToDrawer(getMenuBar());
 	}
-
-//	private static Tabs createMenuTabs() {
-//		final Tabs tabs = new Tabs();
-//		tabs.setOrientation(Tabs.Orientation.VERTICAL);
-//		tabs.addThemeVariants(TabsVariant.LUMO_MINIMAL);
-//		tabs.setId("tabs");
-//		// tabs.add(getAvailableTabs());
-//		// tabs.addComponentAtIndex(0, new Label("Define"));
-//		// tabs.addComponentAtIndex(2, new Label("Config"));
-//		// tabs.addComponentAtIndex(6, new Label("Manage/Run"));
-//		return tabs;
-//	}
-
-	/*
-	 * private Component getMenuBar() { MenuBar menuBar = new MenuBar(); Text
-	 * selected = new Text(""); Div message = new Div(new Text("Selected: "),
-	 * selected); MenuItem define = menuBar.addItem("Define"); MenuItem config =
-	 * menuBar.addItem("Config"); MenuItem manageRun =
-	 * menuBar.addItem("Manage/Run");
-	 * 
-	 * define.isVisible(); SubMenu defineSubMenu = define.getSubMenu(); MenuItem
-	 * edit = defineSubMenu.addItem("Edit");
-	 * 
-	 * SubMenu configSubMenu = config.getSubMenu(); MenuItem commons =
-	 * configSubMenu.addItem("Commons"); commons.addClickListener(e ->
-	 * menuBar.getUI().ifPresent(ui -> ui.navigate(CommonConfigView.class)));
-	 * MenuItem pipeline = configSubMenu.addItem("Pipeline");
-	 * pipeline.addClickListener(e -> menuBar.getUI().ifPresent(ui ->
-	 * ui.navigate(PipelineView.class))); MenuItem channels =
-	 * configSubMenu.addItem("Channels"); channels.addClickListener(e ->
-	 * menuBar.getUI().ifPresent(ui -> ui.navigate(ChannelView.class))); SubMenu
-	 * manageRunSubMenu = manageRun.getSubMenu(); MenuItem auditTrail =
-	 * manageRunSubMenu.addItem("Audit Trail"); auditTrail.addClickListener(e ->
-	 * menuBar.getUI().ifPresent(ui -> ui.navigate(AuditTrailView.class))); MenuItem
-	 * runConsole = manageRunSubMenu.addItem("Run Console");
-	 * runConsole.addClickListener(e -> menuBar.getUI().ifPresent(ui ->
-	 * ui.navigate(RunConsoleView.class))); return menuBar;
-	 * 
-	 * }
-	 */
 
 	private Component getMenuBar() {
 		VerticalLayout scrollableLayout = new VerticalLayout();
@@ -94,56 +46,232 @@ public class MainView extends AppLayout {
 		scrollableLayout.setHeightFull();
 		scrollableLayout.setPadding(false);
 		scrollableLayout.setSpacing(false);
-		Accordion accordion = new Accordion();
 
-		VerticalLayout define = new VerticalLayout();
-		define.add(createTab("Edit", EditView.class));
-		define.setPadding(false);
-		define.getStyle().set("margin-left", "25px");
+		Label defineLabel = new Label();
+		defineLabel.setText("Define");
+		defineLabel.getStyle().set("margin-top", "100px");
+		defineLabel.addClassName("nav-drawer-menus");
 
-		accordion.add("Define", define);
+		Label editLabel = new Label();
+		editLabel.setText("Edit");
+		editLabel.getStyle().set("cursor", "pointer");
+		editLabel.getStyle().set("margin-top", "10px");
+		editLabel.getStyle().set("margin-left", "50px");
+		editLabel.addClassName("nav-drawer-menus");
 
-		VerticalLayout config = new VerticalLayout();
-		config.setPadding(false);
-		config.getStyle().set("margin-left", "25px");
-		config.add(createTab("Commons", CommonConfigView.class), createTab("Pipeline", PipelineView.class),
-				createTab("Channels", ChannelView.class));
+		Label configLabel = new Label();
+		configLabel.setText("Config");
+		configLabel.getStyle().set("margin-top", "10px");
+		configLabel.getStyle().set("cursor", "pointer");
+		configLabel.addClassName("nav-drawer-menus");
 
-		accordion.add("Config", config);
+		Label commonsLabel = new Label();
+		commonsLabel.setText("Commons");
+		commonsLabel.getStyle().set("margin-top", "10px");
+		commonsLabel.getStyle().set("margin-left", "50px");
+		commonsLabel.getStyle().set("cursor", "pointer");
+		commonsLabel.addClassName("nav-drawer-menus");
 
-		VerticalLayout manageResource = new VerticalLayout();
-		manageResource.setPadding(false);
-		manageResource.getStyle().set("margin-left", "25px");
-		manageResource.add(createTab("Add/Modify RDBMS", CommonConfigView.class));
+		Label pipelineLabel = new Label();
+		pipelineLabel.setText("Pipeline");
+		pipelineLabel.getStyle().set("margin-top", "10px");
+		pipelineLabel.getStyle().set("margin-left", "50px");
+		pipelineLabel.getStyle().set("cursor", "pointer");
+		pipelineLabel.addClassName("nav-drawer-menus");
 
-		accordion.add("Manage Resource", manageResource);
+		Label ChannelsLabel = new Label();
+		ChannelsLabel.setText("Channels");
+		ChannelsLabel.getStyle().set("margin-top", "10px");
+		ChannelsLabel.getStyle().set("margin-left", "50px");
+		ChannelsLabel.getStyle().set("cursor", "pointer");
+		ChannelsLabel.addClassName("nav-drawer-menus");
 
-		VerticalLayout manageRunChannel = new VerticalLayout();
-		manageRunChannel.setPadding(false);
-		manageRunChannel.getStyle().set("margin-left", "25px");
-		manageRunChannel.add(createTab("Audit Trail", AuditTrailView.class),
-				createTab("Run Console", RunConsoleView.class));
+		Label manageResourceLabel = new Label();
+		manageResourceLabel.setText("Manage Resource");
+		ChannelsLabel.getStyle().set("margin-top", "10px");
+		manageResourceLabel.getStyle().set("cursor", "pointer");
+		manageResourceLabel.addClassName("nav-drawer-menus");
 
-		accordion.add("Manage/Run Channel", manageRunChannel);
-		scrollableLayout.add(accordion);
+		Label addOrModifyRDBMSLabel = new Label();
+		addOrModifyRDBMSLabel.setText("Add/Modify RDBMS");
+		addOrModifyRDBMSLabel.getStyle().set("margin-top", "10px");
+		addOrModifyRDBMSLabel.getStyle().set("margin-left", "50px");
+		addOrModifyRDBMSLabel.getStyle().set("cursor", "pointer");
+		addOrModifyRDBMSLabel.addClassName("nav-drawer-menus");
+
+		Label manageOrRunChannelLabel = new Label();
+		manageOrRunChannelLabel.setText("Manage/Run Channel");
+		manageOrRunChannelLabel.getStyle().set("margin-top", "10px");
+		manageOrRunChannelLabel.getStyle().set("cursor", "pointer");
+		manageOrRunChannelLabel.addClassName("nav-drawer-menus");
+
+		Label auditTrailLabel = new Label();
+		auditTrailLabel.setText("Audit Trail");
+		auditTrailLabel.getStyle().set("margin-top", "10px");
+		auditTrailLabel.getStyle().set("margin-left", "50px");
+		auditTrailLabel.getStyle().set("cursor", "pointer");
+		auditTrailLabel.addClassName("nav-drawer-menus");
+
+		Label runConsoleLabel = new Label();
+		runConsoleLabel.setText("Run Console");
+		runConsoleLabel.getStyle().set("margin-top", "10px");
+		runConsoleLabel.getStyle().set("margin-left", "50px");
+		runConsoleLabel.getStyle().set("cursor", "pointer");
+		runConsoleLabel.addClassName("nav-drawer-menus");
+
+		Div edit_div = new Div(editLabel);
+		edit_div.setWidthFull();
+		edit_div.getStyle().set("margin-top", "15px");
+		edit_div.addClickListener(event -> {
+			try {
+				editLabel.addClassName("nav-drawer-menu");
+				editLabel.removeClassName("nav-drawer-menus");
+				defineLabel.addClassName("nav-drawer-menu");
+				defineLabel.removeClassName("nav-drawer-menus");
+				configLabel.addClassName("nav-drawer-menus");
+				commonsLabel.addClassName("nav-drawer-menus");
+				pipelineLabel.addClassName("nav-drawer-menus");
+				ChannelsLabel.addClassName("nav-drawer-menus");
+				manageResourceLabel.addClassName("nav-drawer-menus");
+				addOrModifyRDBMSLabel.addClassName("nav-drawer-menus");
+				manageOrRunChannelLabel.addClassName("nav-drawer-menus");
+				auditTrailLabel.addClassName("nav-drawer-menus");
+				runConsoleLabel.addClassName("nav-drawer-menus");
+				//setContent(new EditView().gridView());
+
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		});
+
+		Div configCommonsDiv = new Div(commonsLabel);
+		configCommonsDiv.setWidthFull();
+		configCommonsDiv.getStyle().set("margin-top", "15px");
+		configCommonsDiv.addClickListener(event -> {
+			try {
+				configLabel.addClassName("nav-drawer-menu");
+				configLabel.removeClassName("nav-drawer-menus");
+				commonsLabel.addClassName("nav-drawer-menu");
+				commonsLabel.removeClassName("nav-drawer-menus");
+				editLabel.addClassName("nav-drawer-menus");
+				defineLabel.addClassName("nav-drawer-menus");
+				pipelineLabel.addClassName("nav-drawer-menus");
+				ChannelsLabel.addClassName("nav-drawer-menus");
+				manageResourceLabel.addClassName("nav-drawer-menus");
+				addOrModifyRDBMSLabel.addClassName("nav-drawer-menus");
+				manageOrRunChannelLabel.addClassName("nav-drawer-menus");
+				auditTrailLabel.addClassName("nav-drawer-menus");
+				runConsoleLabel.addClassName("nav-drawer-menus");
+				getUI().get().navigate(CommonConfigView.class);
+				//setContent(new CommonConfigView(commonConfigDao));
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		});
+
+		Div configPipelineDiv = new Div(pipelineLabel);
+		configPipelineDiv.setWidthFull();
+		configPipelineDiv.getStyle().set("margin-top", "15px");
+		configPipelineDiv.addClickListener(event -> {
+			try {
+				configLabel.addClassName("nav-drawer-menu");
+				configLabel.removeClassName("nav-drawer-menus");
+				pipelineLabel.addClassName("nav-drawer-menu");
+				pipelineLabel.removeClassName("nav-drawer-menus");
+				editLabel.addClassName("nav-drawer-menus");
+				defineLabel.addClassName("nav-drawer-menus");
+				commonsLabel.addClassName("nav-drawer-menus");
+				ChannelsLabel.addClassName("nav-drawer-menus");
+				manageResourceLabel.addClassName("nav-drawer-menus");
+				addOrModifyRDBMSLabel.addClassName("nav-drawer-menus");
+				manageOrRunChannelLabel.addClassName("nav-drawer-menus");
+				auditTrailLabel.addClassName("nav-drawer-menus");
+				runConsoleLabel.addClassName("nav-drawer-menus");
+				getUI().get().navigate(PipelineView.class);
+				//setContent(new PipelineView(pipelineConfigDao).pipeLineComponent());
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		});
+
+		Div configChannelDiv = new Div(ChannelsLabel);
+		configChannelDiv.setWidthFull();
+		configChannelDiv.getStyle().set("margin-top", "15px");
+		configChannelDiv.addClickListener(event -> {
+			try {
+				configLabel.addClassName("nav-drawer-menu");
+				configLabel.removeClassName("nav-drawer-menus");
+				ChannelsLabel.addClassName("nav-drawer-menu");
+				ChannelsLabel.removeClassName("nav-drawer-menus");
+				editLabel.addClassName("nav-drawer-menus");
+				defineLabel.addClassName("nav-drawer-menus");
+				commonsLabel.addClassName("nav-drawer-menus");
+				pipelineLabel.addClassName("nav-drawer-menus");
+				manageResourceLabel.addClassName("nav-drawer-menus");
+				addOrModifyRDBMSLabel.addClassName("nav-drawer-menus");
+				manageOrRunChannelLabel.addClassName("nav-drawer-menus");
+				auditTrailLabel.addClassName("nav-drawer-menus");
+				runConsoleLabel.addClassName("nav-drawer-menus");
+				getUI().get().navigate(ChannelView.class);
+				//setContent(new ChannelView(channelConfigDao).channelViewComponent());
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		});
+
+		Div auditTrailDiv = new Div(auditTrailLabel);
+		auditTrailDiv.setWidthFull();
+		auditTrailDiv.getStyle().set("margin-top", "15px");
+		auditTrailDiv.addClickListener(event -> {
+			try {
+				manageOrRunChannelLabel.addClassName("nav-drawer-menu");
+				manageOrRunChannelLabel.removeClassName("nav-drawer-menus");
+				auditTrailLabel.addClassName("nav-drawer-menu");
+				auditTrailLabel.removeClassName("nav-drawer-menus");
+				editLabel.addClassName("nav-drawer-menus");
+				defineLabel.addClassName("nav-drawer-menus");
+				pipelineLabel.addClassName("nav-drawer-menus");
+				ChannelsLabel.addClassName("nav-drawer-menus");
+				manageResourceLabel.addClassName("nav-drawer-menus");
+				addOrModifyRDBMSLabel.addClassName("nav-drawer-menus");
+				configLabel.addClassName("nav-drawer-menus");
+				runConsoleLabel.addClassName("nav-drawer-menus");
+				commonsLabel.addClassName("nav-drawer-menus");
+				//setContent(new AuditTrailView().auditTrailView());
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		});
+
+		Div runConsoleDiv = new Div(runConsoleLabel);
+		runConsoleDiv.setWidthFull();
+		runConsoleDiv.getStyle().set("margin-top", "15px");
+		runConsoleDiv.addClickListener(event -> {
+			try {
+				manageOrRunChannelLabel.addClassName("nav-drawer-menu");
+				manageOrRunChannelLabel.removeClassName("nav-drawer-menus");
+				runConsoleLabel.addClassName("nav-drawer-menu");
+				runConsoleLabel.removeClassName("nav-drawer-menus");
+				editLabel.addClassName("nav-drawer-menus");
+				defineLabel.addClassName("nav-drawer-menus");
+				pipelineLabel.addClassName("nav-drawer-menus");
+				ChannelsLabel.addClassName("nav-drawer-menus");
+				manageResourceLabel.addClassName("nav-drawer-menus");
+				addOrModifyRDBMSLabel.addClassName("nav-drawer-menus");
+				configLabel.addClassName("nav-drawer-menus");
+				auditTrailLabel.addClassName("nav-drawer-menus");
+				commonsLabel.addClassName("nav-drawer-menus");
+				//setContent(new RunConsoleView().runConsoleView());
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		});
+
+		scrollableLayout.add(defineLabel, edit_div, configLabel, configCommonsDiv, configPipelineDiv, configChannelDiv,
+				manageResourceLabel, addOrModifyRDBMSLabel, manageOrRunChannelLabel, auditTrailDiv, runConsoleDiv);
 		return scrollableLayout;
 
 	}
-
-//	private static Tab[] getAvailableTabs() {
-
-	// final List<Tab> tabs = new ArrayList<>();
-//		tabs.add(createTab("Define", DefineView.class));
-//		tabs.add(createTab("Edit", EditView.class));
-//		tabs.add(createTab("Config", ConfigView.class));
-//		tabs.add(createTab("Commons", CommonConfigView.class));
-//		tabs.add(createTab("Pipeline", PipelineView.class));
-//		tabs.add(createTab("Channels", ChannelView.class));
-//		tabs.add(createTab("Manage/Run", ManageRunView.class));
-//		tabs.add(createTab("Audit Trail", AuditTrailView.class));
-//		tabs.add(createTab("Run Console", RunConsoleView.class));
-//		return tabs.toArray(new Tab[tabs.size()]);
-//	}
 
 	private static Tab createTab(String title, Class<? extends Component> viewClass) {
 		return createTab(populateLink(new RouterLink(null, viewClass), title));

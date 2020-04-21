@@ -7,15 +7,22 @@ import com.vaadin.flow.component.AbstractField;
 import com.vaadin.flow.component.Html;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.charts.model.Label;
 import com.vaadin.flow.component.dependency.CssImport;
+import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.html.NativeButton;
+import com.vaadin.flow.component.icon.Icon;
+import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.splitlayout.SplitLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Binder;
+import com.vaadin.flow.data.provider.ListDataProvider;
+import com.vaadin.flow.function.ValueProvider;
 import com.vaadin.flow.router.AfterNavigationEvent;
 import com.vaadin.flow.router.AfterNavigationObserver;
 import com.vaadin.flow.router.PageTitle;
@@ -67,6 +74,9 @@ public class CommonConfigView extends Div implements AfterNavigationObserver {
 		commons.addColumn(CommonConfig::getValue).setHeader(new Html(
 				"<div style='font-weight:bold;font-size:16px;text-orientation: mixed;background:#002f5d;color:#fff'>Value</div>"));
 
+		commons.addComponentColumn(item -> createTrashIcon(commons, item))
+        .setHeader("Actions");
+		
 		// when a row is selected or deselected, populate form
 		commons.asSingleSelect().addValueChangeListener(event -> populateForm(event.getValue()));
 
@@ -120,6 +130,45 @@ public class CommonConfigView extends Div implements AfterNavigationObserver {
 		createEditorLayout(horizontalLayout);
 
 		add(horizontalLayout);
+	}
+	
+	private Icon createTrashIcon(Grid<CommonConfig> grid, CommonConfig item) {
+
+	    Icon trashIcon = new Icon(VaadinIcon.TRASH);
+		trashIcon.addClickListener(
+		        event -> {
+		        	System.out.println(item.getId());
+		        	deleteConfirmDialog(item.getId(), grid, item);
+		        });
+		
+		return trashIcon;
+	}
+	
+	private void deleteConfirmDialog(Long id, Grid<CommonConfig> grid, CommonConfig item) {
+		Dialog dialog = new Dialog();
+
+		dialog.setCloseOnEsc(false);
+		dialog.setCloseOnOutsideClick(false);
+
+		Label messageLabel = new Label();
+
+		NativeButton confirmButton = new NativeButton("Confirm", event -> {
+		    messageLabel.setText("Confirmed!");
+		    this.commonConfigDao.deleteById(id);
+		    dialog.close();
+		    
+		    ListDataProvider<CommonConfig> dataProvider = (ListDataProvider<CommonConfig>) grid
+ 	                .getDataProvider();
+ 	        dataProvider.getItems().remove(item);
+ 	        dataProvider.refreshAll();
+		});
+		NativeButton cancelButton = new NativeButton("Cancel", event -> {
+		    messageLabel.setText("Cancelled...");
+		    dialog.close();
+		});
+		dialog.add(confirmButton, cancelButton);
+		
+		dialog.open();
 	}
 
 	private void createEditorLayout(HorizontalLayout horizontalLayout) {
