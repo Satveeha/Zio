@@ -155,6 +155,7 @@ public class CommonConfigView extends Div implements AfterNavigationObserver {
 		NativeButton confirmButton = new NativeButton("Confirm", event -> {
 		    messageLabel.setText("Confirmed!");
 		    this.commonConfigDao.deleteById(id);
+		    populateForm(new CommonConfig());
 		    dialog.close();
 		    
 		    ListDataProvider<CommonConfig> dataProvider = (ListDataProvider<CommonConfig>) grid

@@ -96,10 +96,6 @@ public class ChannelView extends Div implements AfterNavigationObserver {
         // the grid valueChangeEvent will clear the form too
         cancel.addClickListener(e -> channel.asSingleSelect().clear());
 
-        save.addClickListener(e -> {
-            Notification.show("Not implemented");
-        });
-
         //SplitLayout splitLayout = new SplitLayout();
         //splitLayout.setSizeFull();
         
@@ -159,8 +155,8 @@ public class ChannelView extends Div implements AfterNavigationObserver {
         createEditorLayout(horizontalLayout);
 
     	dialog.add(horizontalLayout);
-    	dialog.setWidth("900px");
-    	dialog.setHeight("600px");
+    	dialog.setWidth("1000px");
+    	dialog.setHeight("500px");
     	
     	//cancel.addClickListener(e -> editChannelConfig.asSingleSelect().clear());
 
@@ -213,6 +209,7 @@ public class ChannelView extends Div implements AfterNavigationObserver {
 		NativeButton confirmButton = new NativeButton("Confirm", event -> {
 		    messageLabel.setText("Confirmed!");
 		    this.channelConfigDao.deleteById(id);
+		    populateForm(new ChannelConfig());
 		    dialog.close();
 		    
 		    ListDataProvider<ChannelConfig> dataProvider = (ListDataProvider<ChannelConfig>) grid

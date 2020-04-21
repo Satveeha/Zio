@@ -143,8 +143,8 @@ public class PipelineView extends Div implements AfterNavigationObserver {
 		createPopupGridLayout(horizontalLayout);
 
 		dialog.add(horizontalLayout);
-		dialog.setWidth("900px");
-		dialog.setHeight("600px");
+		dialog.setWidth("1000px");
+		dialog.setHeight("500px");
 
 		cancel.addClickListener(e -> editPipelineConfig.asSingleSelect().clear());
 
@@ -194,6 +194,7 @@ public class PipelineView extends Div implements AfterNavigationObserver {
 		NativeButton confirmButton = new NativeButton("Confirm", event -> {
 		    messageLabel.setText("Confirmed!");
 		    this.pipelineConfigDao.deleteById(id);
+		    populateForm(new EditPipelineConfig());
 		    dialog.close();
 		    
 		    ListDataProvider<EditPipelineConfig> dataProvider = (ListDataProvider<EditPipelineConfig>) grid
