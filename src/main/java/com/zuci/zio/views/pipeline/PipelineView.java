@@ -177,13 +177,13 @@ public class PipelineView extends Div implements AfterNavigationObserver {
 		trashIcon.addClickListener(
 		        event -> {
 		        	System.out.println(item.getId());
-		        	deleteConfirmDialog(item.getId(), grid, item);
+		        	deleteConfirmDialog(grid, item);
 		        });
 		
 		return trashIcon;
 	}
 	
-	private void deleteConfirmDialog(Long id, Grid<EditPipelineConfig> grid, EditPipelineConfig item) {
+	private void deleteConfirmDialog(Grid<EditPipelineConfig> grid, EditPipelineConfig item) {
 		Dialog dialog = new Dialog();
 
 		dialog.setCloseOnEsc(false);
@@ -193,7 +193,8 @@ public class PipelineView extends Div implements AfterNavigationObserver {
 
 		NativeButton confirmButton = new NativeButton("Confirm", event -> {
 		    messageLabel.setText("Confirmed!");
-		    this.pipelineConfigDao.deleteById(id);
+		    this.pipelineConfigDao.insertAudit(item);
+		    this.pipelineConfigDao.deleteById(item.getId());
 		    populateForm(new EditPipelineConfig());
 		    dialog.close();
 		    

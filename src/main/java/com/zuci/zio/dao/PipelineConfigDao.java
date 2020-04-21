@@ -12,7 +12,9 @@ public interface PipelineConfigDao {
 	
 	public List<EditPipelineConfig> findByPipeline(String process);
 	
-	public EditPipelineConfig insert(final EditPipelineConfig commonConfig);
+	public EditPipelineConfig insert(final EditPipelineConfig pipelineConfig);
+	
+	public EditPipelineConfig insertAudit(final EditPipelineConfig pipelineConfig);
 	
 	public void deleteById(Long id);
 }

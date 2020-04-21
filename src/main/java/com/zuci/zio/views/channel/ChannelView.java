@@ -192,13 +192,13 @@ public class ChannelView extends Div implements AfterNavigationObserver {
 		trashIcon.addClickListener(
 		        event -> {
 		        	System.out.println(item.getId());
-		        	deleteConfirmDialog(item.getId(), grid, item);
+		        	deleteConfirmDialog(grid, item);
 		        });
 		
 		return trashIcon;
 	}
     
-    private void deleteConfirmDialog(Long id, Grid<ChannelConfig> grid, ChannelConfig item) {
+    private void deleteConfirmDialog(Grid<ChannelConfig> grid, ChannelConfig item) {
 		Dialog dialog = new Dialog();
 
 		dialog.setCloseOnEsc(false);
@@ -208,7 +208,8 @@ public class ChannelView extends Div implements AfterNavigationObserver {
 
 		NativeButton confirmButton = new NativeButton("Confirm", event -> {
 		    messageLabel.setText("Confirmed!");
-		    this.channelConfigDao.deleteById(id);
+		    this.channelConfigDao.insertAudit(item);
+		    this.channelConfigDao.deleteById(item.getId());
 		    populateForm(new ChannelConfig());
 		    dialog.close();
 		    

@@ -29,6 +29,8 @@ public class CommonConfigDaoImpl implements CommonConfigDao{
 	
 	private final String INSERT_DATA = "insert into spw_common_config (id,variable,value,active,version) values (?,?,?,?,?) ON DUPLICATE KEY UPDATE variable = ?, value = ?";
 	
+	private final String INSERT_AUDIT_DATA = "insert into spw_common_config_audit (id,variable,value,active,version) values (?,?,?,?,?) ON DUPLICATE KEY UPDATE variable = ?, value = ?";
+	
 	private final String DELETE_BY_ID = "delete from spw_common_config where id = ?";
 	
 	@Autowired
@@ -125,6 +127,37 @@ public class CommonConfigDaoImpl implements CommonConfigDao{
 		//Object[] params = {id};
 		
 		jdbcTemplate.update(DELETE_BY_ID, id);
+	}
+
+	@Override
+	public CommonConfig insertAudit(CommonConfig commonConfig) {
+		
+		KeyHolder holder = new GeneratedKeyHolder();
+		
+		jdbcTemplate.update(new PreparedStatementCreator() {
+			
+			@Override
+			public PreparedStatement createPreparedStatement(Connection connection) throws SQLException {
+				PreparedStatement ps = connection.prepareStatement(INSERT_AUDIT_DATA, Statement.RETURN_GENERATED_KEYS);
+				ps.setLong(1, 0);
+				ps.setString(2, commonConfig.getVariable());
+				ps.setString(3, commonConfig.getValue());
+				ps.setString(4, commonConfig.getActive());
+				ps.setInt(5, commonConfig.getVersion());
+				ps.setString(6, commonConfig.getVariable());
+				ps.setString(7, commonConfig.getValue());
+				return ps;
+			}
+
+		}, holder);
+
+		if(commonConfig.getId() == null) {
+			
+			Long newCommonConfigId = (long) holder.getKey().intValue();
+			commonConfig.setId(newCommonConfigId);
+		}
+		
+		return commonConfig;
 	}
 }
 

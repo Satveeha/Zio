@@ -12,6 +12,8 @@ public interface ChannelConfigDao {
 	
 	public ChannelConfig insert(final ChannelConfig channelConfig);
 	
+	public ChannelConfig insertAudit(final ChannelConfig channelConfig);
+	
 	public void deleteById(Long id);
 	
 }

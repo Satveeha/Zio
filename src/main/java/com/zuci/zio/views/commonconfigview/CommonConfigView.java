@@ -138,13 +138,13 @@ public class CommonConfigView extends Div implements AfterNavigationObserver {
 		trashIcon.addClickListener(
 		        event -> {
 		        	System.out.println(item.getId());
-		        	deleteConfirmDialog(item.getId(), grid, item);
+		        	deleteConfirmDialog(grid, item);
 		        });
 		
 		return trashIcon;
 	}
 	
-	private void deleteConfirmDialog(Long id, Grid<CommonConfig> grid, CommonConfig item) {
+	private void deleteConfirmDialog(Grid<CommonConfig> grid, CommonConfig item) {
 		Dialog dialog = new Dialog();
 
 		dialog.setCloseOnEsc(false);
@@ -154,7 +154,8 @@ public class CommonConfigView extends Div implements AfterNavigationObserver {
 
 		NativeButton confirmButton = new NativeButton("Confirm", event -> {
 		    messageLabel.setText("Confirmed!");
-		    this.commonConfigDao.deleteById(id);
+		    this.commonConfigDao.insertAudit(item);
+		    this.commonConfigDao.deleteById(item.getId());
 		    populateForm(new CommonConfig());
 		    dialog.close();
 		    
