@@ -1,5 +1,5 @@
 .header{	
-  background:#002f5d !important;
+  background:#f8ca34 !important;
   color:#fff;
   text-orientation: mixed;
   writing-mode: Horizontal-lr;
@@ -9,6 +9,6 @@
 }
 
 :host(:not([theme~="no-row-borders"])) [part="row"]:first-child [part~="header-cell"] {
-     background:#002f5d !important;
+     background:#f8ca34 !important;
      color:#fff !important;
 }

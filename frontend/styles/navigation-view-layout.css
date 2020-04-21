@@ -58,7 +58,7 @@ body{
 }
 
 .nav-drawer{
-	background-color: #002f5d !important;
+	background-color: #fff !important;
 	text-align: left;
 	padding: 0 !important;
 	color: #fff !important;
@@ -78,7 +78,7 @@ body{
 .nav-drawer-menu{
 	font-size: 18px;
 	font-weight: 800;
-	color: #016460 !important;
+	color: #002f5d !important;
 	font-family: Lato, sans-serif;
 	letter-spacing: 1px !important;
 	text-alignment:left;
@@ -92,7 +92,7 @@ body{
 	letter-spacing: 1px !important;
 	text-alignment:left;
 	margin-left:16px;
-	color: #fff !important;
+	color: #4b483f !important;
 	
 }
 

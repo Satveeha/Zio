@@ -79,9 +79,9 @@ public class PipelineView extends Div implements AfterNavigationObserver {
 		pipeline.addThemeVariants(GridVariant.LUMO_ROW_STRIPES);
 		pipeline.setHeightByRows(true);
 		pipeline.addColumn(PipelineConfig::getProcess).setHeader(new Html(
-				"<div style='font-weight:bold;font-size:16px;text-orientation: mixed;background:#002f5d;color:#fff'>Pipeline</div>"));
+				"<div style='font-weight:bold;font-size:16px;text-orientation: mixed;background:#f8ca34;color:#4b483f'>Pipeline</div>"));
 		pipeline.addColumn(PipelineConfig::getPipelineCount).setHeader(new Html(
-				"<div style='font-weight:bold;font-size:16px;text-orientation: mixed;background:#002f5d;color:#fff'>Pipeline Count</div>"));
+				"<div style='font-weight:bold;font-size:16px;text-orientation: mixed;background:#f8ca34;color:#4b483f'>Pipeline Count</div>"));
 
 		// when a row is selected or deselected, populate form
 		pipeline.asSingleSelect().addValueChangeListener(event -> openDialog(event.getValue().getProcess()));
@@ -91,8 +91,9 @@ public class PipelineView extends Div implements AfterNavigationObserver {
 
 		add.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 		add.getStyle().set("margin-left", "90%");
-		add.getStyle().set("background", "#002f5d");
+		add.getStyle().set("background", "#58d2cc");
 		add.getStyle().set("border-radius", "6px");
+		add.getStyle().set("color", "#4b483f");
 		add.addClickListener(e -> {
 			createAddLayout(horizontalLayout);
 		});
@@ -126,11 +127,11 @@ public class PipelineView extends Div implements AfterNavigationObserver {
 		editPipelineConfig.addThemeVariants(GridVariant.LUMO_ROW_STRIPES);
 		editPipelineConfig.setHeightByRows(true);
 		editPipelineConfig.addColumn(EditPipelineConfig::getDescription).setHeader(new Html(
-				"<div style='font-weight:bold;font-size:16px;text-orientation: mixed;background:#002f5d;color:#fff'>Description</div>"));
+				"<div style='font-weight:bold;font-size:16px;text-orientation: mixed;background:#f8ca34;color:#4b483f'>Description</div>"));
 		editPipelineConfig.addColumn(EditPipelineConfig::getVariable).setHeader(new Html(
-				"<div style='font-weight:bold;font-size:16px;text-orientation: mixed;background:#002f5d;color:#fff'>Variable</div>"));
+				"<div style='font-weight:bold;font-size:16px;text-orientation: mixed;background:#f8ca34;color:#4b483f'>Variable</div>"));
 		editPipelineConfig.addColumn(EditPipelineConfig::getValue).setHeader(new Html(
-				"<div style='font-weight:bold;font-size:16px;text-orientation: mixed;background:#002f5d;color:#fff'>Value</div>"));
+				"<div style='font-weight:bold;font-size:16px;text-orientation: mixed;background:#f8ca34;color:#4b483f'>Value</div>"));
 
 		editPipelineConfig.addComponentColumn(item -> createTrashIcon(editPipelineConfig, item)).setHeader("");
 
@@ -201,8 +202,8 @@ public class PipelineView extends Div implements AfterNavigationObserver {
 			dataProvider.getItems().remove(item);
 			dataProvider.refreshAll();
 		});
-		confirmButton.getStyle().set("color", "#fff");
-		confirmButton.getStyle().set("background-color", "#002f5d");
+		confirmButton.getStyle().set("color", "#4b483f");
+		confirmButton.getStyle().set("background-color", "#58d2cc");
 		confirmButton.getStyle().set("padding", "0.5rem");
 		confirmButton.getStyle().set("border-radius", "6px");
 		confirmButton.getStyle().set("margin", "20px");
@@ -214,8 +215,8 @@ public class PipelineView extends Div implements AfterNavigationObserver {
 			messageLabel.setText("Cancelled...");
 			dialog.close();
 		});
-		cancelButton.getStyle().set("color", "#fff");
-		cancelButton.getStyle().set("background-color", "#002f5d");
+		cancelButton.getStyle().set("color", "#4b483f");
+		cancelButton.getStyle().set("background-color", "#58d2cc");
 		cancelButton.getStyle().set("padding", "0.5rem");
 		cancelButton.getStyle().set("border-radius", "6px");
 		cancelButton.getStyle().set("font-size", "16px");
@@ -251,8 +252,10 @@ public class PipelineView extends Div implements AfterNavigationObserver {
 		buttonLayout.setSpacing(true);
 		addCancel.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
 		addSave.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-		addSave.getStyle().set("background", "#002f5d");
+		addSave.getStyle().set("background", "#58d2cc");
 		addSave.getStyle().set("border-radius", "6px");
+		addSave.getStyle().set("color", "#4b483f");
+
 		buttonLayout.add(addCancel, addSave);
 		editorDiv.add(buttonLayout);
 	}
@@ -319,8 +322,9 @@ public class PipelineView extends Div implements AfterNavigationObserver {
 
 		cancel.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
 		save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-		save.getStyle().set("background", "#002f5d");
+		save.getStyle().set("background", "#58d2cc");
 		save.getStyle().set("border-radius", "6px");
+		save.getStyle().set("color", "#4b483f");
 
 		buttonLayout.add(cancel, save);
 

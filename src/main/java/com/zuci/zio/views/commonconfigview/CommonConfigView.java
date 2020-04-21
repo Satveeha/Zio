@@ -70,9 +70,9 @@ public class CommonConfigView extends Div implements AfterNavigationObserver {
 		commons.addThemeVariants(GridVariant.LUMO_ROW_STRIPES);
 		commons.setHeightByRows(true);
 		commons.addColumn(CommonConfig::getVariable).setHeader(new Html(
-				"<div style='font-weight:bold;font-size:16px;text-orientation: mixed;background:#002f5d;color:#fff'>Variable</div>"));
+				"<div style='font-weight:bold;font-size:16px;text-orientation: mixed;background:#f8ca34;color:#4b483f'>Variable</div>"));
 		commons.addColumn(CommonConfig::getValue).setHeader(new Html(
-				"<div style='font-weight:bold;font-size:16px;text-orientation: mixed;background:#002f5d;color:#fff'>Value</div>"));
+				"<div style='font-weight:bold;font-size:16px;text-orientation: mixed;background:#f8ca34;color:#4b483f'>Value</div>"));
 
 		commons.addComponentColumn(item -> createTrashIcon(commons, item)).setHeader("");
 
@@ -111,7 +111,8 @@ public class CommonConfigView extends Div implements AfterNavigationObserver {
 
 		add.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 		add.getStyle().set("margin-left", "89%");
-		add.getStyle().set("background", "#002f5d");
+		add.getStyle().set("background", "#58d2cc");
+		add.getStyle().set("color", "#4b483f");
 		add.getStyle().set("border-radius", "6px");
 		add.addClickListener(e -> {
 			populateForm(new CommonConfig());
@@ -161,8 +162,8 @@ public class CommonConfigView extends Div implements AfterNavigationObserver {
 			dataProvider.getItems().remove(item);
 			dataProvider.refreshAll();
 		});
-		confirmButton.getStyle().set("color", "#fff");
-		confirmButton.getStyle().set("background-color", "#002f5d");
+		confirmButton.getStyle().set("color", "#4b483f");
+		confirmButton.getStyle().set("background-color", "#58d2cc");
 		confirmButton.getStyle().set("padding", "0.5rem");
 		confirmButton.getStyle().set("border-radius", "6px");
 		confirmButton.getStyle().set("margin", "20px");
@@ -177,8 +178,8 @@ public class CommonConfigView extends Div implements AfterNavigationObserver {
 			dialog.close();
 		});
 		
-		cancelButton.getStyle().set("color", "#fff");
-		cancelButton.getStyle().set("background-color", "#002f5d");
+		cancelButton.getStyle().set("color", "#4b483f");
+		cancelButton.getStyle().set("background-color", "#58d2cc");
 		cancelButton.getStyle().set("padding", "0.5rem");
 		cancelButton.getStyle().set("border-radius", "6px");
 		cancelButton.getStyle().set("font-size", "16px");
@@ -219,8 +220,10 @@ public class CommonConfigView extends Div implements AfterNavigationObserver {
 
 		cancel.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
 		save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-		save.getStyle().set("background", "#002f5d");
+		save.getStyle().set("background", "#58d2cc");
 		save.getStyle().set("border-radius", "6px");
+		save.getStyle().set("color", "#4b483f");
+
 
 		buttonLayout.add(cancel, save);
 

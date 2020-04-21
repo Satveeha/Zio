@@ -76,11 +76,11 @@ public class ChannelView extends Div implements AfterNavigationObserver {
 		channel.addThemeVariants(GridVariant.LUMO_ROW_STRIPES);
 		channel.setHeightByRows(true);
         channel.addColumn(ChannelConfig::getInstance).setHeader(new Html(
-				"<div style='font-weight:bold;font-size:16px;text-orientation: mixed;background:#002f5d;color:#fff'>Channel</div>"));
+				"<div style='font-weight:bold;font-size:16px;text-orientation: mixed;background:#f8ca34;color:#4b483f'>Channel</div>"));
         channel.addColumn(ChannelConfig::getProcess).setHeader(new Html(
-				"<div style='font-weight:bold;font-size:16px;text-orientation: mixed;background:#002f5d;color:#fff'>Pipeline</div>"));
+				"<div style='font-weight:bold;font-size:16px;text-orientation: mixed;background:#f8ca34;color:#4b483f'>Pipeline</div>"));
         channel.addColumn(ChannelConfig::getAlias).setHeader(new Html(
-				"<div style='font-weight:bold;font-size:16px;text-orientation: mixed;background:#002f5d;color:#fff'>Alias</div>"));
+				"<div style='font-weight:bold;font-size:16px;text-orientation: mixed;background:#f8ca34;color:#4b483f'>Alias</div>"));
 
         //when a row is selected or deselected, populate form
         channel.asSingleSelect().addValueChangeListener(event -> openDialog(event.getValue().getInstance()));
@@ -129,15 +129,15 @@ public class ChannelView extends Div implements AfterNavigationObserver {
     	editChannelConfig.addThemeVariants(GridVariant.LUMO_ROW_STRIPES);
     	editChannelConfig.setHeightByRows(true);
     	editChannelConfig.addColumn(ChannelConfig::getInstance).setHeader(new Html(
-				"<div style='font-weight:bold;font-size:16px;text-orientation: mixed;background:#002f5d;color:#fff'>Channel</div>"));
+				"<div style='font-weight:bold;font-size:16px;text-orientation: mixed;background:#f8ca34;color:#4b483f'>Channel</div>"));
     	editChannelConfig.addColumn(ChannelConfig::getProcess).setHeader(new Html(
-				"<div style='font-weight:bold;font-size:16px;text-orientation: mixed;background:#002f5d;color:#fff'>Pipeline</div>"));
+				"<div style='font-weight:bold;font-size:16px;text-orientation: mixed;background:#f8ca34;color:#4b483f'>Pipeline</div>"));
     	editChannelConfig.addColumn(ChannelConfig::getVariable).setHeader(new Html(
-				"<div style='font-weight:bold;font-size:16px;text-orientation: mixed;background:#002f5d;color:#fff'>Variable</div>"));
+				"<div style='font-weight:bold;font-size:16px;text-orientation: mixed;background:#f8ca34;color:#4b483f'>Variable</div>"));
     	editChannelConfig.addColumn(ChannelConfig::getAlias).setHeader(new Html(
-				"<div style='font-weight:bold;font-size:16px;text-orientation: mixed;background:#002f5d;color:#fff'>Alias</div>"));
+				"<div style='font-weight:bold;font-size:16px;text-orientation: mixed;background:#f8ca34;color:#4b483f'>Alias</div>"));
     	editChannelConfig.addColumn(ChannelConfig::getValue).setHeader(new Html(
-				"<div style='font-weight:bold;font-size:16px;text-orientation: mixed;background:#002f5d;color:#fff'>Value</div>"));
+				"<div style='font-weight:bold;font-size:16px;text-orientation: mixed;background:#f8ca34;color:#4b483f'>Value</div>"));
     	
     	editChannelConfig.addComponentColumn(item -> createTrashIcon(editChannelConfig, item))
         .setHeader("");
@@ -218,8 +218,8 @@ public class ChannelView extends Div implements AfterNavigationObserver {
  	        dataProvider.getItems().remove(item);
  	        dataProvider.refreshAll();
 		});
-		confirmButton.getStyle().set("color", "#fff");
-		confirmButton.getStyle().set("background-color", "#002f5d");
+		confirmButton.getStyle().set("color", "#4b483f");
+		confirmButton.getStyle().set("background-color", "#58d2cc");
 		confirmButton.getStyle().set("padding", "0.5rem");
 		confirmButton.getStyle().set("border-radius", "6px");
 		confirmButton.getStyle().set("margin", "20px");
@@ -231,8 +231,8 @@ public class ChannelView extends Div implements AfterNavigationObserver {
 		    messageLabel.setText("Cancelled...");
 		    dialog.close();
 		});
-		cancelButton.getStyle().set("color", "#fff");
-		cancelButton.getStyle().set("background-color", "#002f5d");
+		cancelButton.getStyle().set("color", "#4b483f");
+		cancelButton.getStyle().set("background-color", "#58d2cc");
 		cancelButton.getStyle().set("padding", "0.5rem");
 		cancelButton.getStyle().set("border-radius", "6px");
 		cancelButton.getStyle().set("font-size", "16px");
@@ -255,8 +255,9 @@ public class ChannelView extends Div implements AfterNavigationObserver {
         
         add.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         add.getStyle().set("margin-left", "80%");
-        add.getStyle().set("background", "#002f5d");
+        add.getStyle().set("background", "#58d2cc");
         add.getStyle().set("border-radius", "6px");
+		add.getStyle().set("color", "#4b483f");
         wrapper.add(add);
         wrapper.add(editChannelConfig);
     }
@@ -281,8 +282,10 @@ public class ChannelView extends Div implements AfterNavigationObserver {
         buttonLayout.setSpacing(true);
         cancel.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
         save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-        save.getStyle().set("background", "#002f5d");
+        save.getStyle().set("background", "#58d2cc");
         save.getStyle().set("border-radius", "6px");
+		save.getStyle().set("color", "#4b483f");
+
         buttonLayout.add(cancel, save);
         editorDiv.add(buttonLayout);
     }

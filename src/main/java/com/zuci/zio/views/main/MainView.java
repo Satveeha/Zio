@@ -43,11 +43,12 @@ public class MainView extends AppLayout {
 		Label logoLabel = new Label();
 		logoLabel.setText("ZIO");
 		addToNavbar(true, logoLabel);
-		logoLabel.addClassName("nav-drawer-menu");
+//		logoLabel.addClassName("nav-drawer-menu");
 		logoLabel.getStyle().set("text-align", "center");
 		logoLabel.getStyle().set("margin-left", "auto");
 		logoLabel.getStyle().set("margin-right", "auto");
-		// logoLabel.getStyle().set("text-align", "center");
+		logoLabel.getStyle().set("color", "#4b483f !important");
+	    logoLabel.getStyle().set("font-weight", "bold");
 
 		addToDrawer(getMenuBar());
 	}
@@ -59,18 +60,19 @@ public class MainView extends AppLayout {
 		scrollableLayout.setHeightFull();
 		scrollableLayout.setPadding(false);
 		scrollableLayout.setSpacing(false);
+		
 
 		VerticalLayout image_layout = new VerticalLayout();
 		image_layout.setPadding(false);
 		image_layout.setMargin(false);
-		image_layout.getStyle().set("margin-bottom", "-65px");
+		image_layout.getStyle().set("margin-bottom", "-50px");
 		Image sidenavimage = new Image();
 		sidenavimage.setSrc("/icons/zio.png");
-		sidenavimage.setWidth("76%");
-		sidenavimage.setHeight("50%");
+		sidenavimage.setWidth("55%");
+		sidenavimage.setHeight("60%");
 		sidenavimage.getStyle().set("margin-left", "25px");
-//		sidenavimage.getStyle().set("margin-top", "-16px");
-//		sidenavimage.getStyle().set("padding", "0px");
+		sidenavimage.getStyle().set("border-radius", "50%");
+		sidenavimage.getStyle().set("padding", "15px");
 		image_layout.add(sidenavimage);
 
 		Label packageLabel = new Label();
