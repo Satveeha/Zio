@@ -8,6 +8,7 @@ import com.vaadin.flow.component.dependency.JsModule;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.html.Label;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.router.RouterLink;
@@ -48,7 +49,7 @@ public class MainView extends AppLayout {
 		logoLabel.getStyle().set("margin-left", "auto");
 		logoLabel.getStyle().set("margin-right", "auto");
 		logoLabel.getStyle().set("color", "#4b483f !important");
-	    logoLabel.getStyle().set("font-weight", "bold");
+		logoLabel.getStyle().set("font-weight", "bold");
 
 		addToDrawer(getMenuBar());
 	}
@@ -60,22 +61,32 @@ public class MainView extends AppLayout {
 		scrollableLayout.setHeightFull();
 		scrollableLayout.setPadding(false);
 		scrollableLayout.setSpacing(false);
-		
 
 		VerticalLayout image_layout = new VerticalLayout();
 		image_layout.setPadding(false);
 		image_layout.setMargin(false);
-		image_layout.getStyle().set("margin-bottom", "-50px");
+
+		VerticalLayout logoName = new VerticalLayout();
+		Label logoLabel = new Label();
+		logoLabel.setText("ZIO");
+		logoLabel.getStyle().set("color", "#f8ca34");
+		logoLabel.getStyle().set("font-size", "30px");
+		logoLabel.getStyle().set("font-weight", "1000");
+		logoLabel.getStyle().set("text-align", "center");
+		logoLabel.getStyle().set("justify-content", "center");
+		logoLabel.getStyle().set("margin-left", "70px");
+		logoLabel.getStyle().set("margin-top", "-15px");
+
 		Image sidenavimage = new Image();
-		sidenavimage.setSrc("/icons/zio.png");
+		sidenavimage.setSrc("/icons/globe.svg");
 		sidenavimage.setWidth("55%");
 		sidenavimage.setHeight("60%");
 		sidenavimage.getStyle().set("margin-left", "25px");
 		sidenavimage.getStyle().set("border-radius", "50%");
 		sidenavimage.getStyle().set("padding", "15px");
 		image_layout.add(sidenavimage);
+		logoName.add(image_layout,logoLabel);
 
-		Label packageLabel = new Label();
 		Label defineLabel = new Label();
 		defineLabel.setText("Define");
 		defineLabel.addClassName("nav-drawer-menus");
@@ -298,9 +309,9 @@ public class MainView extends AppLayout {
 			}
 		});
 
-		scrollableLayout.add(image_layout, defineLabel, edit_div, configLabel, configCommonsDiv, configPipelineDiv,
-				configChannelDiv, manageResourceLabel, addOrModifyRDBMSLabel, manageOrRunChannelLabel, auditTrailDiv,
-				runConsoleDiv);
+		scrollableLayout.add(logoName, defineLabel, edit_div, configLabel, configCommonsDiv,
+				configPipelineDiv, configChannelDiv, manageResourceLabel, addOrModifyRDBMSLabel,
+				manageOrRunChannelLabel, auditTrailDiv, runConsoleDiv);
 		return scrollableLayout;
 
 	}
