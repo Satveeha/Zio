@@ -178,7 +178,8 @@ public class PipelineView extends Div implements AfterNavigationObserver {
 			System.out.println(item.getId());
 			deleteConfirmDialog(grid, item);
 		});
-
+		trashIcon.setColor("#b2b5a6");
+		trashIcon.getStyle().set("margin-left", "50%");
 		return trashIcon;
 	}
 

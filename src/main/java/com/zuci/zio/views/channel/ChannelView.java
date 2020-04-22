@@ -38,167 +38,166 @@ import com.zuci.zio.views.pipeline.PipelineView;
 @Route(value = "channel", layout = MainView.class)
 @PageTitle("Channel")
 @CssImport("styles/views/channel/channel-view.css")
-@CssImport(value = "./styles/my-grid-styles.css", themeFor="vaadin-grid")
+@CssImport(value = "./styles/my-grid-styles.css", themeFor = "vaadin-grid")
 public class ChannelView extends Div implements AfterNavigationObserver {
-    
+
 	@Autowired
-    private static ChannelConfigDao channelConfigDao;
+	private static ChannelConfigDao channelConfigDao;
 
-    private Grid<ChannelConfig> channel;
-    private Grid<ChannelConfig> editChannelConfig;
+	private Grid<ChannelConfig> channel;
+	private Grid<ChannelConfig> editChannelConfig;
 
-    private TextField instance = new TextField();
-    private TextField process = new TextField();
-    private TextField variable = new TextField();
-    private TextField alias = new TextField();
-    private TextField value = new TextField();
-    
-    private Button add = new Button("Add");
+	private TextField instance = new TextField();
+	private TextField process = new TextField();
+	private TextField variable = new TextField();
+	private TextField alias = new TextField();
+	private TextField value = new TextField();
 
-    private Button cancel = new Button("Cancel");
-    private Button save = new Button("Save");
+	private Button add = new Button("Add");
 
-    private Binder<ChannelConfig> binder;
-    
-    private ChannelConfig channelConfig;
+	private Button cancel = new Button("Cancel");
+	private Button save = new Button("Save");
 
-    public ChannelView(ChannelConfigDao channelConfigDao) {
-    	
-    	this.channelConfigDao = channelConfigDao;
-        setId("channel-view");
-        // Configure Grid
-        channel = new Grid<>();
-        channel.addThemeVariants(GridVariant.LUMO_NO_BORDER);
+	private Binder<ChannelConfig> binder;
+
+	private ChannelConfig channelConfig;
+
+	public ChannelView(ChannelConfigDao channelConfigDao) {
+
+		this.channelConfigDao = channelConfigDao;
+		setId("channel-view");
+		// Configure Grid
+		channel = new Grid<>();
+		channel.addThemeVariants(GridVariant.LUMO_NO_BORDER);
 		channel.setWidth("90%");
 		channel.getStyle().set("font-family", "Lato, sans-serif");
 		channel.getStyle().set("margin-left", "50px");
 		channel.getStyle().set("border", "none");
 		channel.addThemeVariants(GridVariant.LUMO_ROW_STRIPES);
 		channel.setHeightByRows(true);
-        channel.addColumn(ChannelConfig::getInstance).setHeader(new Html(
+		channel.addColumn(ChannelConfig::getInstance).setHeader(new Html(
 				"<div style='font-weight:bold;font-size:16px;text-orientation: mixed;background:#f8ca34;color:#4b483f'>Channel</div>"));
-        channel.addColumn(ChannelConfig::getProcess).setHeader(new Html(
+		channel.addColumn(ChannelConfig::getProcess).setHeader(new Html(
 				"<div style='font-weight:bold;font-size:16px;text-orientation: mixed;background:#f8ca34;color:#4b483f'>Pipeline</div>"));
-        channel.addColumn(ChannelConfig::getAlias).setHeader(new Html(
+		channel.addColumn(ChannelConfig::getAlias).setHeader(new Html(
 				"<div style='font-weight:bold;font-size:16px;text-orientation: mixed;background:#f8ca34;color:#4b483f'>Alias</div>"));
 
-        //when a row is selected or deselected, populate form
-        channel.asSingleSelect().addValueChangeListener(event -> openDialog(event.getValue().getInstance()));
+		// when a row is selected or deselected, populate form
+		channel.asSingleSelect().addValueChangeListener(event -> openDialog(event.getValue().getInstance()));
 
-        // Configure Form
-        binder = new Binder<>(ChannelConfig.class);
+		// Configure Form
+		binder = new Binder<>(ChannelConfig.class);
 
-        // Bind fields. This where you'd define e.g. validation rules
-        binder.bindInstanceFields(this);
-        // note that password field isn't bound since that property doesn't exist in
-        // Employee
+		// Bind fields. This where you'd define e.g. validation rules
+		binder.bindInstanceFields(this);
+		// note that password field isn't bound since that property doesn't exist in
+		// Employee
 
-        // the grid valueChangeEvent will clear the form too
-        cancel.addClickListener(e -> channel.asSingleSelect().clear());
+		// the grid valueChangeEvent will clear the form too
+		cancel.addClickListener(e -> channel.asSingleSelect().clear());
 
-        //SplitLayout splitLayout = new SplitLayout();
-        //splitLayout.setSizeFull();
-        
-        HorizontalLayout horizontalLayout = new HorizontalLayout();
+		// SplitLayout splitLayout = new SplitLayout();
+		// splitLayout.setSizeFull();
 
-        createGridLayout(horizontalLayout);
-        //createEditorLayout(splitLayout);
+		HorizontalLayout horizontalLayout = new HorizontalLayout();
 
-        add(horizontalLayout);
-    }
-    
-    private void openDialog(String instance) {
-    	
-    	Dialog dialog = new Dialog();
-    	
-    	Div content = new Div();
-    	content.addClassName("my-style");
-    	
-    	//SplitLayout splitLayout = new SplitLayout();
-        //splitLayout.setSizeFull();
-    	
-    	HorizontalLayout horizontalLayout = new HorizontalLayout();
-    	
-    	editChannelConfig = new Grid<>();
-    	editChannelConfig.setItems(channelConfigDao.findByChannel(instance));
-    	editChannelConfig.addThemeVariants(GridVariant.LUMO_NO_BORDER);
-    	editChannelConfig.setWidth("90%");
-    	editChannelConfig.getStyle().set("font-family", "Lato, sans-serif");
-    	editChannelConfig.getStyle().set("margin-left", "2px");
-    	editChannelConfig.getStyle().set("border", "none");
-    	editChannelConfig.addThemeVariants(GridVariant.LUMO_ROW_STRIPES);
-    	editChannelConfig.setHeightByRows(true);
-    	editChannelConfig.addColumn(ChannelConfig::getInstance).setHeader(new Html(
+		createGridLayout(horizontalLayout);
+		// createEditorLayout(splitLayout);
+
+		add(horizontalLayout);
+	}
+
+	private void openDialog(String instance) {
+
+		Dialog dialog = new Dialog();
+
+		Div content = new Div();
+		content.addClassName("my-style");
+
+		// SplitLayout splitLayout = new SplitLayout();
+		// splitLayout.setSizeFull();
+
+		HorizontalLayout horizontalLayout = new HorizontalLayout();
+
+		editChannelConfig = new Grid<>();
+		editChannelConfig.setItems(channelConfigDao.findByChannel(instance));
+		editChannelConfig.addThemeVariants(GridVariant.LUMO_NO_BORDER);
+		editChannelConfig.setWidth("90%");
+		editChannelConfig.getStyle().set("font-family", "Lato, sans-serif");
+		editChannelConfig.getStyle().set("margin-left", "2px");
+		editChannelConfig.getStyle().set("border", "none");
+		editChannelConfig.addThemeVariants(GridVariant.LUMO_ROW_STRIPES);
+		editChannelConfig.setHeightByRows(true);
+		editChannelConfig.addColumn(ChannelConfig::getInstance).setHeader(new Html(
 				"<div style='font-weight:bold;font-size:16px;text-orientation: mixed;background:#f8ca34;color:#4b483f'>Channel</div>"));
-    	editChannelConfig.addColumn(ChannelConfig::getProcess).setHeader(new Html(
+		editChannelConfig.addColumn(ChannelConfig::getProcess).setHeader(new Html(
 				"<div style='font-weight:bold;font-size:16px;text-orientation: mixed;background:#f8ca34;color:#4b483f'>Pipeline</div>"));
-    	editChannelConfig.addColumn(ChannelConfig::getVariable).setHeader(new Html(
+		editChannelConfig.addColumn(ChannelConfig::getVariable).setHeader(new Html(
 				"<div style='font-weight:bold;font-size:16px;text-orientation: mixed;background:#f8ca34;color:#4b483f'>Variable</div>"));
-    	editChannelConfig.addColumn(ChannelConfig::getAlias).setHeader(new Html(
+		editChannelConfig.addColumn(ChannelConfig::getAlias).setHeader(new Html(
 				"<div style='font-weight:bold;font-size:16px;text-orientation: mixed;background:#f8ca34;color:#4b483f'>Alias</div>"));
-    	editChannelConfig.addColumn(ChannelConfig::getValue).setHeader(new Html(
+		editChannelConfig.addColumn(ChannelConfig::getValue).setHeader(new Html(
 				"<div style='font-weight:bold;font-size:16px;text-orientation: mixed;background:#f8ca34;color:#4b483f'>Value</div>"));
-    	
-    	editChannelConfig.addComponentColumn(item -> createTrashIcon(editChannelConfig, item))
-        .setHeader("");
-    	
-    	editChannelConfig.asSingleSelect().addValueChangeListener(event -> {
-    		populateForm(event.getValue());
-    		//createEditorLayout(horizontalLayout);
-    	});
-    	
-    	add.addClickListener(e -> {
-        	editChannelConfig.asSingleSelect().clear();
-        });
-    	
-        createPopupGridLayout(horizontalLayout);
-        createEditorLayout(horizontalLayout);
 
-    	dialog.add(horizontalLayout);
-    	dialog.setWidth("1000px");
-    	dialog.setHeight("500px");
-    	
-    	//cancel.addClickListener(e -> editChannelConfig.asSingleSelect().clear());
+		editChannelConfig.addComponentColumn(item -> createTrashIcon(editChannelConfig, item)).setHeader("");
 
-        save.addClickListener(e -> {
-        	
-        	if(this.channelConfig == null) {
-        		this.channelConfig = new ChannelConfig();
-        		this.channelConfig.setId(0L);
-        		this.channelConfig.setActive("Y");
-        		this.channelConfig.setVersion(0);
-        		this.channelConfig.setSeedConfig(0);
-        	}
-        	
-        	this.channelConfig.setInstance(this.instance.getValue());
-    		this.channelConfig.setProcess(this.process.getValue());
-    		this.channelConfig.setVariable(variable.getValue());
-    		this.channelConfig.setValue(value.getValue());
-    		this.channelConfig.setAlias(alias.getValue());
-    		
-    		this.channelConfigDao.insert(this.channelConfig);
-    		
-    		//dialog.close();
-    		editChannelConfig.setItems(channelConfigDao.findByChannel(instance));
-    		//channel.setItems(this.channelConfigDao.findAll());
-        });
-    	
-    	dialog.open();
-    }
-    
-    private Icon createTrashIcon(Grid<ChannelConfig> grid, ChannelConfig item) {
+		editChannelConfig.asSingleSelect().addValueChangeListener(event -> {
+			populateForm(event.getValue());
+			// createEditorLayout(horizontalLayout);
+		});
 
-	    Icon trashIcon = new Icon(VaadinIcon.TRASH);
-		trashIcon.addClickListener(
-		        event -> {
-		        	System.out.println(item.getId());
-		        	deleteConfirmDialog(grid, item);
-		        });
-		
+		add.addClickListener(e -> {
+			editChannelConfig.asSingleSelect().clear();
+		});
+
+		createPopupGridLayout(horizontalLayout);
+		createEditorLayout(horizontalLayout);
+
+		dialog.add(horizontalLayout);
+		dialog.setWidth("1000px");
+		dialog.setHeight("500px");
+
+		// cancel.addClickListener(e -> editChannelConfig.asSingleSelect().clear());
+
+		save.addClickListener(e -> {
+
+			if (this.channelConfig == null) {
+				this.channelConfig = new ChannelConfig();
+				this.channelConfig.setId(0L);
+				this.channelConfig.setActive("Y");
+				this.channelConfig.setVersion(0);
+				this.channelConfig.setSeedConfig(0);
+			}
+
+			this.channelConfig.setInstance(this.instance.getValue());
+			this.channelConfig.setProcess(this.process.getValue());
+			this.channelConfig.setVariable(variable.getValue());
+			this.channelConfig.setValue(value.getValue());
+			this.channelConfig.setAlias(alias.getValue());
+
+			this.channelConfigDao.insert(this.channelConfig);
+
+			// dialog.close();
+			editChannelConfig.setItems(channelConfigDao.findByChannel(instance));
+			// channel.setItems(this.channelConfigDao.findAll());
+		});
+
+		dialog.open();
+	}
+
+	private Icon createTrashIcon(Grid<ChannelConfig> grid, ChannelConfig item) {
+
+		Icon trashIcon = new Icon(VaadinIcon.TRASH);
+		trashIcon.addClickListener(event -> {
+			System.out.println(item.getId());
+			deleteConfirmDialog(grid, item);
+		});
+		trashIcon.setColor("#b2b5a6");
+		trashIcon.getStyle().set("margin-left", "50%");
 		return trashIcon;
 	}
-    
-    private void deleteConfirmDialog(Grid<ChannelConfig> grid, ChannelConfig item) {
+
+	private void deleteConfirmDialog(Grid<ChannelConfig> grid, ChannelConfig item) {
 		Dialog dialog = new Dialog();
 
 		dialog.setCloseOnEsc(false);
@@ -207,16 +206,15 @@ public class ChannelView extends Div implements AfterNavigationObserver {
 		Label messageLabel = new Label();
 
 		NativeButton confirmButton = new NativeButton("Confirm", event -> {
-		    messageLabel.setText("Confirmed!");
-		    this.channelConfigDao.insertAudit(item);
-		    this.channelConfigDao.deleteById(item.getId());
-		    populateForm(new ChannelConfig());
-		    dialog.close();
-		    
-		    ListDataProvider<ChannelConfig> dataProvider = (ListDataProvider<ChannelConfig>) grid
- 	                .getDataProvider();
- 	        dataProvider.getItems().remove(item);
- 	        dataProvider.refreshAll();
+			messageLabel.setText("Confirmed!");
+			this.channelConfigDao.insertAudit(item);
+			this.channelConfigDao.deleteById(item.getId());
+			populateForm(new ChannelConfig());
+			dialog.close();
+
+			ListDataProvider<ChannelConfig> dataProvider = (ListDataProvider<ChannelConfig>) grid.getDataProvider();
+			dataProvider.getItems().remove(item);
+			dataProvider.refreshAll();
 		});
 		confirmButton.getStyle().set("color", "#4b483f");
 		confirmButton.getStyle().set("background-color", "#58d2cc");
@@ -228,8 +226,8 @@ public class ChannelView extends Div implements AfterNavigationObserver {
 		confirmButton.getStyle().set("font-weight", "600");
 
 		NativeButton cancelButton = new NativeButton("Cancel", event -> {
-		    messageLabel.setText("Cancelled...");
-		    dialog.close();
+			messageLabel.setText("Cancelled...");
+			dialog.close();
 		});
 		cancelButton.getStyle().set("color", "#4b483f");
 		cancelButton.getStyle().set("background-color", "#58d2cc");
@@ -241,82 +239,81 @@ public class ChannelView extends Div implements AfterNavigationObserver {
 		cancelButton.getStyle().set("font-weight", "600");
 
 		dialog.add(confirmButton, cancelButton);
-		
+
 		dialog.open();
 	}
-    
-    private void createPopupGridLayout(HorizontalLayout horizontalLayout) {
-        
-    	Div wrapper = new Div();
-        wrapper.setId("wrapper");
-        wrapper.setWidthFull();
-        
-        horizontalLayout.add(wrapper);
-        
-        add.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-        add.getStyle().set("margin-left", "80%");
-        add.getStyle().set("background", "#58d2cc");
-        add.getStyle().set("border-radius", "6px");
+
+	private void createPopupGridLayout(HorizontalLayout horizontalLayout) {
+
+		Div wrapper = new Div();
+		wrapper.setId("wrapper");
+		wrapper.setWidthFull();
+
+		horizontalLayout.add(wrapper);
+
+		add.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+		add.getStyle().set("margin-left", "80%");
+		add.getStyle().set("background", "#58d2cc");
+		add.getStyle().set("border-radius", "6px");
 		add.getStyle().set("color", "#4b483f");
-        wrapper.add(add);
-        wrapper.add(editChannelConfig);
-    }
+		wrapper.add(add);
+		wrapper.add(editChannelConfig);
+	}
 
-    private void createEditorLayout(HorizontalLayout horizontalLayout) {
-        Div editorDiv = new Div();
-        editorDiv.setId("editor-layout");
-        FormLayout formLayout = new FormLayout();
-        addFormItem(editorDiv, formLayout, instance, "Channel");
-        addFormItem(editorDiv, formLayout, process, "Pipeline");
-        addFormItem(editorDiv, formLayout, variable, "Variable");
-        addFormItem(editorDiv, formLayout, alias, "Alias");
-        addFormItem(editorDiv, formLayout, value, "Value");
-        createButtonLayout(editorDiv);
-        horizontalLayout.add(editorDiv);
-    }
+	private void createEditorLayout(HorizontalLayout horizontalLayout) {
+		Div editorDiv = new Div();
+		editorDiv.setId("editor-layout");
+		FormLayout formLayout = new FormLayout();
+		addFormItem(editorDiv, formLayout, instance, "Channel");
+		addFormItem(editorDiv, formLayout, process, "Pipeline");
+		addFormItem(editorDiv, formLayout, variable, "Variable");
+		addFormItem(editorDiv, formLayout, alias, "Alias");
+		addFormItem(editorDiv, formLayout, value, "Value");
+		createButtonLayout(editorDiv);
+		horizontalLayout.add(editorDiv);
+	}
 
-    private void createButtonLayout(Div editorDiv) {
-        HorizontalLayout buttonLayout = new HorizontalLayout();
-        buttonLayout.setId("button-layout");
-        buttonLayout.setWidthFull();
-        buttonLayout.setSpacing(true);
-        cancel.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
-        save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-        save.getStyle().set("background", "#58d2cc");
-        save.getStyle().set("border-radius", "6px");
+	private void createButtonLayout(Div editorDiv) {
+		HorizontalLayout buttonLayout = new HorizontalLayout();
+		buttonLayout.setId("button-layout");
+		buttonLayout.setWidthFull();
+		buttonLayout.setSpacing(true);
+		cancel.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+		save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+		save.getStyle().set("background", "#58d2cc");
+		save.getStyle().set("border-radius", "6px");
 		save.getStyle().set("color", "#4b483f");
 
-        buttonLayout.add(cancel, save);
-        editorDiv.add(buttonLayout);
-    }
+		buttonLayout.add(cancel, save);
+		editorDiv.add(buttonLayout);
+	}
 
-    private void createGridLayout(HorizontalLayout horizontalLayout) {
-        Div wrapper = new Div();
-        wrapper.setId("wrapper");
-        wrapper.setWidthFull();
-        horizontalLayout.add(wrapper);
-        wrapper.add(channel);
-    }
+	private void createGridLayout(HorizontalLayout horizontalLayout) {
+		Div wrapper = new Div();
+		wrapper.setId("wrapper");
+		wrapper.setWidthFull();
+		horizontalLayout.add(wrapper);
+		wrapper.add(channel);
+	}
 
-    private void addFormItem(Div wrapper, FormLayout formLayout,
-            AbstractField field, String fieldName) {
-        formLayout.addFormItem(field, fieldName);
-        wrapper.add(formLayout);
-        field.getElement().getClassList().add("full-width");
-    }
+	private void addFormItem(Div wrapper, FormLayout formLayout, AbstractField field, String fieldName) {
+		formLayout.addFormItem(field, fieldName);
+		wrapper.add(formLayout);
+		field.getElement().getClassList().add("full-width");
+	}
 
-    @Override
-    public void afterNavigation(AfterNavigationEvent event) {
+	@Override
+	public void afterNavigation(AfterNavigationEvent event) {
 
-        // Lazy init of the grid items, happens only when we are sure the view will be
-        // shown to the user
-        channel.setItems(this.channelConfigDao.findAll());
-    }
+		// Lazy init of the grid items, happens only when we are sure the view will be
+		// shown to the user
+		channel.setItems(this.channelConfigDao.findAll());
+	}
 
-    private void populateForm(ChannelConfig value) {
-        
-    	// Value can be null as well, that clears the form
-        binder.readBean(value);
-        this.channelConfig = value;
-    }
+	private void populateForm(ChannelConfig value) {
+
+		// Value can be null as well, that clears the form
+		binder.readBean(value);
+		this.channelConfig = value;
+	}
 }

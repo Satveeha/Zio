@@ -74,7 +74,8 @@ public class CommonConfigView extends Div implements AfterNavigationObserver {
 		commons.addColumn(CommonConfig::getValue).setHeader(new Html(
 				"<div style='font-weight:bold;font-size:16px;text-orientation: mixed;background:#f8ca34;color:#4b483f'>Value</div>"));
 
-		commons.addComponentColumn(item -> createTrashIcon(commons, item)).setHeader("");
+		commons.addComponentColumn(item -> createTrashIcon(commons, item)).setHeader(new Html(
+				"<div style='font-weight:bold;font-size:16px;text-orientation: mixed;background:#f8ca34;color:#4b483f'></div>"));
 
 		// when a row is selected or deselected, populate form
 		commons.asSingleSelect().addValueChangeListener(event -> populateForm(event.getValue()));
@@ -135,6 +136,8 @@ public class CommonConfigView extends Div implements AfterNavigationObserver {
 	private Icon createTrashIcon(Grid<CommonConfig> grid, CommonConfig item) {
 
 		Icon trashIcon = new Icon(VaadinIcon.TRASH);
+		trashIcon.setColor("#b2b5a6");
+		trashIcon.getStyle().set("margin-left", "50%");
 		trashIcon.addClickListener(event -> {
 			System.out.println(item.getId());
 			deleteConfirmDialog(grid, item);
@@ -171,13 +174,11 @@ public class CommonConfigView extends Div implements AfterNavigationObserver {
 		confirmButton.getStyle().set("border", "none");
 		confirmButton.getStyle().set("font-weight", "600");
 
-
-
 		NativeButton cancelButton = new NativeButton("Cancel", event -> {
 			messageLabel.setText("Cancelled...");
 			dialog.close();
 		});
-		
+
 		cancelButton.getStyle().set("color", "#4b483f");
 		cancelButton.getStyle().set("background-color", "#58d2cc");
 		cancelButton.getStyle().set("padding", "0.5rem");
@@ -186,7 +187,6 @@ public class CommonConfigView extends Div implements AfterNavigationObserver {
 		cancelButton.getStyle().set("margin", "5px");
 		cancelButton.getStyle().set("border", "none");
 		cancelButton.getStyle().set("font-weight", "600");
-
 
 		dialog.add(confirmButton, cancelButton);
 
@@ -223,7 +223,6 @@ public class CommonConfigView extends Div implements AfterNavigationObserver {
 		save.getStyle().set("background", "#58d2cc");
 		save.getStyle().set("border-radius", "6px");
 		save.getStyle().set("color", "#4b483f");
-
 
 		buttonLayout.add(cancel, save);
 
