@@ -37,6 +37,10 @@ public class PipelineConfigDaoImpl implements PipelineConfigDao{
 	
 	private final String FETCH_DISTINCT_COMMON_VARIABLES = "select distinct variable from spw_common_config";
 	
+	private final String FETCH_VARIABLE_BY_PIPELINE = "select variable from spw_process_config where process = ?";
+	
+	private final String UPDATE_BY_PIPELINE = "update spw_process_config set value = ? where process = ? and variable = ?";
+	
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
 	
@@ -69,12 +73,12 @@ public class PipelineConfigDaoImpl implements PipelineConfigDao{
 	}
 
 	@Override
-	public List<EditPipelineConfig> findByPipeline(String process) {
+	public List<EditPipelineConfig> findByPipeline(String pipeline) {
 		
 		List<EditPipelineConfig> returnData = new ArrayList<EditPipelineConfig>();
 		
 		try {
-			returnData = jdbcTemplate.query(FETCH_ALL_BY_PIPELINE,new Object[]{process},new BeanPropertyRowMapper(EditPipelineConfig.class));
+			returnData = jdbcTemplate.query(FETCH_ALL_BY_PIPELINE,new Object[]{pipeline},new BeanPropertyRowMapper(EditPipelineConfig.class));
 		} catch (Exception e) {
 			System.out.println(e);
 			return returnData;
@@ -174,6 +178,35 @@ public class PipelineConfigDaoImpl implements PipelineConfigDao{
 		} catch (Exception e) {
 			System.out.println(e);
 			return returnData;
+		}
+		
+		return returnData;
+	}
+
+	@Override
+	public List<String> getVariableByPipeline(String pipeline) {
+		
+		List<String> variables = new ArrayList<String>();
+		try {
+			variables = jdbcTemplate.queryForList(FETCH_VARIABLE_BY_PIPELINE,new Object[]{pipeline},String.class);
+		} catch (Exception e) {
+			System.out.println(e);
+			return variables;
+		}
+		
+		return variables;
+	}
+
+	@Override
+	public Boolean updateVariableByPipeline(String pipeline, String variable, String value) {
+		Boolean returnData = false;
+		
+		try {
+			jdbcTemplate.update(UPDATE_BY_PIPELINE, value, pipeline, variable);
+			returnData = true;
+		} catch (Exception e) {
+			System.out.println(e);
+			return false;
 		}
 		
 		return returnData;

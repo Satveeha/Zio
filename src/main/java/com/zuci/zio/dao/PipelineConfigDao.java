@@ -10,7 +10,7 @@ public interface PipelineConfigDao {
 
 	public List<PipelineConfig> findAll();
 	
-	public List<EditPipelineConfig> findByPipeline(String process);
+	public List<EditPipelineConfig> findByPipeline(String pipeline);
 	
 	public EditPipelineConfig insert(final EditPipelineConfig pipelineConfig);
 	
@@ -19,4 +19,8 @@ public interface PipelineConfigDao {
 	public List<PipeLineGridDTO> getGrid();
 	
 	public Boolean deleteById(Long id);
+	
+	public List<String> getVariableByPipeline(String pipeline);
+	
+	public Boolean updateVariableByPipeline(String pipeline, String variable, String value);
 }
