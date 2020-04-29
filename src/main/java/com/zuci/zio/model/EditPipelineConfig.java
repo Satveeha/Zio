@@ -13,10 +13,6 @@ public class EditPipelineConfig {
 	String active;
 	
 	Integer version;
-	
-	String description;
-	
-	String shortName;
 
 	public Long getId() {
 		return id;
@@ -64,22 +60,6 @@ public class EditPipelineConfig {
 
 	public void setVersion(Integer version) {
 		this.version = version;
-	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
-	public String getShortName() {
-		return shortName;
-	}
-
-	public void setShortName(String shortName) {
-		this.shortName = shortName;
 	}
 	
 }

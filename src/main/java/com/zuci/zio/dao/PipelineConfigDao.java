@@ -2,7 +2,7 @@ package com.zuci.zio.dao;
 
 import java.util.List;
 
-import com.zuci.zio.model.EditPipelineConfig;
+import com.zuci.zio.dto.PipeLineGridDTO;
 import com.zuci.zio.model.EditPipelineConfig;
 import com.zuci.zio.model.PipelineConfig;
 
@@ -16,5 +16,7 @@ public interface PipelineConfigDao {
 	
 	public EditPipelineConfig insertAudit(final EditPipelineConfig pipelineConfig);
 	
-	public void deleteById(Long id);
+	public List<PipeLineGridDTO> getGrid();
+	
+	public Boolean deleteById(Long id);
 }

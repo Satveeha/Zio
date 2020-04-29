@@ -1,12 +1,9 @@
 package com.zuci.zio.views.channel;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import com.zuci.zio.backend.BackendService;
-import com.zuci.zio.backend.Employee;
 import com.zuci.zio.dao.ChannelConfigDao;
-import com.zuci.zio.dao.CommonConfigDao;
+import com.zuci.zio.dto.InstanceGridDTO;
 import com.zuci.zio.model.ChannelConfig;
-import com.zuci.zio.model.EditPipelineConfig;
 import com.vaadin.flow.component.AbstractField;
 import com.vaadin.flow.component.Html;
 import com.vaadin.flow.component.button.Button;
@@ -23,8 +20,6 @@ import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
-import com.vaadin.flow.component.splitlayout.SplitLayout;
-import com.vaadin.flow.component.textfield.PasswordField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.provider.ListDataProvider;
@@ -33,7 +28,6 @@ import com.vaadin.flow.router.AfterNavigationObserver;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.zuci.zio.views.main.MainView;
-import com.zuci.zio.views.pipeline.PipelineView;
 
 @Route(value = "channel", layout = MainView.class)
 @PageTitle("Channel")
@@ -44,29 +38,47 @@ public class ChannelView extends Div implements AfterNavigationObserver {
 	@Autowired
 	private static ChannelConfigDao channelConfigDao;
 
-	private Grid<ChannelConfig> channel;
+	//Grid Variable
+	private Grid<InstanceGridDTO> channel;
 	private Grid<ChannelConfig> editChannelConfig;
 
+	//Fields for configuration form
 	private TextField instance = new TextField();
 	private TextField process = new TextField();
 	private TextField variable = new TextField();
-	private TextField alias = new TextField();
 	private TextField value = new TextField();
-
 	private Button add = new Button("Add");
-
 	private Button cancel = new Button("Cancel");
 	private Button save = new Button("Save");
+	
+	//Page layout in horizontal
+	private HorizontalLayout horizontalLayout;
 
+	//Binder binds the object
 	private Binder<ChannelConfig> binder;
-
 	private ChannelConfig channelConfig;
 
 	public ChannelView(ChannelConfigDao channelConfigDao) {
 
 		this.channelConfigDao = channelConfigDao;
+		
 		setId("channel-view");
-		// Configure Grid
+		
+		instance.setEnabled(false);
+		process.setEnabled(false);
+		
+		//Configure Object
+		binder = new Binder<>(ChannelConfig.class);
+		binder.bindInstanceFields(this);
+
+		horizontalLayout = new HorizontalLayout();
+		
+		// Configure Main Page Grid
+		configureMainGrid();
+	}
+	
+	//Configure Main Page Grid
+	private void configureMainGrid() {
 		channel = new Grid<>();
 		channel.addThemeVariants(GridVariant.LUMO_NO_BORDER);
 		channel.setWidth("90%");
@@ -75,52 +87,50 @@ public class ChannelView extends Div implements AfterNavigationObserver {
 		channel.getStyle().set("border", "none");
 		channel.addThemeVariants(GridVariant.LUMO_ROW_STRIPES);
 		channel.setHeightByRows(true);
-		channel.addColumn(ChannelConfig::getInstance).setHeader(new Html(
+		channel.addColumn(InstanceGridDTO::getInstance).setHeader(new Html(
 				"<div style='font-weight:bold;font-size:16px;text-orientation: mixed;background:#f8ca34;color:#4b483f'>Channel</div>"));
-		channel.addColumn(ChannelConfig::getProcess).setHeader(new Html(
+		channel.addColumn(InstanceGridDTO::getProcess).setHeader(new Html(
 				"<div style='font-weight:bold;font-size:16px;text-orientation: mixed;background:#f8ca34;color:#4b483f'>Pipeline</div>"));
-		channel.addColumn(ChannelConfig::getAlias).setHeader(new Html(
-				"<div style='font-weight:bold;font-size:16px;text-orientation: mixed;background:#f8ca34;color:#4b483f'>Alias</div>"));
+		channel.addColumn(InstanceGridDTO::getVariableCount).setHeader(new Html(
+				"<div style='font-weight:bold;font-size:16px;text-orientation: mixed;background:#f8ca34;color:#4b483f'>Variable Count</div>"));
+		channel.addColumn(InstanceGridDTO::getOverriddenCommonCount).setHeader(new Html(
+				"<div style='font-weight:bold;font-size:16px;text-orientation: mixed;background:#f8ca34;color:#4b483f'>Overridden Common Count</div>"));
+		channel.addColumn(InstanceGridDTO::getOverriddenPipelineCount).setHeader(new Html(
+				"<div style='font-weight:bold;font-size:16px;text-orientation: mixed;background:#f8ca34;color:#4b483f'>Overridden Pipeline Count</div>"));
 
-		// when a row is selected or deselected, populate form
-		channel.asSingleSelect().addValueChangeListener(event -> openDialog(event.getValue().getInstance()));
-
-		// Configure Form
-		binder = new Binder<>(ChannelConfig.class);
-
-		// Bind fields. This where you'd define e.g. validation rules
-		binder.bindInstanceFields(this);
-		// note that password field isn't bound since that property doesn't exist in
-		// Employee
-
-		// the grid valueChangeEvent will clear the form too
-		cancel.addClickListener(e -> channel.asSingleSelect().clear());
-
-		// SplitLayout splitLayout = new SplitLayout();
-		// splitLayout.setSizeFull();
-
-		HorizontalLayout horizontalLayout = new HorizontalLayout();
-
-		createGridLayout(horizontalLayout);
-		// createEditorLayout(splitLayout);
+		channel.asSingleSelect().addValueChangeListener(event -> openDialog(event.getValue()));
+		
+		channel.setItems(this.channelConfigDao.getGrid());
+		
+		horizontalLayout.removeAll();
+		horizontalLayout.setHeightFull();
+		horizontalLayout.setWidthFull();
+		
+		createMainGridLayout(horizontalLayout);
 
 		add(horizontalLayout);
 	}
 
-	private void openDialog(String instance) {
+	//Open Configuration Dialog
+	private void openDialog(InstanceGridDTO item) {
 
 		Dialog dialog = new Dialog();
+		dialog.setCloseOnEsc(false);
+		dialog.setCloseOnOutsideClick(false);
+		
+		ChannelConfig initializeProcessInstance = new ChannelConfig();
+		initializeProcessInstance.setProcess(item.getProcess());
+		initializeProcessInstance.setInstance(item.getInstance());
+		populateForm(initializeProcessInstance);
 
 		Div content = new Div();
 		content.addClassName("my-style");
 
-		// SplitLayout splitLayout = new SplitLayout();
-		// splitLayout.setSizeFull();
-
 		HorizontalLayout horizontalLayout = new HorizontalLayout();
 
+		//Configure Configuration Grid
 		editChannelConfig = new Grid<>();
-		editChannelConfig.setItems(channelConfigDao.findByChannel(instance));
+		editChannelConfig.setItems(channelConfigDao.findByChannel(item.getInstance()));
 		editChannelConfig.addThemeVariants(GridVariant.LUMO_NO_BORDER);
 		editChannelConfig.setWidth("90%");
 		editChannelConfig.getStyle().set("font-family", "Lato, sans-serif");
@@ -134,20 +144,20 @@ public class ChannelView extends Div implements AfterNavigationObserver {
 				"<div style='font-weight:bold;font-size:16px;text-orientation: mixed;background:#f8ca34;color:#4b483f'>Pipeline</div>"));
 		editChannelConfig.addColumn(ChannelConfig::getVariable).setHeader(new Html(
 				"<div style='font-weight:bold;font-size:16px;text-orientation: mixed;background:#f8ca34;color:#4b483f'>Variable</div>"));
-		editChannelConfig.addColumn(ChannelConfig::getAlias).setHeader(new Html(
-				"<div style='font-weight:bold;font-size:16px;text-orientation: mixed;background:#f8ca34;color:#4b483f'>Alias</div>"));
 		editChannelConfig.addColumn(ChannelConfig::getValue).setHeader(new Html(
 				"<div style='font-weight:bold;font-size:16px;text-orientation: mixed;background:#f8ca34;color:#4b483f'>Value</div>"));
 
-		editChannelConfig.addComponentColumn(item -> createTrashIcon(editChannelConfig, item)).setHeader("");
+		editChannelConfig.addComponentColumn(iterateItem -> createTrashIcon(editChannelConfig, iterateItem)).setHeader("");
 
 		editChannelConfig.asSingleSelect().addValueChangeListener(event -> {
 			populateForm(event.getValue());
-			// createEditorLayout(horizontalLayout);
 		});
 
 		add.addClickListener(e -> {
-			editChannelConfig.asSingleSelect().clear();
+			ChannelConfig initializeFormVariable = new ChannelConfig();
+			initializeFormVariable.setProcess(item.getProcess());
+			initializeFormVariable.setInstance(item.getInstance());
+			populateForm(initializeFormVariable);
 		});
 
 		createPopupGridLayout(horizontalLayout);
@@ -157,8 +167,6 @@ public class ChannelView extends Div implements AfterNavigationObserver {
 		dialog.setWidth("1000px");
 		dialog.setHeight("500px");
 
-		// cancel.addClickListener(e -> editChannelConfig.asSingleSelect().clear());
-
 		save.addClickListener(e -> {
 
 			if (this.channelConfig == null) {
@@ -167,24 +175,49 @@ public class ChannelView extends Div implements AfterNavigationObserver {
 				this.channelConfig.setActive("Y");
 				this.channelConfig.setVersion(0);
 				this.channelConfig.setSeedConfig(0);
+			}else if(this.channelConfig.getId() == null) {
+				this.channelConfig = new ChannelConfig();
+				this.channelConfig.setId(0L);
+				this.channelConfig.setActive("Y");
+				this.channelConfig.setVersion(0);
+				this.channelConfig.setSeedConfig(0);
+			}
+			
+			if(variable.getValue() == null || variable.getValue().equals("") || value.getValue() == null || value.getValue().equals("")) {
+				Notification.show("Variable or Value should not be empty");
+			}else {
+				this.channelConfig.setInstance(this.instance.getValue());
+				this.channelConfig.setProcess(this.process.getValue());
+				this.channelConfig.setVariable(variable.getValue());
+				this.channelConfig.setValue(value.getValue());
+
+				ChannelConfig insertData = this.channelConfigDao.insert(this.channelConfig);
+				
+				if(insertData != null) {
+					editChannelConfig.setItems(channelConfigDao.findByChannel(item.getInstance()));
+					
+					ChannelConfig initializeProcessInstanceData = new ChannelConfig();
+					initializeProcessInstanceData.setProcess(item.getProcess());
+					initializeProcessInstanceData.setInstance(item.getInstance());
+					populateForm(initializeProcessInstanceData);
+					
+					Notification.show("Saved Successfully!");
+				}else {
+					Notification.show("Saved Failure!");
+				}
 			}
 
-			this.channelConfig.setInstance(this.instance.getValue());
-			this.channelConfig.setProcess(this.process.getValue());
-			this.channelConfig.setVariable(variable.getValue());
-			this.channelConfig.setValue(value.getValue());
-			this.channelConfig.setAlias(alias.getValue());
-
-			this.channelConfigDao.insert(this.channelConfig);
-
-			// dialog.close();
-			editChannelConfig.setItems(channelConfigDao.findByChannel(instance));
-			// channel.setItems(this.channelConfigDao.findAll());
+		});
+		
+		cancel.addClickListener(e -> {
+			dialog.close();
+			configureMainGrid();
 		});
 
 		dialog.open();
 	}
 
+	//Creat Trash Icon in Grid
 	private Icon createTrashIcon(Grid<ChannelConfig> grid, ChannelConfig item) {
 
 		Icon trashIcon = new Icon(VaadinIcon.TRASH);
@@ -197,6 +230,7 @@ public class ChannelView extends Div implements AfterNavigationObserver {
 		return trashIcon;
 	}
 
+	//Confirmation Dialog
 	private void deleteConfirmDialog(Grid<ChannelConfig> grid, ChannelConfig item) {
 		Dialog dialog = new Dialog();
 
@@ -206,16 +240,38 @@ public class ChannelView extends Div implements AfterNavigationObserver {
 		Label messageLabel = new Label();
 
 		NativeButton confirmButton = new NativeButton("Confirm", event -> {
+			
 			messageLabel.setText("Confirmed!");
-			this.channelConfigDao.insertAudit(item);
-			this.channelConfigDao.deleteById(item.getId());
-			populateForm(new ChannelConfig());
+			
+			ChannelConfig insertData = this.channelConfigDao.insertAudit(item);
+			
+			if(insertData != null) {
+				
+				if(this.channelConfigDao.deleteById(item.getId())) {
+					Notification.show("Deleted Successfully!");
+					
+					//Remove item from grid
+					ListDataProvider<ChannelConfig> dataProvider = (ListDataProvider<ChannelConfig>) grid.getDataProvider();
+					dataProvider.getItems().remove(item);
+					dataProvider.refreshAll();
+				}else {
+					Notification.show("Delete Failure!");
+				}
+				
+			}else {
+				Notification.show("Delete Failure!");
+			}
+			
+			
+			ChannelConfig initializeProcessInstance = new ChannelConfig();
+			initializeProcessInstance.setProcess(item.getProcess());
+			initializeProcessInstance.setInstance(item.getInstance());
+			populateForm(initializeProcessInstance);
+			
 			dialog.close();
 
-			ListDataProvider<ChannelConfig> dataProvider = (ListDataProvider<ChannelConfig>) grid.getDataProvider();
-			dataProvider.getItems().remove(item);
-			dataProvider.refreshAll();
 		});
+		
 		confirmButton.getStyle().set("color", "#4b483f");
 		confirmButton.getStyle().set("background-color", "#58d2cc");
 		confirmButton.getStyle().set("padding", "0.5rem");
@@ -243,6 +299,7 @@ public class ChannelView extends Div implements AfterNavigationObserver {
 		dialog.open();
 	}
 
+	//Create popup grid layout
 	private void createPopupGridLayout(HorizontalLayout horizontalLayout) {
 
 		Div wrapper = new Div();
@@ -260,6 +317,7 @@ public class ChannelView extends Div implements AfterNavigationObserver {
 		wrapper.add(editChannelConfig);
 	}
 
+	//Create Form Layout
 	private void createEditorLayout(HorizontalLayout horizontalLayout) {
 		Div editorDiv = new Div();
 		editorDiv.setId("editor-layout");
@@ -267,12 +325,12 @@ public class ChannelView extends Div implements AfterNavigationObserver {
 		addFormItem(editorDiv, formLayout, instance, "Channel");
 		addFormItem(editorDiv, formLayout, process, "Pipeline");
 		addFormItem(editorDiv, formLayout, variable, "Variable");
-		addFormItem(editorDiv, formLayout, alias, "Alias");
 		addFormItem(editorDiv, formLayout, value, "Value");
 		createButtonLayout(editorDiv);
 		horizontalLayout.add(editorDiv);
 	}
 
+	//Create Button for Form Layout
 	private void createButtonLayout(Div editorDiv) {
 		HorizontalLayout buttonLayout = new HorizontalLayout();
 		buttonLayout.setId("button-layout");
@@ -288,7 +346,8 @@ public class ChannelView extends Div implements AfterNavigationObserver {
 		editorDiv.add(buttonLayout);
 	}
 
-	private void createGridLayout(HorizontalLayout horizontalLayout) {
+	//Create main grid layout
+	private void createMainGridLayout(HorizontalLayout horizontalLayout) {
 		Div wrapper = new Div();
 		wrapper.setId("wrapper");
 		wrapper.setWidthFull();
@@ -296,23 +355,24 @@ public class ChannelView extends Div implements AfterNavigationObserver {
 		wrapper.add(channel);
 	}
 
+	//Add Field for Form Layout
 	private void addFormItem(Div wrapper, FormLayout formLayout, AbstractField field, String fieldName) {
 		formLayout.addFormItem(field, fieldName);
 		wrapper.add(formLayout);
 		field.getElement().getClassList().add("full-width");
 	}
 
+	//Calls after the constructor
 	@Override
 	public void afterNavigation(AfterNavigationEvent event) {
 
-		// Lazy init of the grid items, happens only when we are sure the view will be
-		// shown to the user
-		channel.setItems(this.channelConfigDao.findAll());
+		channel.setItems(this.channelConfigDao.getGrid());
 	}
 
+	//Set Form Field Values
 	private void populateForm(ChannelConfig value) {
 
-		// Value can be null as well, that clears the form
+		//if value is null, then it clear the form value
 		binder.readBean(value);
 		this.channelConfig = value;
 	}

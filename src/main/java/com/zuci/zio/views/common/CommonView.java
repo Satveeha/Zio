@@ -1,4 +1,4 @@
-package com.zuci.zio.views.commonconfigview;
+package com.zuci.zio.views.common;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import com.zuci.zio.dao.CommonConfigDao;
@@ -7,7 +7,6 @@ import com.vaadin.flow.component.AbstractField;
 import com.vaadin.flow.component.Html;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
-import com.vaadin.flow.component.charts.model.Label;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.formlayout.FormLayout;
@@ -17,12 +16,11 @@ import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.NativeButton;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
-import com.vaadin.flow.component.splitlayout.SplitLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.provider.ListDataProvider;
-import com.vaadin.flow.function.ValueProvider;
 import com.vaadin.flow.router.AfterNavigationEvent;
 import com.vaadin.flow.router.AfterNavigationObserver;
 import com.vaadin.flow.router.PageTitle;
@@ -33,32 +31,38 @@ import com.zuci.zio.views.main.MainView;
 @PageTitle("Commons")
 //@CssImport("styles/views/commonconfigview/commons-run-console-run-console-view.css")
 @CssImport(value = "./styles/my-grid-styles.css", themeFor = "vaadin-grid")
-public class CommonConfigView extends Div implements AfterNavigationObserver {
+public class CommonView extends Div implements AfterNavigationObserver {
 
 	@Autowired
 	private static CommonConfigDao commonConfigDao;
 
+	//Grid Variable
 	private Grid<CommonConfig> commons;
 
+	//Fields for configuration form
 	private TextField variable = new TextField();
 	private TextField value = new TextField();
-
 	private Button cancel = new Button("Cancel");
 	private Button save = new Button("Save");
 	private Button add = new Button("Add");
-
-	private Binder<CommonConfig> binder;
-
-	// private SplitLayout splitLayout;
-
-	private CommonConfig commonConfig;
-
+	
+	//Page layout in horizontal
 	private HorizontalLayout horizontalLayout;
 
-	public CommonConfigView(CommonConfigDao commonConfigDao) {
+	//Binder binds the object
+	private Binder<CommonConfig> binder;
+	private CommonConfig commonConfig;
+
+	//Constructor
+	public CommonView(CommonConfigDao commonConfigDao) {
 
 		this.commonConfigDao = commonConfigDao;
+		
 		setId("commons-run-console-run-console-view");
+		
+		horizontalLayout = new HorizontalLayout();
+		horizontalLayout.setHeightFull();
+		horizontalLayout.setWidthFull();
 
 		// Configure Grid
 		commons = new Grid<>();
@@ -77,22 +81,23 @@ public class CommonConfigView extends Div implements AfterNavigationObserver {
 		commons.addComponentColumn(item -> createTrashIcon(commons, item)).setHeader(new Html(
 				"<div style='font-weight:bold;font-size:16px;text-orientation: mixed;background:#f8ca34;color:#4b483f'></div>"));
 
-		// when a row is selected or deselected, populate form
 		commons.asSingleSelect().addValueChangeListener(event -> populateForm(event.getValue()));
 
 		// Configure Form
 		binder = new Binder<>(CommonConfig.class);
-
-		// Bind fields. This where you'd define e.g. validation rules
 		binder.bindInstanceFields(this);
 
 		// the grid valueChangeEvent will clear the form too
-		cancel.addClickListener(e -> commons.asSingleSelect().clear());
+		cancel.addClickListener(e -> populateForm(new CommonConfig()));
 
 		save.addClickListener(e -> {
 
-			// Notification.show("Not implemented");
 			if (this.commonConfig == null) {
+				this.commonConfig = new CommonConfig();
+				this.commonConfig.setId(0L);
+				this.commonConfig.setActive("Y");
+				this.commonConfig.setVersion(0);
+			}else if(this.commonConfig.getId() == null) {
 				this.commonConfig = new CommonConfig();
 				this.commonConfig.setId(0L);
 				this.commonConfig.setActive("Y");
@@ -105,9 +110,16 @@ public class CommonConfigView extends Div implements AfterNavigationObserver {
 			this.commonConfig.setVariable(updatedVariable);
 			this.commonConfig.setValue(updatedValue);
 
-			this.commonConfigDao.insert(this.commonConfig);
+			CommonConfig insertData = this.commonConfigDao.insert(this.commonConfig);
+			
+			if(insertData != null) {
+				Notification.show("Saved Successfully!");
+				commons.setItems(commonConfigDao.findAll());
+				populateForm(new CommonConfig());
+			}else {
+				Notification.show("Saved Failure!");
+			}
 
-			commons.setItems(commonConfigDao.findAll());
 		});
 
 		add.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
@@ -120,19 +132,13 @@ public class CommonConfigView extends Div implements AfterNavigationObserver {
 			commons.asSingleSelect().clear();
 		});
 
-		// splitLayout = new SplitLayout();
-		// splitLayout.setSizeFull();
-
-		horizontalLayout = new HorizontalLayout();
-		horizontalLayout.setHeightFull();
-		horizontalLayout.setWidthFull();
-
 		createGridLayout(horizontalLayout);
 		createEditorLayout(horizontalLayout);
 
 		add(horizontalLayout);
 	}
 
+	//Create trash icon in grid
 	private Icon createTrashIcon(Grid<CommonConfig> grid, CommonConfig item) {
 
 		Icon trashIcon = new Icon(VaadinIcon.TRASH);
@@ -146,25 +152,37 @@ public class CommonConfigView extends Div implements AfterNavigationObserver {
 		return trashIcon;
 	}
 
+	//Conformation dialog for delete
 	private void deleteConfirmDialog(Grid<CommonConfig> grid, CommonConfig item) {
+		
 		Dialog dialog = new Dialog();
 
 		dialog.setCloseOnEsc(false);
 		dialog.setCloseOnOutsideClick(false);
 
-		Label messageLabel = new Label();
-
 		NativeButton confirmButton = new NativeButton("Confirm", event -> {
-			messageLabel.setText("Confirmed!");
-			this.commonConfigDao.insertAudit(item);
-			this.commonConfigDao.deleteById(item.getId());
-			populateForm(new CommonConfig());
-			dialog.close();
+			
+			CommonConfig insertValue = this.commonConfigDao.insertAudit(item);
+			
+			if(insertValue != null) {
+				if(this.commonConfigDao.deleteById(item.getId())) {
+					Notification.show("Deleted Successfully!");
+					populateForm(new CommonConfig());
+					dialog.close();
 
-			ListDataProvider<CommonConfig> dataProvider = (ListDataProvider<CommonConfig>) grid.getDataProvider();
-			dataProvider.getItems().remove(item);
-			dataProvider.refreshAll();
+					ListDataProvider<CommonConfig> dataProvider = (ListDataProvider<CommonConfig>) grid.getDataProvider();
+					dataProvider.getItems().remove(item);
+					dataProvider.refreshAll();
+				}else {
+					Notification.show("Delete Failed!");
+				}
+				
+			}else {
+				Notification.show("Delete Failed!");
+			}
+			
 		});
+		
 		confirmButton.getStyle().set("color", "#4b483f");
 		confirmButton.getStyle().set("background-color", "#58d2cc");
 		confirmButton.getStyle().set("padding", "0.5rem");
@@ -175,7 +193,7 @@ public class CommonConfigView extends Div implements AfterNavigationObserver {
 		confirmButton.getStyle().set("font-weight", "600");
 
 		NativeButton cancelButton = new NativeButton("Cancel", event -> {
-			messageLabel.setText("Cancelled...");
+			populateForm(new CommonConfig());
 			dialog.close();
 		});
 
@@ -193,6 +211,7 @@ public class CommonConfigView extends Div implements AfterNavigationObserver {
 		dialog.open();
 	}
 
+	//Create form
 	private void createEditorLayout(HorizontalLayout horizontalLayout) {
 
 		Div editorDiv = new Div();
@@ -210,6 +229,7 @@ public class CommonConfigView extends Div implements AfterNavigationObserver {
 		horizontalLayout.add(editorDiv);
 	}
 
+	//Create button layout
 	private void createButtonLayout(Div editorDiv) {
 
 		HorizontalLayout buttonLayout = new HorizontalLayout();
@@ -229,6 +249,7 @@ public class CommonConfigView extends Div implements AfterNavigationObserver {
 		editorDiv.add(buttonLayout);
 	}
 
+	//Create grid layout
 	private void createGridLayout(HorizontalLayout horizontalLayout) {
 
 		Div wrapper = new Div();
@@ -240,6 +261,7 @@ public class CommonConfigView extends Div implements AfterNavigationObserver {
 		wrapper.add(commons);
 	}
 
+	//Add fields to form
 	private void addFormItem(Div wrapper, FormLayout formLayout, AbstractField field, String fieldName) {
 
 		formLayout.addFormItem(field, fieldName);
@@ -249,6 +271,7 @@ public class CommonConfigView extends Div implements AfterNavigationObserver {
 		field.getElement().getClassList().add("full-width");
 	}
 
+	//Call after the execution of constructor
 	@Override
 	public void afterNavigation(AfterNavigationEvent event) {
 
@@ -257,11 +280,10 @@ public class CommonConfigView extends Div implements AfterNavigationObserver {
 		commons.setItems(commonConfigDao.findAll());
 	}
 
+	//Set Form Field Values
 	private void populateForm(CommonConfig value) {
 
-		// Value can be null as well, that clears the form
-		// createEditorLayout(horizontalLayout);
-
+		//if value is null, then it clear the form value
 		binder.readBean(value);
 
 		this.commonConfig = value;

@@ -16,5 +16,5 @@ public interface CommonConfigDao {
 
 	public List<CommonConfig> findAll();
 	
-	public void deleteById(Long id); 
+	public Boolean deleteById(Long id); 
 }

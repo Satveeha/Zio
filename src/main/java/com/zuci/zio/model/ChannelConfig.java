@@ -16,8 +16,6 @@ public class ChannelConfig {
 	
 	Integer version;
 	
-	String alias;
-	
 	Integer seedConfig;
 
 	public Long getId() {
@@ -74,14 +72,6 @@ public class ChannelConfig {
 
 	public void setVersion(Integer version) {
 		this.version = version;
-	}
-
-	public String getAlias() {
-		return alias;
-	}
-
-	public void setAlias(String alias) {
-		this.alias = alias;
 	}
 
 	public Integer getSeedConfig() {
