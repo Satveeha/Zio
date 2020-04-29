@@ -16,6 +16,8 @@ import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
@@ -33,7 +35,6 @@ import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.upload.Upload;
 import com.vaadin.flow.component.upload.receivers.MemoryBuffer;
-import com.vaadin.flow.data.provider.ListDataProvider;
 import com.vaadin.flow.router.AfterNavigationEvent;
 import com.vaadin.flow.router.AfterNavigationObserver;
 import com.vaadin.flow.router.PageTitle;
@@ -44,10 +45,10 @@ import com.zuci.zio.dao.PipelineConfigDao;
 import com.zuci.zio.model.EditPipelineConfig;
 import com.zuci.zio.views.main.MainView;
 
-@Route(value = "upload", layout = MainView.class)
+@Route(value = "upload-screen-one", layout = MainView.class)
 @PageTitle("Upload")
 @CssImport(value = "./styles/my-grid-styles.css", themeFor = "vaadin-grid")
-public class UploadView extends Div implements AfterNavigationObserver {
+public class UploadScreenOne extends Div implements AfterNavigationObserver {
 	
 	@Autowired
 	private static PipelineConfigDao pipelineConfigDao;
@@ -63,9 +64,17 @@ public class UploadView extends Div implements AfterNavigationObserver {
 	
 	private String extractFolderPath = "";
 	
-	public UploadView(PipelineConfigDao pipelineConfigDao) throws IOException {
+	private Button next = new Button("Next");
+	
+	public UploadScreenOne(PipelineConfigDao pipelineConfigDao) throws IOException {
 		
 		this.pipelineConfigDao = pipelineConfigDao;
+		
+		next.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+		next.getStyle().set("margin-left", "90%");
+		next.getStyle().set("background", "#58d2cc");
+		next.getStyle().set("border-radius", "6px");
+		next.getStyle().set("color", "#4b483f");
 		
 		verticalLayout = new VerticalLayout();
 		verticalLayout.setHeightFull();
@@ -241,6 +250,8 @@ public class UploadView extends Div implements AfterNavigationObserver {
 		addIcon.addClickListener(
 		        event -> 
 		        {
+		        	verticalLayout.remove(next);
+		        	
 		        	HorizontalLayout addField = new HorizontalLayout();
 		    		
 		    		TextField localVariableField = new TextField();
@@ -277,6 +288,7 @@ public class UploadView extends Div implements AfterNavigationObserver {
 		    		addField.add(removeIcon);
 		    		
 		    		verticalLayout.add(addField);
+		    		verticalLayout.add(next);
 		    		
 		        	Notification.show("added");
 		        });
@@ -353,6 +365,7 @@ public class UploadView extends Div implements AfterNavigationObserver {
 		horizontalLayout.add(valueField);*/
 		
 		verticalLayout.add(horizontalLayout);
+		verticalLayout.add(next);
 		
 	}
 	

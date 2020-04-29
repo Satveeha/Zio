@@ -8,7 +8,6 @@ import com.vaadin.flow.component.dependency.JsModule;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.html.Label;
-import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.router.RouterLink;
@@ -22,7 +21,7 @@ import com.zuci.zio.views.common.CommonView;
 import com.zuci.zio.views.pipeline.PipelineView;
 import com.zuci.zio.views.pipelineDefinition.PipelineDefinitionView;
 import com.zuci.zio.views.runconsole.RunConsoleView;
-import com.zuci.zio.views.upload.UploadView;
+import com.zuci.zio.views.upload.UploadScreenOne;
 
 /**
  * The main view is a top-level placeholder for other views.
@@ -252,7 +251,7 @@ public class MainView extends AppLayout {
 				manageOrRunChannelLabel.addClassName("nav-drawer-menus");
 				auditTrailLabel.addClassName("nav-drawer-menus");
 				runConsoleLabel.addClassName("nav-drawer-menus");
-				getUI().get().navigate(UploadView.class);
+				getUI().get().navigate(UploadScreenOne.class);
 				// setContent(new EditView().gridView());
 
 			} catch (Exception e) {
