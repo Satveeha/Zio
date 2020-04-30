@@ -1,0 +1,36 @@
+.upload-layout{
+	background: #fff;
+    width: 50%;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    height: auto;
+    font-family: Lato, sans-serif;
+}
+
+:host(:not([theme~="tertiary"]):not([theme~="primary"]):not([theme~="error"]):not([theme~="success"])) {
+    color: var(--lumo-body-text-color);
+    background-image: none !important;
+    box-shadow: none !important;
+}
+
+:host(:not([theme~="tertiary"])) {
+    background-image: none !important;
+    box-shadow: none !important;
+    background: #fdc133;
+    font-family: Lato, sans-serif;
+}
+
+[part="input-field"], [part="input-field"] ::slotted(textarea) {
+    padding-top: calc((var(--lumo-text-field-size) - 1em * var(--lumo-line-height-s)) / 2);
+    padding-bottom: calc((var(--lumo-text-field-size) - 1em * var(--lumo-line-height-s)) / 2);
+    height: auto;
+    box-sizing: border-box;
+    transition: background-color 0.1s;
+    line-height: var(--lumo-line-height-s);
+    border-radius:0px;
+}
+
+
+
+
