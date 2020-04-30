@@ -52,6 +52,8 @@ import com.zuci.zio.views.main.MainView;
 @CssImport(value = "./styles/upload.css")
 @CssImport(value = "./styles/upload.css", themeFor = "vaadin-button")
 @CssImport(value = "./styles/tabs.css", themeFor = "vaadin-tabs")
+@CssImport(value = "./styles/text-area.css", themeFor = "vaadin-text-area")
+@CssImport(value = "./styles/text-field.css", themeFor = "vaadin-text-field")
 public class UploadScreenOne extends Div implements AfterNavigationObserver {
 
 	@Autowired
@@ -68,17 +70,18 @@ public class UploadScreenOne extends Div implements AfterNavigationObserver {
 
 	private String extractFolderPath = "";
 
-	private Button next = new Button("Next");
+	private Button next = new Button("Next", new Icon(VaadinIcon.ANGLE_DOUBLE_RIGHT));
 
 	public UploadScreenOne(PipelineConfigDao pipelineConfigDao) throws IOException {
 
 		this.pipelineConfigDao = pipelineConfigDao;
-
+		next.setIconAfterText(true);
 		next.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-		next.getStyle().set("margin-left", "90%");
-		next.getStyle().set("background", "#58d2cc");
-		next.getStyle().set("border-radius", "6px");
-		next.getStyle().set("color", "#4b483f");
+		next.getStyle().set("margin-left", "auto");
+		next.addClassName("delete-button");
+//		next.getStyle().set("background", "#58d2cc");
+//		next.getStyle().set("border-radius", "6px");
+//		next.getStyle().set("color", "#4b483f");
 
 		verticalLayout = new VerticalLayout();
 		verticalLayout.setHeightFull();
@@ -256,15 +259,18 @@ public class UploadScreenOne extends Div implements AfterNavigationObserver {
 	public void setConfigurationComponent() {
 
 		HorizontalLayout horizontalLayout = new HorizontalLayout();
-
+		horizontalLayout.addClassName("add-variable-layout");
 		Label addLabel = new Label("Add Variable");
 
 		Icon addIcon = new Icon(VaadinIcon.PLUS);
 		addIcon.getStyle().set("cursor", "pointer");
+		addIcon.getStyle().set("width", "20px");
+		addIcon.getStyle().set("height", "20px");
 		addIcon.addClickListener(event -> {
 			verticalLayout.remove(next);
 
 			HorizontalLayout addField = new HorizontalLayout();
+			addField.getStyle().set("display", "table-column-group");
 
 			TextField localVariableField = new TextField();
 			localVariableField.setPlaceholder("Variable");
@@ -274,13 +280,17 @@ public class UploadScreenOne extends Div implements AfterNavigationObserver {
 
 			Icon saveIcon = new Icon(VaadinIcon.FILE_O);
 			saveIcon.getStyle().set("cursor", "pointer");
+			saveIcon.getStyle().set("width", "20px");
+			saveIcon.getStyle().set("height", "20px");
 			saveIcon.addClickListener(saveEvent -> {
 				saveVariable(localVariableField.getValue(), localValueField.getValue());
 				Notification.show(localVariableField.getValue());
 			});
 
-			Icon removeIcon = new Icon(VaadinIcon.CLOSE);
+			Icon removeIcon = new Icon(VaadinIcon.TRASH);
 			removeIcon.getStyle().set("cursor", "pointer");
+			removeIcon.getStyle().set("width", "20px");
+			removeIcon.getStyle().set("height", "20px");
 			removeIcon.addClickListener(removeEvent -> {
 				addField.remove(localVariableField);
 				addField.remove(localValueField);
@@ -309,6 +319,7 @@ public class UploadScreenOne extends Div implements AfterNavigationObserver {
 
 		variableList.forEach((temp) -> {
 			HorizontalLayout addField = new HorizontalLayout();
+			addField.getStyle().set("display", "table-column-group");
 
 			TextField localVariableField = new TextField();
 			localVariableField.setPlaceholder("Variable");
@@ -330,13 +341,17 @@ public class UploadScreenOne extends Div implements AfterNavigationObserver {
 
 			Icon saveIcon = new Icon(VaadinIcon.FILE_O);
 			saveIcon.getStyle().set("cursor", "pointer");
+			saveIcon.getStyle().set("width", "20px");
+			saveIcon.getStyle().set("height", "20px");
 			saveIcon.addClickListener(saveEvent -> {
 				saveVariable(localVariableField.getValue(), localValueField.getValue());
 				Notification.show(localVariableField.getValue());
 			});
 
-			Icon removeIcon = new Icon(VaadinIcon.CLOSE);
+			Icon removeIcon = new Icon(VaadinIcon.TRASH);
 			removeIcon.getStyle().set("cursor", "pointer");
+			removeIcon.getStyle().set("width", "20px");
+			removeIcon.getStyle().set("height", "20px");
 			removeIcon.addClickListener(removeEvent -> {
 				addField.remove(localVariableField);
 				addField.remove(localValueField);
@@ -391,9 +406,16 @@ public class UploadScreenOne extends Div implements AfterNavigationObserver {
 		dialog.setCloseOnEsc(false);
 		dialog.setCloseOnOutsideClick(false);
 
+		VerticalLayout dialogLayout = new VerticalLayout();
+
+		HorizontalLayout messageLabelLayout = new HorizontalLayout();
+		messageLabelLayout.setWidthFull();
+		HorizontalLayout buttonLayout = new HorizontalLayout();
+		buttonLayout.setWidthFull();
 		Label messageLabel = new Label();
 		messageLabel.setText("Variable already exists, Do you want to save?");
-
+		messageLabel.addClassName("label-bold");
+		messageLabelLayout.add(messageLabel);
 		NativeButton confirmButton = new NativeButton("Confirm", event -> {
 
 			if (this.pipelineConfigDao.updateVariableByPipeline(pipelineName, variable, value)) {
@@ -405,29 +427,18 @@ public class UploadScreenOne extends Div implements AfterNavigationObserver {
 			dialog.close();
 		});
 
-		confirmButton.getStyle().set("color", "#4b483f");
-		confirmButton.getStyle().set("background-color", "#58d2cc");
-		confirmButton.getStyle().set("padding", "0.5rem");
-		confirmButton.getStyle().set("border-radius", "6px");
-		confirmButton.getStyle().set("margin", "20px");
-		confirmButton.getStyle().set("font-size", "16px");
-		confirmButton.getStyle().set("border", "none");
-		confirmButton.getStyle().set("font-weight", "600");
-
+		confirmButton.addClassName("add-button");
+		confirmButton.getStyle().set("margin-left", "auto");
 		NativeButton cancelButton = new NativeButton("Cancel", event -> {
 			dialog.close();
 		});
 
-		cancelButton.getStyle().set("color", "#4b483f");
-		cancelButton.getStyle().set("background-color", "#58d2cc");
-		cancelButton.getStyle().set("padding", "0.5rem");
-		cancelButton.getStyle().set("border-radius", "6px");
-		cancelButton.getStyle().set("font-size", "16px");
-		cancelButton.getStyle().set("margin", "5px");
-		cancelButton.getStyle().set("border", "none");
-		cancelButton.getStyle().set("font-weight", "600");
+		cancelButton.addClassName("delete-button");
+		cancelButton.getStyle().set("margin-right", "auto");
 
-		dialog.add(messageLabel, confirmButton, cancelButton);
+		buttonLayout.add(confirmButton, cancelButton);
+		dialogLayout.add(messageLabelLayout, buttonLayout);
+		dialog.add(dialogLayout);
 
 		dialog.open();
 	}
