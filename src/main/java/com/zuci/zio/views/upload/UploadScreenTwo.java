@@ -139,7 +139,7 @@ public class UploadScreenTwo extends AppLayout {
 		next.addClassName("delete-button");
 
 		next.addClickListener(e -> {
-			setContent(new UploadScreenThree(this.channelConfigDao,this.pipelineName));
+			setContent(new UploadScreenThree(this.pipelineConfigDao,this.channelConfigDao,this.commonConfigDao,this.pipelineName,filePath));
 		});
 
 		prev.setIconAfterText(true);

@@ -21,6 +21,7 @@ import org.springframework.stereotype.Repository;
 import com.zuci.zio.dao.ChannelConfigDao;
 import com.zuci.zio.dto.InstanceGridDTO;
 import com.zuci.zio.dto.PipelineVariableDTO;
+import com.zuci.zio.dto.UploadPageThreeMasterDTO;
 import com.zuci.zio.dto.InstanceGridDTO;
 import com.zuci.zio.model.ChannelConfig;
 import com.zuci.zio.model.ChannelMaster;
@@ -34,6 +35,8 @@ public class ChannelConfigDaoImple implements ChannelConfigDao{
 	private final String FETCH_ALL_BY_CHANNEL = "select * from spw_instance_config where instance = ?";
 	
 	private final String FETCH_ALL_BY_PIPELINE = "select * from spw_instance_config where process = ?";
+	
+	private final String FETCH_CHANNEL_ALL_BY_PIPELINE_CHANNEL = "select * from spw_instance_config where process = ? and instance = ?";
 	
 	private final String FETCH_ALL_BY_CHANNEL_PIPELINE = "select * from spw_instance where process = ? and instance = ?";
 	
@@ -52,6 +55,8 @@ public class ChannelConfigDaoImple implements ChannelConfigDao{
 	private final String FETCH_DISTINCT_COMMON_VARIABLES = "select distinct variable from spw_common_config";
 	
 	private final String FETCH_PROCESS_VARIABLE = "select process, GROUP_CONCAT(variable) as variables from spw_process_config GROUP BY process";
+	
+	private final String FETCH_CHANNEL_VARIABLE_COUNT = "select c.instance, count(c.instance) as variableCount from spw_instance_config c inner join spw_instance m on c.instance = m.instance and m.alias = ? group by c.instance";
 	
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
@@ -229,12 +234,12 @@ public class ChannelConfigDaoImple implements ChannelConfigDao{
 	}
 
 	@Override
-	public List<ChannelMaster> findByPipelineAndChannel(String pipeline, String Channel) {
+	public List<ChannelMaster> findByPipelineAndChannel(String pipeline, String channel) {
 		
 		List<ChannelMaster> returnData = new ArrayList<ChannelMaster>();
 		
 		try {
-			returnData = jdbcTemplate.query(FETCH_ALL_BY_CHANNEL_PIPELINE, new Object[]{pipeline,Channel}, new BeanPropertyRowMapper(ChannelMaster.class));
+			returnData = jdbcTemplate.query(FETCH_ALL_BY_CHANNEL_PIPELINE, new Object[]{pipeline,channel}, new BeanPropertyRowMapper(ChannelMaster.class));
 		} catch (Exception e) {
 			System.out.println(e);
 			return returnData;
@@ -329,6 +334,36 @@ public class ChannelConfigDaoImple implements ChannelConfigDao{
 		
 		try {
 			returnData = jdbcTemplate.query(FETCH_MASTER_BY_PIPELINE, new Object[]{pipeline}, new BeanPropertyRowMapper(ChannelMaster.class));
+		} catch (Exception e) {
+			System.out.println(e);
+			return returnData;
+		}
+		
+		return returnData;
+	}
+
+	@Override
+	public List<UploadPageThreeMasterDTO> groupChannelByAlias(String alias) {
+		
+		List<UploadPageThreeMasterDTO> returnData = new ArrayList<UploadPageThreeMasterDTO>();
+		
+		try {
+			returnData = jdbcTemplate.query(FETCH_CHANNEL_VARIABLE_COUNT, new Object[]{alias}, new BeanPropertyRowMapper(UploadPageThreeMasterDTO.class));
+		} catch (Exception e) {
+			System.out.println(e);
+			return returnData;
+		}
+		
+		return returnData;
+	}
+
+	@Override
+	public List<ChannelConfig> findChannelByPipelineAndChannel(String pipeline, String channel) {
+		
+		List<ChannelConfig> returnData = new ArrayList<ChannelConfig>();
+		
+		try {
+			returnData = jdbcTemplate.query(FETCH_CHANNEL_ALL_BY_PIPELINE_CHANNEL, new Object[]{pipeline,channel}, new BeanPropertyRowMapper(ChannelConfig.class));
 		} catch (Exception e) {
 			System.out.println(e);
 			return returnData;

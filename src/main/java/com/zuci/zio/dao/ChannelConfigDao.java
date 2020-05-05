@@ -3,6 +3,7 @@ package com.zuci.zio.dao;
 import java.util.List;
 
 import com.zuci.zio.dto.InstanceGridDTO;
+import com.zuci.zio.dto.UploadPageThreeMasterDTO;
 import com.zuci.zio.model.ChannelConfig;
 import com.zuci.zio.model.ChannelMaster;
 
@@ -16,9 +17,13 @@ public interface ChannelConfigDao {
 	
 	public List<ChannelConfig> findByPipeline(String pipeline);
 	
-	public List<ChannelMaster> findByPipelineAndChannel(String pipeline, String Channel);
+	public List<ChannelConfig> findChannelByPipelineAndChannel(String pipeline, String channel);
+	
+	public List<ChannelMaster> findByPipelineAndChannel(String pipeline, String channel);
 	
 	public List<ChannelMaster> findMasterByPipeline(String pipeline);
+	
+	public List<UploadPageThreeMasterDTO> groupChannelByAlias(String alias);
 	
 	public ChannelConfig insert(final ChannelConfig channelConfig);
 	
