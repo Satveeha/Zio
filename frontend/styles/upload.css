@@ -6,6 +6,9 @@
     text-align: center;
     height: auto;
     font-family: Lato, sans-serif;
+    display:table;
+    padding-bottom: 2%;
+    padding-top: 2%;
 }
 
 :host(:not([theme~="tertiary"]):not([theme~="primary"]):not([theme~="error"]):not([theme~="success"])) {
