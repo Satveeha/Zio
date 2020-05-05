@@ -13,9 +13,11 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.apache.commons.io.FileUtils;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dependency.CssImport;
@@ -36,14 +38,19 @@ import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.upload.Upload;
 import com.vaadin.flow.component.upload.receivers.MemoryBuffer;
+import com.vaadin.flow.data.provider.ListDataProvider;
 import com.vaadin.flow.router.AfterNavigationEvent;
 import com.vaadin.flow.router.AfterNavigationObserver;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.zuci.zio.commonFuntions.ConfigRead;
 import com.zuci.zio.commonFuntions.ZipFileHandling;
+import com.zuci.zio.dao.ChannelConfigDao;
+import com.zuci.zio.dao.CommonConfigDao;
 import com.zuci.zio.dao.PipelineConfigDao;
+import com.zuci.zio.model.CommonConfig;
 import com.zuci.zio.model.EditPipelineConfig;
+import com.zuci.zio.model.PipelineMaster;
 import com.zuci.zio.views.main.MainView;
 
 @Route(value = "upload-screen-one", layout = MainView.class)
@@ -54,10 +61,16 @@ import com.zuci.zio.views.main.MainView;
 @CssImport(value = "./styles/tabs.css", themeFor = "vaadin-tabs")
 @CssImport(value = "./styles/text-area.css", themeFor = "vaadin-text-area")
 @CssImport(value = "./styles/text-field.css", themeFor = "vaadin-text-field")
-public class UploadScreenOne extends Div implements AfterNavigationObserver {
+public class UploadScreenOne extends AppLayout {
 
 	@Autowired
 	private static PipelineConfigDao pipelineConfigDao;
+	
+	@Autowired
+	private static CommonConfigDao commonConfigDao;
+	
+	@Autowired
+	private static ChannelConfigDao channelConfigDao;
 
 	private VerticalLayout verticalLayout;
 
@@ -65,34 +78,46 @@ public class UploadScreenOne extends Div implements AfterNavigationObserver {
 	private static String downloadPath = configRead.readProperty("downloadPath");
 
 	private String fileName = "";
-
+	
 	private String pipelineName = "";
 
 	private String extractFolderPath = "";
+	
+	private EditPipelineConfig pipelineConfig;
+	
+	private JSONObject routerData = new JSONObject();
 
 	private Button next = new Button("Next", new Icon(VaadinIcon.ANGLE_DOUBLE_RIGHT));
-
-	public UploadScreenOne(PipelineConfigDao pipelineConfigDao) throws IOException {
+	
+	public UploadScreenOne(PipelineConfigDao pipelineConfigDao, CommonConfigDao commonConfigDao, ChannelConfigDao channelConfigDao, String filePath) throws IOException {
 
 		this.pipelineConfigDao = pipelineConfigDao;
+		this.commonConfigDao = commonConfigDao;
+		this.channelConfigDao = channelConfigDao;
+		
+		extractFolderPath = filePath;
+		
 		next.setIconAfterText(true);
 		next.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 		next.getStyle().set("margin-left", "auto");
 		next.addClassName("delete-button");
-//		next.getStyle().set("background", "#58d2cc");
-//		next.getStyle().set("border-radius", "6px");
-//		next.getStyle().set("color", "#4b483f");
-
+		
+		next.addClickListener(e -> {
+			setContent(new UploadScreenTwo(this.pipelineConfigDao, this.channelConfigDao, this.commonConfigDao, pipelineName, extractFolderPath));
+			//setContent(new UploadScreenTwo());
+			//getUI().get().navigate(UploadScreenTwo.class,pipelineName+"."+fileNameWithoutExtension);
+		});
+		
 		verticalLayout = new VerticalLayout();
 		verticalLayout.setHeightFull();
 		verticalLayout.setWidthFull();
-
+		
 		setUploadComponent();
 
-		add(verticalLayout);
+		setContent(verticalLayout);
 	}
 
-	public void setUploadComponent() {
+	public void setUploadComponent() throws IOException {
 
 		MemoryBuffer memoryBuffer = new MemoryBuffer();
 
@@ -128,7 +153,7 @@ public class UploadScreenOne extends Div implements AfterNavigationObserver {
 				int fileCount = directory.list().length;
 
 				System.out.println(fileCount);
-
+				
 				setTab();
 
 			} catch (IOException e1) {
@@ -138,6 +163,10 @@ public class UploadScreenOne extends Div implements AfterNavigationObserver {
 		});
 
 		verticalLayout.add(upload);
+		
+		if(extractFolderPath != "") {
+			setTab();
+		}
 	}
 
 	void setTab() throws IOException {
@@ -154,8 +183,6 @@ public class UploadScreenOne extends Div implements AfterNavigationObserver {
 		pages.getStyle().set("width", "-webkit-fill-available");
 		pages.getStyle().set("border-radius", "0px");
 
-		// Div rootDiv = new Div();
-
 		TextArea rootTextArea = new TextArea();
 		rootTextArea.getStyle().set("border-radius", "0px");
 
@@ -168,17 +195,13 @@ public class UploadScreenOne extends Div implements AfterNavigationObserver {
 			if (!f.isDirectory()) {
 				data = new String(Files.readAllBytes(Paths.get(f.getAbsolutePath())));
 				pipelineName = f.getName().substring(0, f.getName().lastIndexOf("."));
+				
+				routerData.put("filePath", extractFolderPath);
+				routerData.put("pipelineName", pipelineName);
+				
 				System.out.println(data);
 
-				Tab rootTab = new Tab("Root");
-
-				/*
-				 * rootDiv.setText(data); rootDiv.setVisible(true);
-				 * 
-				 * pages.add(rootDiv);
-				 * 
-				 * tabsToPages.put(rootTab, rootDiv);
-				 */
+				Tab rootTab = new Tab(f.getName());
 
 				rootTextArea.setValue("Root \n" + data);
 				rootTextArea.setHeight("500px");
@@ -209,17 +232,9 @@ public class UploadScreenOne extends Div implements AfterNavigationObserver {
 					if (!subFile.isDirectory()) {
 						data = new String(Files.readAllBytes(Paths.get(subFile.getAbsolutePath())));
 						System.out.println(data);
+						System.out.println(subFile.getName());
 
-						Tab calleeTab = new Tab("Callee " + i);
-
-						/*
-						 * Div calleeDiv = new Div(); calleeDiv.setText(data);
-						 * calleeDiv.setVisible(false);
-						 * 
-						 * pages.add(calleeDiv);
-						 * 
-						 * tabsToPages.put(calleeTab, calleeDiv);
-						 */
+						Tab calleeTab = new Tab(subFile.getName());
 
 						TextArea calleeTextArea = new TextArea();
 						calleeTextArea.setValue("Callee " + i + "\n" + data);
@@ -267,6 +282,11 @@ public class UploadScreenOne extends Div implements AfterNavigationObserver {
 		addIcon.getStyle().set("width", "20px");
 		addIcon.getStyle().set("height", "20px");
 		addIcon.addClickListener(event -> {
+			
+			if(pipelineName == null || pipelineName == "") {
+				next.setEnabled(false);
+			}
+			
 			verticalLayout.remove(next);
 
 			HorizontalLayout addField = new HorizontalLayout();
@@ -284,7 +304,6 @@ public class UploadScreenOne extends Div implements AfterNavigationObserver {
 			saveIcon.getStyle().set("height", "20px");
 			saveIcon.addClickListener(saveEvent -> {
 				saveVariable(localVariableField.getValue(), localValueField.getValue());
-				Notification.show(localVariableField.getValue());
 			});
 
 			Icon removeIcon = new Icon(VaadinIcon.TRASH);
@@ -292,15 +311,23 @@ public class UploadScreenOne extends Div implements AfterNavigationObserver {
 			removeIcon.getStyle().set("width", "20px");
 			removeIcon.getStyle().set("height", "20px");
 			removeIcon.addClickListener(removeEvent -> {
-				addField.remove(localVariableField);
-				addField.remove(localValueField);
-				addField.remove(saveIcon);
-				addField.remove(removeIcon);
-				Notification.show("Removed");
+				deleteConfirmDialog(localVariableField, localValueField, pipelineName, addField, saveIcon, removeIcon);
+			});
+			
+			Button makeCommon = new Button("Make Common");
+			
+			makeCommon.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+			makeCommon.getStyle().set("background", "#58d2cc");
+			makeCommon.getStyle().set("border-radius", "6px");
+			makeCommon.getStyle().set("color", "#4b483f");
+			
+			makeCommon.addClickListener(e -> {
+				makeAsCommon(localVariableField.getValue(), localValueField.getValue());
 			});
 
 			addField.add(localVariableField);
 			addField.add(localValueField);
+			addField.add(makeCommon);
 			addField.add(saveIcon);
 			addField.add(removeIcon);
 
@@ -325,19 +352,9 @@ public class UploadScreenOne extends Div implements AfterNavigationObserver {
 			localVariableField.setPlaceholder("Variable");
 			localVariableField.setValue(temp.getVariable());
 
-			/*
-			 * if(i[0] == 1) { localVariableField.setLabel("Variable"); }
-			 */
-
 			TextField localValueField = new TextField();
 			localValueField.setPlaceholder("Value");
 			localValueField.setValue(temp.getValue());
-
-			/*
-			 * if(i[0] == 1) { localValueField.setLabel("Value"); }
-			 */
-
-			// i[0]= i[0] + 1;
 
 			Icon saveIcon = new Icon(VaadinIcon.FILE_O);
 			saveIcon.getStyle().set("cursor", "pointer");
@@ -345,7 +362,6 @@ public class UploadScreenOne extends Div implements AfterNavigationObserver {
 			saveIcon.getStyle().set("height", "20px");
 			saveIcon.addClickListener(saveEvent -> {
 				saveVariable(localVariableField.getValue(), localValueField.getValue());
-				Notification.show(localVariableField.getValue());
 			});
 
 			Icon removeIcon = new Icon(VaadinIcon.TRASH);
@@ -353,15 +369,23 @@ public class UploadScreenOne extends Div implements AfterNavigationObserver {
 			removeIcon.getStyle().set("width", "20px");
 			removeIcon.getStyle().set("height", "20px");
 			removeIcon.addClickListener(removeEvent -> {
-				addField.remove(localVariableField);
-				addField.remove(localValueField);
-				addField.remove(saveIcon);
-				addField.remove(removeIcon);
-				Notification.show("Removed");
+				deleteConfirmDialog(localVariableField, localValueField, pipelineName, addField, saveIcon, removeIcon);
+			});
+			
+			Button makeCommon = new Button("Make Common");
+			
+			makeCommon.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+			makeCommon.getStyle().set("background", "#58d2cc");
+			makeCommon.getStyle().set("border-radius", "6px");
+			makeCommon.getStyle().set("color", "#4b483f");
+			
+			makeCommon.addClickListener(e -> {
+				makeAsCommon(localVariableField.getValue(), localValueField.getValue());
 			});
 
 			addField.add(localVariableField);
 			addField.add(localValueField);
+			addField.add(makeCommon);
 			addField.add(saveIcon);
 			addField.add(removeIcon);
 
@@ -382,8 +406,87 @@ public class UploadScreenOne extends Div implements AfterNavigationObserver {
 		 */
 
 		verticalLayout.add(horizontalLayout);
+		
+		if(pipelineName == null || pipelineName == "") {
+			next.setEnabled(false);
+		}
+		
 		verticalLayout.add(next);
 
+	}
+	
+	private void makeAsCommon(String variable, String value) {
+		
+		CommonConfig commonConfig = new CommonConfig();
+		
+		commonConfig = new CommonConfig();
+		commonConfig.setId(0L);
+		commonConfig.setActive("Y");
+		commonConfig.setVersion(0);
+		commonConfig.setVariable(variable);
+		commonConfig.setValue(value);
+		
+		CommonConfig insertData = this.commonConfigDao.insert(commonConfig);
+		
+		if(insertData != null) {
+			Notification.show("Saved Successfully!");
+		}else {
+			Notification.show("Saved Failure!");
+		}
+	}
+	
+	//Confirmation Dialog
+	private void deleteConfirmDialog(TextField variable, TextField value, String pipeline, HorizontalLayout addField, Icon saveIcon, Icon removeIcon) {
+		
+		Dialog dialog = new Dialog();
+
+		dialog.setCloseOnEsc(false);
+		dialog.setCloseOnOutsideClick(false);
+
+		Label messageLabel = new Label();
+
+		NativeButton confirmButton = new NativeButton("Confirm", event -> {
+			
+			if(this.pipelineConfigDao.deleteByVariableAndValueAndPipeline(variable.getValue(), value.getValue(), pipelineName)) {
+				addField.remove(variable);
+				addField.remove(value);
+				addField.remove(saveIcon);
+				addField.remove(removeIcon);
+				
+				Notification.show("Deleted Successfully!");
+			}else {
+				Notification.show("Deletion Failure!");
+			}
+			
+			dialog.close();
+			
+		});
+		
+		confirmButton.getStyle().set("color", "#4b483f");
+		confirmButton.getStyle().set("background-color", "#58d2cc");
+		confirmButton.getStyle().set("padding", "0.5rem");
+		confirmButton.getStyle().set("border-radius", "6px");
+		confirmButton.getStyle().set("margin", "20px");
+		confirmButton.getStyle().set("font-size", "16px");
+		confirmButton.getStyle().set("border", "none");
+		confirmButton.getStyle().set("font-weight", "600");
+
+		NativeButton cancelButton = new NativeButton("Cancel", event -> {
+			dialog.close();
+		});
+		
+		cancelButton.getStyle().set("color", "#4b483f");
+		cancelButton.getStyle().set("background-color", "#58d2cc");
+		cancelButton.getStyle().set("padding", "0.5rem");
+		cancelButton.getStyle().set("border-radius", "6px");
+		cancelButton.getStyle().set("font-size", "16px");
+		cancelButton.getStyle().set("margin", "5px");
+		cancelButton.getStyle().set("border", "none");
+		cancelButton.getStyle().set("font-weight", "600");
+
+		dialog.add(confirmButton, cancelButton);
+
+		dialog.open();
 	}
 
 	public void saveVariable(String variable, String value) {
@@ -394,7 +497,71 @@ public class UploadScreenOne extends Div implements AfterNavigationObserver {
 		if (variableList.contains(variable)) {
 			saveConfirmDialog(variable, value);
 		} else {
+			
+			List<PipelineMaster> pipelineMaster = this.pipelineConfigDao.findByPipelineInMaster(pipelineName);
+			
+			if(pipelineMaster == null || pipelineMaster.isEmpty()) {
+				PipelineMaster insertValue = new PipelineMaster();
+				insertValue.setId(0L);
+				insertValue.setProcess(pipelineName);
+				insertValue.setDescription("");
+				insertValue.setShortName("");
+				
+				PipelineMaster insertedData = this.pipelineConfigDao.insertPipeline(insertValue);
+				
+				if(insertedData != null) {
+					
+					this.pipelineConfig = new EditPipelineConfig();
+					
+					this.pipelineConfig.setId(0L);
+					this.pipelineConfig.setVersion(0);
+					this.pipelineConfig.setActive("Y");
+			
+					
+					if(variable == null || variable.equals("") || value == null || value.equals("")) {
+						Notification.show("Variable or Value should not be empty");
+					}else {
+						this.pipelineConfig.setProcess(pipelineName);
+						this.pipelineConfig.setVariable(variable);
+						this.pipelineConfig.setValue(value);
 
+						EditPipelineConfig insertData = this.pipelineConfigDao.insert(this.pipelineConfig);
+						
+						if(insertData != null) {
+							Notification.show("Saved Successfully!");
+						}else {
+							Notification.show("Save Failure!");
+						}
+					}
+				}else {
+					Notification.show("Save Failure!");
+				}
+			}else {
+				
+				this.pipelineConfig = new EditPipelineConfig();
+				
+				this.pipelineConfig.setId(0L);
+				this.pipelineConfig.setVersion(0);
+				this.pipelineConfig.setActive("Y");
+		
+				
+				if(variable == null || variable.equals("") || value == null || value.equals("")) {
+					Notification.show("Variable or Value should not be empty");
+				}else {
+					this.pipelineConfig.setProcess(pipelineName);
+					this.pipelineConfig.setVariable(variable);
+					this.pipelineConfig.setValue(value);
+
+					EditPipelineConfig insertData = this.pipelineConfigDao.insert(this.pipelineConfig);
+					
+					if(insertData != null) {
+						Notification.show("Saved Successfully!");
+					}else {
+						Notification.show("Save Failure!");
+					}
+				}
+			
+			}
 		}
 	}
 
@@ -441,12 +608,6 @@ public class UploadScreenOne extends Div implements AfterNavigationObserver {
 		dialog.add(dialogLayout);
 
 		dialog.open();
-	}
-
-	@Override
-	public void afterNavigation(AfterNavigationEvent event) {
-		// TODO Auto-generated method stub
-
 	}
 
 }

@@ -1,5 +1,7 @@
 package com.zuci.zio.views.main;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.HasComponents;
 import com.vaadin.flow.component.applayout.AppLayout;
@@ -14,7 +16,9 @@ import com.vaadin.flow.router.RouterLink;
 import com.vaadin.flow.server.PWA;
 import com.vaadin.flow.theme.Theme;
 import com.vaadin.flow.theme.lumo.Lumo;
+import com.zuci.zio.dao.ChannelConfigDao;
 import com.zuci.zio.dao.CommonConfigDao;
+import com.zuci.zio.dao.PipelineConfigDao;
 import com.zuci.zio.views.audittrail.AuditTrailView;
 import com.zuci.zio.views.channel.ChannelView;
 import com.zuci.zio.views.common.CommonView;
@@ -22,6 +26,7 @@ import com.zuci.zio.views.pipeline.PipelineView;
 import com.zuci.zio.views.pipelineDefinition.PipelineDefinitionView;
 import com.zuci.zio.views.runconsole.RunConsoleView;
 import com.zuci.zio.views.upload.UploadScreenOne;
+import com.zuci.zio.views.upload.UploadScreenTwo;
 
 /**
  * The main view is a top-level placeholder for other views.
@@ -35,7 +40,20 @@ import com.zuci.zio.views.upload.UploadScreenOne;
 @CssImport(value = "./styles/menubar.css", themeFor = "vaadin-menu-bar")
 public class MainView extends AppLayout {
 
-	public MainView(CommonConfigDao commonConfigDao) {
+	@Autowired
+	private static PipelineConfigDao pipelineConfigDao;
+	
+	@Autowired
+	private static CommonConfigDao commonConfigDao;
+	
+	@Autowired
+	private static ChannelConfigDao channelConfigDao;
+	
+	public MainView(PipelineConfigDao pipelineConfigDao, CommonConfigDao commonConfigDao, ChannelConfigDao channelConfigDao) {
+		
+		this.pipelineConfigDao = pipelineConfigDao;
+		this.commonConfigDao = commonConfigDao;
+		this.channelConfigDao = channelConfigDao;
 
 		setPrimarySection(Section.DRAWER);
 		// addToNavbar(true, new DrawerToggle());
@@ -251,7 +269,8 @@ public class MainView extends AppLayout {
 				manageOrRunChannelLabel.addClassName("nav-drawer-menus");
 				auditTrailLabel.addClassName("nav-drawer-menus");
 				runConsoleLabel.addClassName("nav-drawer-menus");
-				getUI().get().navigate(UploadScreenOne.class);
+				setContent(new UploadScreenOne(this.pipelineConfigDao,this.commonConfigDao,this.channelConfigDao,""));
+				//getUI().get().navigate(UploadScreenOne.class);
 				// setContent(new EditView().gridView());
 
 			} catch (Exception e) {

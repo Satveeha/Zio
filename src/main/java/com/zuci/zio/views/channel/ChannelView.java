@@ -1,9 +1,12 @@
 package com.zuci.zio.views.channel;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import com.zuci.zio.dao.ChannelConfigDao;
 import com.zuci.zio.dto.InstanceGridDTO;
 import com.zuci.zio.model.ChannelConfig;
+import com.zuci.zio.model.ChannelMaster;
 import com.vaadin.flow.component.AbstractField;
 import com.vaadin.flow.component.Html;
 import com.vaadin.flow.component.button.Button;
@@ -121,7 +124,8 @@ public class ChannelView extends Div implements AfterNavigationObserver {
 		ChannelConfig initializeProcessInstance = new ChannelConfig();
 		initializeProcessInstance.setProcess(item.getProcess());
 		initializeProcessInstance.setInstance(item.getInstance());
-		populateForm(initializeProcessInstance);
+		System.out.println(item.getInstance());
+		//populateForm(initializeProcessInstance);
 
 		Div content = new Div();
 		content.addClassName("my-style");
@@ -168,6 +172,8 @@ public class ChannelView extends Div implements AfterNavigationObserver {
 		dialog.setHeight("500px");
 
 		save.addClickListener(e -> {
+			
+			System.out.println(item.getInstance());
 
 			if (this.channelConfig == null) {
 				this.channelConfig = new ChannelConfig();
@@ -184,27 +190,67 @@ public class ChannelView extends Div implements AfterNavigationObserver {
 			}
 			
 			if(variable.getValue() == null || variable.getValue().equals("") || value.getValue() == null || value.getValue().equals("")) {
-				Notification.show("Variable or Value should not be empty");
+				Notification.show("Variable, Value should not be empty");
 			}else {
+				
 				this.channelConfig.setInstance(this.instance.getValue());
 				this.channelConfig.setProcess(this.process.getValue());
 				this.channelConfig.setVariable(variable.getValue());
 				this.channelConfig.setValue(value.getValue());
-
-				ChannelConfig insertData = this.channelConfigDao.insert(this.channelConfig);
 				
-				if(insertData != null) {
-					editChannelConfig.setItems(channelConfigDao.findByChannel(item.getInstance()));
+				List<ChannelMaster> masterInstance = this.channelConfigDao.findByPipelineAndChannel(this.process.getValue(), this.instance.getValue());
+				
+				if(masterInstance == null || masterInstance.isEmpty()) {
+					ChannelMaster newInstance = new ChannelMaster();
+					newInstance.setId(0L);
+					newInstance.setProcess(this.process.getValue());
+					newInstance.setInstance(this.instance.getValue());
+					newInstance.setAlias("");
+					newInstance.setDescription("");
+					newInstance.setShortName("");
 					
-					ChannelConfig initializeProcessInstanceData = new ChannelConfig();
-					initializeProcessInstanceData.setProcess(item.getProcess());
-					initializeProcessInstanceData.setInstance(item.getInstance());
-					populateForm(initializeProcessInstanceData);
+					ChannelMaster insertedInstance = this.channelConfigDao.insertInstance(newInstance);
 					
-					Notification.show("Saved Successfully!");
+					if(insertedInstance != null) {
+						
+						ChannelConfig insertData = this.channelConfigDao.insert(this.channelConfig);
+						
+						if(insertData != null) {
+							editChannelConfig.setItems(channelConfigDao.findByChannel(this.instance.getValue()));
+							
+							ChannelConfig initializeProcessInstanceData = new ChannelConfig();
+							initializeProcessInstanceData.setProcess(this.process.getValue());
+							initializeProcessInstanceData.setInstance(this.instance.getValue());
+							populateForm(initializeProcessInstanceData);
+							
+							Notification.show("Saved Successfully!");
+						}else {
+							Notification.show("Saved Failure!");
+						}
+						
+					}else {
+						Notification.show("Saved Failure!");
+					}
 				}else {
-					Notification.show("Saved Failure!");
+					
+					ChannelConfig insertData = this.channelConfigDao.insert(this.channelConfig);
+					
+					if(insertData != null) {
+						editChannelConfig.setItems(channelConfigDao.findByChannel(this.instance.getValue()));
+						
+						System.out.println(item.getInstance());
+						
+						ChannelConfig initializeProcessInstanceData = new ChannelConfig();
+						initializeProcessInstanceData.setProcess(this.process.getValue());
+						initializeProcessInstanceData.setInstance(this.instance.getValue());
+						populateForm(initializeProcessInstanceData);
+						
+						Notification.show("Saved Successfully!");
+					}else {
+						Notification.show("Saved Failure!");
+					}
 				}
+				
 			}
 
 		});

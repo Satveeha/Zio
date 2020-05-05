@@ -5,6 +5,7 @@ import java.util.List;
 import com.zuci.zio.dto.PipeLineGridDTO;
 import com.zuci.zio.model.EditPipelineConfig;
 import com.zuci.zio.model.PipelineConfig;
+import com.zuci.zio.model.PipelineMaster;
 
 public interface PipelineConfigDao {
 
@@ -12,13 +13,19 @@ public interface PipelineConfigDao {
 	
 	public List<EditPipelineConfig> findByPipeline(String pipeline);
 	
-	public EditPipelineConfig insert(final EditPipelineConfig pipelineConfig);
+	public List<PipelineMaster> findByPipelineInMaster(String pipeline);
 	
-	public EditPipelineConfig insertAudit(final EditPipelineConfig pipelineConfig);
+	public EditPipelineConfig insert(EditPipelineConfig pipelineConfig);
+	
+	public EditPipelineConfig insertAudit(EditPipelineConfig pipelineConfig);
+	
+	public PipelineMaster insertPipeline(PipelineMaster channelMaster);
 	
 	public List<PipeLineGridDTO> getGrid();
 	
 	public Boolean deleteById(Long id);
+	
+	public Boolean deleteByVariableAndValueAndPipeline(String variable, String value, String pipeline);
 	
 	public List<String> getVariableByPipeline(String pipeline);
 	
