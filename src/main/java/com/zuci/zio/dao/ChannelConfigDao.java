@@ -18,6 +18,8 @@ public interface ChannelConfigDao {
 	
 	public List<ChannelMaster> findByPipelineAndChannel(String pipeline, String Channel);
 	
+	public List<ChannelMaster> findMasterByPipeline(String pipeline);
+	
 	public ChannelConfig insert(final ChannelConfig channelConfig);
 	
 	public List<ChannelConfig> insertBatch(final List<ChannelConfig> channelConfig);

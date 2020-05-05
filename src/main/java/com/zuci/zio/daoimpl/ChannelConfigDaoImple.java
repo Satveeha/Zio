@@ -37,6 +37,8 @@ public class ChannelConfigDaoImple implements ChannelConfigDao{
 	
 	private final String FETCH_ALL_BY_CHANNEL_PIPELINE = "select * from spw_instance where process = ? and instance = ?";
 	
+	private final String FETCH_MASTER_BY_PIPELINE = "select * from spw_instance where process = ?";
+	
 	private final String INSERT_INSTANCE_DATA = "insert into spw_instance (id,process,instance,alias,description,shortName) values (?,?,?,?,?,?) ON DUPLICATE KEY UPDATE process = ?, instance = ?, alias = ?, description = ?, shortName = ?";
 	
 	private final String INSERT_CONFIG_DATA = "insert into spw_instance_config (id,instance,process,variable,value,active,version,seedConfig) values (?,?,?,?,?,?,?,?) ON DUPLICATE KEY UPDATE instance = ?, process = ?, variable = ?, value = ?";
@@ -318,6 +320,21 @@ public class ChannelConfigDaoImple implements ChannelConfigDao{
 		}
 		
 		return channelConfig;
+	}
+
+	@Override
+	public List<ChannelMaster> findMasterByPipeline(String pipeline) {
+		
+		List<ChannelMaster> returnData = new ArrayList<ChannelMaster>();
+		
+		try {
+			returnData = jdbcTemplate.query(FETCH_MASTER_BY_PIPELINE, new Object[]{pipeline}, new BeanPropertyRowMapper(ChannelMaster.class));
+		} catch (Exception e) {
+			System.out.println(e);
+			return returnData;
+		}
+		
+		return returnData;
 	}
 }
 
