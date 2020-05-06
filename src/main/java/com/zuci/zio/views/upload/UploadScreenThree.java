@@ -145,10 +145,13 @@ public class UploadScreenThree extends AppLayout {
 		Tab statementLevel = new Tab("Statement Level");
 		Tabs tabs = new Tabs(textLog, topLevel, macroLevel, statementLevel);
 		tabs.setFlexGrowForEnclosedTabs(1);
-		
+		tabs.getStyle().set("margin-right", "100px");
+		tabs.getStyle().set("width", "100%");
+
 		variableValueGrid = new Grid<>();
 		variableValueGrid.addThemeVariants(GridVariant.LUMO_NO_BORDER);
-		variableValueGrid.setWidth("100%");
+		variableValueGrid.setWidth("40%");
+		variableValueGrid.getStyle().set("margin-left", "auto");
 		variableValueGrid.getStyle().set("font-family", "Lato, sans-serif");
 		variableValueGrid.getStyle().set("margin-left", "2px");
 		variableValueGrid.getStyle().set("border", "none");
@@ -198,6 +201,8 @@ public class UploadScreenThree extends AppLayout {
 		viewLog.getStyle().set("background", "#58d2cc");
 		viewLog.getStyle().set("border-radius", "6px");
 		viewLog.getStyle().set("color", "#4b483f");
+		viewLog.getStyle().set("margin-left", "auto");
+
 		
 		cancel.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
 		
@@ -214,8 +219,11 @@ public class UploadScreenThree extends AppLayout {
 		finish.getStyle().set("background", "#58d2cc");
 		finish.getStyle().set("border-radius", "6px");
 		finish.getStyle().set("color", "#4b483f");
-		
+		finish.getStyle().set("margin-right", "20px");
+
 		HorizontalLayout horizontalLayout = new HorizontalLayout();
+		horizontalLayout.getStyle().set("margin-top", "auto");
+		horizontalLayout.getStyle().set("margin-bottom", "20px");
 		horizontalLayout.setWidthFull();
 		horizontalLayout.add(viewLog);
 		horizontalLayout.add(cancel);

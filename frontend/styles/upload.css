@@ -55,6 +55,7 @@
     min-width: fit-content;
     max-width: -webkit-fill-available;
     border:0px;
+    margin-right:20px;
 }
 
 .label-bold{

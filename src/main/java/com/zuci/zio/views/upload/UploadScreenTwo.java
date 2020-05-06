@@ -139,7 +139,8 @@ public class UploadScreenTwo extends AppLayout {
 		next.addClassName("delete-button");
 
 		next.addClickListener(e -> {
-			setContent(new UploadScreenThree(this.pipelineConfigDao,this.channelConfigDao,this.commonConfigDao,this.pipelineName,filePath));
+			setContent(new UploadScreenThree(this.pipelineConfigDao, this.channelConfigDao, this.commonConfigDao,
+					this.pipelineName, filePath));
 		});
 
 		prev.setIconAfterText(true);
@@ -158,10 +159,11 @@ public class UploadScreenTwo extends AppLayout {
 		});
 
 		setChannelGrid();
-		
+
 		HorizontalLayout horizontalLayout = new HorizontalLayout();
-		//horizontalLayout.setWidthFull();
-		horizontalLayout.add(prev); 
+		horizontalLayout.getStyle().set("margin-left", "auto");
+		// horizontalLayout.setWidthFull();
+		horizontalLayout.add(prev);
 		horizontalLayout.add(next);
 		verticalLayout.add(horizontalLayout);
 
@@ -410,15 +412,15 @@ public class UploadScreenTwo extends AppLayout {
 		grid2.setRowsDraggable(true);
 		grid2.setHeightByRows(true);
 		grid2.setColumns("variable", "value");
-		
+
 		HorizontalLayout horizontalLayout = new HorizontalLayout();
 		horizontalLayout.setWidthFull();
-		horizontalLayout.add(grid); 
+		horizontalLayout.add(grid);
 		horizontalLayout.add(grid2);
 		verticalLayout.add(horizontalLayout);
 
-		//verticalLayout.add(grid);
-		//verticalLayout.add(grid2);
+		// verticalLayout.add(grid);
+		// verticalLayout.add(grid2);
 
 	}
 
