@@ -3,7 +3,7 @@
     flex-direction: column;
     min-width: 100%;
     max-width: 100%;
-    background-color: #f4f9fe !important;
+    background-color: transparent !important;
     width: var(--vaadin-text-field-default-width, 18em);
 }
 

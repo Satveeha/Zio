@@ -30,4 +30,8 @@ public interface PipelineConfigDao {
 	public List<String> getVariableByPipeline(String pipeline);
 	
 	public Boolean updateVariableByPipeline(String pipeline, String variable, String value);
+	
+	public List<EditPipelineConfig> getProcessDetailsByPipelineAndAlias(String pipeline, String alias);
+	
+	public List<EditPipelineConfig> getProcessDetailsExcludedByPipelineAndAlias(String pipeline, String alias);
 }

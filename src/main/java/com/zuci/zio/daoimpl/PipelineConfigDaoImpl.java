@@ -48,6 +48,10 @@ public class PipelineConfigDaoImpl implements PipelineConfigDao{
 	
 	private final String UPDATE_BY_PIPELINE = "update spw_process_config set value = ? where process = ? and variable = ?";
 	
+	private final String GET_PIPELINE_BY_PIPELINE_ALIAS = "select * from spw_process_config where variable in (select c.variable from spw_instance_config c inner join spw_instance m on c.instance = m.instance and c.process = m.process where m.alias = ?) and process = ?";
+	
+	private final String GET_EXCLUDED_VARIABLE_PIPELINE_BY_PIPELINE_ALIAS = "select * from spw_process_config where variable not in (select c.variable from spw_instance_config c inner join spw_instance m on c.instance = m.instance and c.process = m.process where m.alias = ?) and process = ?";
+	
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
 	
@@ -280,6 +284,36 @@ public class PipelineConfigDaoImpl implements PipelineConfigDao{
 		}
 		
 		return true;
+	}
+
+	@Override
+	public List<EditPipelineConfig> getProcessDetailsByPipelineAndAlias(String pipeline, String alias) {
+		
+		List<EditPipelineConfig> returnData = new ArrayList<EditPipelineConfig>();
+		
+		try {
+			returnData = jdbcTemplate.query(GET_PIPELINE_BY_PIPELINE_ALIAS,new Object[]{alias,pipeline},new BeanPropertyRowMapper(EditPipelineConfig.class));
+		} catch (Exception e) {
+			System.out.println(e);
+			return returnData;
+		}
+		
+		return returnData;
+	}
+
+	@Override
+	public List<EditPipelineConfig> getProcessDetailsExcludedByPipelineAndAlias(String pipeline, String alias) {
+		
+		List<EditPipelineConfig> returnData = new ArrayList<EditPipelineConfig>();
+		
+		try {
+			returnData = jdbcTemplate.query(GET_EXCLUDED_VARIABLE_PIPELINE_BY_PIPELINE_ALIAS,new Object[]{alias,pipeline},new BeanPropertyRowMapper(EditPipelineConfig.class));
+		} catch (Exception e) {
+			System.out.println(e);
+			return returnData;
+		}
+		
+		return returnData;
 	}
 
 }

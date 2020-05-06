@@ -23,7 +23,7 @@ public interface ChannelConfigDao {
 	
 	public List<ChannelMaster> findMasterByPipeline(String pipeline);
 	
-	public List<UploadPageThreeMasterDTO> groupChannelByAlias(String alias);
+	public List<UploadPageThreeMasterDTO> groupChannelByAlias(String pipeline, String alias);
 	
 	public ChannelConfig insert(final ChannelConfig channelConfig);
 	
@@ -34,5 +34,7 @@ public interface ChannelConfigDao {
 	public ChannelConfig insertAudit(final ChannelConfig channelConfig);
 	
 	public Boolean deleteById(Long id);
+	
+	public Boolean deleteChannelByPipelineAndAlias(String pipeline, String alias);
 	
 }

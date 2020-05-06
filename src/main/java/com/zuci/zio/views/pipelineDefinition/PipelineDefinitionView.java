@@ -71,9 +71,9 @@ public class PipelineDefinitionView extends Div implements AfterNavigationObserv
 		pipeline.addThemeVariants(GridVariant.LUMO_ROW_STRIPES);
 		pipeline.setHeightByRows(true);
 		pipeline.addColumn(PipelineConfig::getProcess).setHeader(new Html(
-				"<div style='font-weight:bold;font-size:16px;text-orientation: mixed;background:#f8ca34;color:#4b483f'>Pipeline</div>"));
+				"<div style='font-weight:bold;font-size:16px;text-orientation: mixed;background:#fff;color:#4b483f'>Pipeline</div>"));
 		pipeline.addColumn(PipelineConfig::getPipelineCount).setHeader(new Html(
-				"<div style='font-weight:bold;font-size:16px;text-orientation: mixed;background:#f8ca34;color:#4b483f'>Pipeline Count</div>"));
+				"<div style='font-weight:bold;font-size:16px;text-orientation: mixed;background:#fff;color:#4b483f'>Pipeline Count</div>"));
 
 		// when a row is selected or deselected, populate form
 		pipeline.asSingleSelect().addValueChangeListener(event -> openDialog(event.getValue().getProcess()));

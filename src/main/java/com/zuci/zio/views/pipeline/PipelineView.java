@@ -37,11 +37,11 @@ public class PipelineView extends Div implements AfterNavigationObserver {
 	@Autowired
 	private static PipelineConfigDao pipelineConfigDao;
 
-	//Grid Variable
+	// Grid Variable
 	private Grid<PipeLineGridDTO> pipeline;
 	private Grid<EditPipelineConfig> editPipelineConfig;
 
-	//Fields for configuration form
+	// Fields for configuration form
 	private TextField variable = new TextField();
 	private TextField value = new TextField();
 	private TextField process = new TextField();
@@ -49,40 +49,40 @@ public class PipelineView extends Div implements AfterNavigationObserver {
 	private Button cancel = new Button("Cancel");
 	private Button save = new Button("Save");
 
-	//Page layout in horizontal
+	// Page layout in horizontal
 	private HorizontalLayout horizontalLayout;
 
-	//Binder binds the object
+	// Binder binds the object
 	private Binder<EditPipelineConfig> binder;
 	private EditPipelineConfig pipelineConfig;
 
-	//Constructor
+	// Constructor
 	public PipelineView(PipelineConfigDao pipelineConfigDao) {
 
 		try {
-			
+
 			this.pipelineConfigDao = pipelineConfigDao;
-			
+
 			setId("pipeline-view");
-			
+
 			process.setEnabled(false);
 
 			horizontalLayout = new HorizontalLayout();
-			
+
 			// Configure Main Page Grid
 			configureMainGrid();
 
-			//Configure Object
+			// Configure Object
 			binder = new Binder<>(EditPipelineConfig.class);
 			binder.bindInstanceFields(this);
 
 		} catch (Exception e) {
 			System.out.println(e);
 		}
-		
+
 	}
-	
-	//Configure Main Page Grid
+
+	// Configure Main Page Grid
 	private void configureMainGrid() {
 		pipeline = new Grid<>();
 		pipeline.addThemeVariants(GridVariant.LUMO_NO_BORDER);
@@ -93,33 +93,33 @@ public class PipelineView extends Div implements AfterNavigationObserver {
 		pipeline.addThemeVariants(GridVariant.LUMO_ROW_STRIPES);
 		pipeline.setHeightByRows(true);
 		pipeline.addColumn(PipeLineGridDTO::getProcess).setHeader(new Html(
-				"<div style='font-weight:bold;font-size:16px;text-orientation: mixed;background:#f8ca34;color:#4b483f'>Pipeline</div>"));
+				"<div style='font-weight:bold;font-size:16px;text-orientation: mixed;background:#fff;color:#4b483f'>Pipeline</div>"));
 		pipeline.addColumn(PipeLineGridDTO::getChannelCount).setHeader(new Html(
-				"<div style='font-weight:bold;font-size:16px;text-orientation: mixed;background:#f8ca34;color:#4b483f'>Channel Count</div>"));
+				"<div style='font-weight:bold;font-size:16px;text-orientation: mixed;background:#fff;color:#4b483f'>Channel Count</div>"));
 		pipeline.addColumn(PipeLineGridDTO::getVariableCount).setHeader(new Html(
-				"<div style='font-weight:bold;font-size:16px;text-orientation: mixed;background:#f8ca34;color:#4b483f'>Variable Count</div>"));
+				"<div style='font-weight:bold;font-size:16px;text-orientation: mixed;background:#fff;color:#4b483f'>Variable Count</div>"));
 		pipeline.addColumn(PipeLineGridDTO::getOverriddenCount).setHeader(new Html(
-				"<div style='font-weight:bold;font-size:16px;text-orientation: mixed;background:#f8ca34;color:#4b483f'>Overridden Count</div>"));
+				"<div style='font-weight:bold;font-size:16px;text-orientation: mixed;background:#fff;color:#4b483f'>Overridden Count</div>"));
 
 		pipeline.asSingleSelect().addValueChangeListener(event -> openDialog(event.getValue().getProcess()));
-		
+
 		pipeline.setItems(pipelineConfigDao.getGrid());
-		
+
 		horizontalLayout.removeAll();
 		horizontalLayout.setHeightFull();
 		horizontalLayout.setWidthFull();
-		
+
 		createMainGridLayout(horizontalLayout);
 
 		add(horizontalLayout);
 	}
 
-	//Open Configuration Dialog
+	// Open Configuration Dialog
 	private void openDialog(String process) {
-		
+
 		EditPipelineConfig intialProcessValue = new EditPipelineConfig();
 		intialProcessValue.setProcess(process);
-		
+
 		populateForm(intialProcessValue);
 
 		Dialog dialog = new Dialog();
@@ -129,7 +129,7 @@ public class PipelineView extends Div implements AfterNavigationObserver {
 		Div content = new Div();
 		content.addClassName("my-style");
 
-		//Configure Configuration Grid
+		// Configure Configuration Grid
 		editPipelineConfig = new Grid<>();
 		editPipelineConfig.setItems(pipelineConfigDao.findByPipeline(process));
 		editPipelineConfig.addThemeVariants(GridVariant.LUMO_NO_BORDER);
@@ -140,19 +140,19 @@ public class PipelineView extends Div implements AfterNavigationObserver {
 		editPipelineConfig.addThemeVariants(GridVariant.LUMO_ROW_STRIPES);
 		editPipelineConfig.setHeightByRows(true);
 		editPipelineConfig.addColumn(EditPipelineConfig::getVariable).setHeader(new Html(
-				"<div style='font-weight:bold;font-size:16px;text-orientation: mixed;background:#f8ca34;color:#4b483f'>Variable</div>"));
+				"<div style='font-weight:bold;font-size:16px;text-orientation: mixed;background:#fff;color:#4b483f'>Variable</div>"));
 		editPipelineConfig.addColumn(EditPipelineConfig::getValue).setHeader(new Html(
-				"<div style='font-weight:bold;font-size:16px;text-orientation: mixed;background:#f8ca34;color:#4b483f'>Value</div>"));
+				"<div style='font-weight:bold;font-size:16px;text-orientation: mixed;background:#fff;color:#4b483f'>Value</div>"));
 
 		editPipelineConfig.addComponentColumn(item -> createTrashIcon(editPipelineConfig, item)).setHeader("");
 
 		editPipelineConfig.asSingleSelect().addValueChangeListener(event -> populateForm(event.getValue()));
-		
-		add.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+
+		add.addClassName("add-button");
 		add.getStyle().set("margin-left", "90%");
-		add.getStyle().set("background", "#58d2cc");
-		add.getStyle().set("border-radius", "6px");
-		add.getStyle().set("color", "#4b483f");
+//		add.getStyle().set("background", "#58d2cc");
+//		add.getStyle().set("border-radius", "6px");
+//		add.getStyle().set("color", "#4b483f");
 		add.addClickListener(e -> {
 			EditPipelineConfig initialProcessValue = new EditPipelineConfig();
 			initialProcessValue.setProcess(process);
@@ -161,13 +161,13 @@ public class PipelineView extends Div implements AfterNavigationObserver {
 
 		HorizontalLayout horizontalLayout = new HorizontalLayout();
 		horizontalLayout.setSizeFull();
-		
+
 		createPopupGridLayout(horizontalLayout);
 
 		dialog.add(horizontalLayout);
 		dialog.setWidth("1000px");
 		dialog.setHeight("500px");
-		
+
 		cancel.addClickListener(e -> {
 			dialog.close();
 			configureMainGrid();
@@ -179,34 +179,35 @@ public class PipelineView extends Div implements AfterNavigationObserver {
 				this.pipelineConfig.setId(0L);
 				this.pipelineConfig.setVersion(0);
 				this.pipelineConfig.setActive("Y");
-			}else if(this.pipelineConfig.getId() == null) {
+			} else if (this.pipelineConfig.getId() == null) {
 				this.pipelineConfig.setId(0L);
 				this.pipelineConfig.setVersion(0);
 				this.pipelineConfig.setActive("Y");
 			}
-			
-			if(variable.getValue() == null || variable.getValue().equals("") || value.getValue() == null || value.getValue().equals("")) {
+
+			if (variable.getValue() == null || variable.getValue().equals("") || value.getValue() == null
+					|| value.getValue().equals("")) {
 				Notification.show("Variable or Value should not be empty");
-			}else {
+			} else {
 				this.pipelineConfig.setProcess(this.process.getValue());
 				this.pipelineConfig.setVariable(variable.getValue());
 				this.pipelineConfig.setValue(value.getValue());
 
 				EditPipelineConfig insertData = this.pipelineConfigDao.insert(this.pipelineConfig);
-				
-				if(insertData != null) {
+
+				if (insertData != null) {
 					editPipelineConfig.setItems(pipelineConfigDao.findByPipeline(process));
-					
+
 					EditPipelineConfig initialProcessValue = new EditPipelineConfig();
 					initialProcessValue.setProcess(process);
 					populateForm(initialProcessValue);
-					
+
 					Notification.show("Saved Successfully!");
-				}else {
+				} else {
 					Notification.show("Save Failure!");
 				}
 			}
-			
+
 		});
 
 		createEditorLayout(horizontalLayout);
@@ -214,7 +215,7 @@ public class PipelineView extends Div implements AfterNavigationObserver {
 		dialog.open();
 	}
 
-	//Creat Trash Icon in Grid
+	// Creat Trash Icon in Grid
 	private Icon createTrashIcon(Grid<EditPipelineConfig> grid, EditPipelineConfig item) {
 
 		Icon trashIcon = new Icon(VaadinIcon.TRASH);
@@ -227,9 +228,9 @@ public class PipelineView extends Div implements AfterNavigationObserver {
 		return trashIcon;
 	}
 
-	//Confirmation Dialog
+	// Confirmation Dialog
 	private void deleteConfirmDialog(Grid<EditPipelineConfig> grid, EditPipelineConfig item) {
-		
+
 		Dialog dialog = new Dialog();
 
 		dialog.setCloseOnEsc(false);
@@ -240,39 +241,39 @@ public class PipelineView extends Div implements AfterNavigationObserver {
 		NativeButton confirmButton = new NativeButton("Confirm", event -> {
 			messageLabel.setText("Confirmed!");
 			EditPipelineConfig insertData = this.pipelineConfigDao.insertAudit(item);
-			
-			if(insertData != null) {
-				if(this.pipelineConfigDao.deleteById(item.getId())) {
-					//Remove item from grid
-					ListDataProvider<EditPipelineConfig> dataProvider = (
-							ListDataProvider<EditPipelineConfig>) grid
+
+			if (insertData != null) {
+				if (this.pipelineConfigDao.deleteById(item.getId())) {
+					// Remove item from grid
+					ListDataProvider<EditPipelineConfig> dataProvider = (ListDataProvider<EditPipelineConfig>) grid
 							.getDataProvider();
 					dataProvider.getItems().remove(item);
 					dataProvider.refreshAll();
-					
+
 					Notification.show("Deleted Successfully!");
-				}else {
+				} else {
 					Notification.show("Delete Failure!");
 				}
-			}else {
+			} else {
 				Notification.show("Delete Failure!");
 			}
-			
+
 			EditPipelineConfig intialProcessValue = new EditPipelineConfig();
 			intialProcessValue.setProcess(item.getProcess());
 			populateForm(intialProcessValue);
-			
+
 			dialog.close();
 		});
-		
-		confirmButton.getStyle().set("color", "#4b483f");
-		confirmButton.getStyle().set("background-color", "#58d2cc");
-		confirmButton.getStyle().set("padding", "0.5rem");
-		confirmButton.getStyle().set("border-radius", "6px");
+
+//		confirmButton.getStyle().set("color", "#4b483f");
+//		confirmButton.getStyle().set("background-color", "#58d2cc");
+//		confirmButton.getStyle().set("padding", "0.5rem");
+//		confirmButton.getStyle().set("border-radius", "6px");
 		confirmButton.getStyle().set("margin", "20px");
-		confirmButton.getStyle().set("font-size", "16px");
-		confirmButton.getStyle().set("border", "none");
-		confirmButton.getStyle().set("font-weight", "600");
+//		confirmButton.getStyle().set("font-size", "16px");
+//		confirmButton.getStyle().set("border", "none");
+//		confirmButton.getStyle().set("font-weight", "600");
+		confirmButton.addClassName("add-button");
 
 		NativeButton cancelButton = new NativeButton("Cancel", event -> {
 			messageLabel.setText("Cancelled...");
@@ -281,22 +282,23 @@ public class PipelineView extends Div implements AfterNavigationObserver {
 			populateForm(intialProcessValue);
 			dialog.close();
 		});
-		
-		cancelButton.getStyle().set("color", "#4b483f");
-		cancelButton.getStyle().set("background-color", "#58d2cc");
-		cancelButton.getStyle().set("padding", "0.5rem");
-		cancelButton.getStyle().set("border-radius", "6px");
-		cancelButton.getStyle().set("font-size", "16px");
+		cancelButton.addClassName("delete-button");
+
+//		cancelButton.getStyle().set("color", "#4b483f");
+//		cancelButton.getStyle().set("background-color", "#58d2cc");
+//		cancelButton.getStyle().set("padding", "0.5rem");
+//		cancelButton.getStyle().set("border-radius", "6px");
+//		cancelButton.getStyle().set("font-size", "16px");
 		cancelButton.getStyle().set("margin", "5px");
-		cancelButton.getStyle().set("border", "none");
-		cancelButton.getStyle().set("font-weight", "600");
+//		cancelButton.getStyle().set("border", "none");
+//		cancelButton.getStyle().set("font-weight", "600");
 
 		dialog.add(confirmButton, cancelButton);
 
 		dialog.open();
 	}
 
-	//Create Form Layout
+	// Create Form Layout
 	private void createEditorLayout(HorizontalLayout horizontalLayout) {
 
 		Div editorDiv = new Div();
@@ -311,7 +313,7 @@ public class PipelineView extends Div implements AfterNavigationObserver {
 		horizontalLayout.add(editorDiv);
 	}
 
-	//Create Button for Form Layout
+	// Create Button for Form Layout
 	private void createButtonLayout(Div editorDiv) {
 
 		HorizontalLayout buttonLayout = new HorizontalLayout();
@@ -319,18 +321,20 @@ public class PipelineView extends Div implements AfterNavigationObserver {
 		buttonLayout.setWidthFull();
 		buttonLayout.setSpacing(true);
 
-		cancel.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
-		save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-		save.getStyle().set("background", "#58d2cc");
-		save.getStyle().set("border-radius", "6px");
-		save.getStyle().set("color", "#4b483f");
+//		cancel.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+//		save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+//		save.getStyle().set("background", "#58d2cc");
+//		save.getStyle().set("border-radius", "6px");
+//		save.getStyle().set("color", "#4b483f");
+		cancel.addClassName("delete-button");
+		save.addClassName("add-button");
 
 		buttonLayout.add(cancel, save);
 
 		editorDiv.add(buttonLayout);
 	}
 
-	//Create Main Grid Layout
+	// Create Main Grid Layout
 	private void createMainGridLayout(HorizontalLayout horizontalLayout) {
 
 		Div wrapper = new Div();
@@ -341,7 +345,7 @@ public class PipelineView extends Div implements AfterNavigationObserver {
 		horizontalLayout.add(wrapper);
 	}
 
-	//Create Popup Grid Layout
+	// Create Popup Grid Layout
 	private void createPopupGridLayout(HorizontalLayout horizontalLayout) {
 
 		Div wrapper = new Div();
@@ -350,11 +354,11 @@ public class PipelineView extends Div implements AfterNavigationObserver {
 
 		wrapper.add(add);
 		wrapper.add(editPipelineConfig);
-		
+
 		horizontalLayout.add(wrapper);
 	}
 
-	//Add Field for Form Layout
+	// Add Field for Form Layout
 	private void addFormItem(Div wrapper, FormLayout formLayout, AbstractField field, String fieldName) {
 
 		formLayout.addFormItem(field, fieldName);
@@ -364,17 +368,17 @@ public class PipelineView extends Div implements AfterNavigationObserver {
 		field.getElement().getClassList().add("full-width");
 	}
 
-	//Calls after the constructor
+	// Calls after the constructor
 	@Override
 	public void afterNavigation(AfterNavigationEvent event) {
 
 		pipeline.setItems(pipelineConfigDao.getGrid());
 	}
 
-	//Set Form Field Values
+	// Set Form Field Values
 	private void populateForm(EditPipelineConfig value) {
 
-		//if value is null, then it clear the form value
+		// if value is null, then it clear the form value
 		binder.readBean(value);
 
 		this.pipelineConfig = value;

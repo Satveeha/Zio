@@ -74,12 +74,12 @@ public class CommonView extends Div implements AfterNavigationObserver {
 		commons.addThemeVariants(GridVariant.LUMO_ROW_STRIPES);
 		commons.setHeightByRows(true);
 		commons.addColumn(CommonConfig::getVariable).setHeader(new Html(
-				"<div style='font-weight:bold;font-size:16px;text-orientation: mixed;background:#f8ca34;color:#4b483f'>Variable</div>"));
+				"<div style='font-weight:bold;font-size:16px;text-orientation: mixed;background:#fff;color:#4b483f'>Variable</div>"));
 		commons.addColumn(CommonConfig::getValue).setHeader(new Html(
-				"<div style='font-weight:bold;font-size:16px;text-orientation: mixed;background:#f8ca34;color:#4b483f'>Value</div>"));
+				"<div style='font-weight:bold;font-size:16px;text-orientation: mixed;background:#fff;color:#4b483f'>Value</div>"));
 
 		commons.addComponentColumn(item -> createTrashIcon(commons, item)).setHeader(new Html(
-				"<div style='font-weight:bold;font-size:16px;text-orientation: mixed;background:#f8ca34;color:#4b483f'></div>"));
+				"<div style='font-weight:bold;font-size:16px;text-orientation: mixed;background:#fff;color:#4b483f'></div>"));
 
 		commons.asSingleSelect().addValueChangeListener(event -> populateForm(event.getValue()));
 
@@ -122,11 +122,13 @@ public class CommonView extends Div implements AfterNavigationObserver {
 
 		});
 
-		add.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+//		add.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 		add.getStyle().set("margin-left", "89%");
-		add.getStyle().set("background", "#58d2cc");
-		add.getStyle().set("color", "#4b483f");
-		add.getStyle().set("border-radius", "6px");
+		add.getStyle().set("margin-bottom", "10px");
+		add.addClassName("add-button");
+//		add.getStyle().set("background", "#58d2cc");
+//		add.getStyle().set("color", "#4b483f");
+//		add.getStyle().set("border-radius", "6px");
 		add.addClickListener(e -> {
 			populateForm(new CommonConfig());
 			commons.asSingleSelect().clear();
@@ -183,28 +185,31 @@ public class CommonView extends Div implements AfterNavigationObserver {
 			
 		});
 		
-		confirmButton.getStyle().set("color", "#4b483f");
-		confirmButton.getStyle().set("background-color", "#58d2cc");
-		confirmButton.getStyle().set("padding", "0.5rem");
-		confirmButton.getStyle().set("border-radius", "6px");
+//		confirmButton.getStyle().set("color", "#4b483f");
+//		confirmButton.getStyle().set("background-color", "#");
+//		confirmButton.getStyle().set("padding", "0.5rem");
+//		confirmButton.getStyle().set("border-radius", "6px");58d2cc
 		confirmButton.getStyle().set("margin", "20px");
-		confirmButton.getStyle().set("font-size", "16px");
-		confirmButton.getStyle().set("border", "none");
-		confirmButton.getStyle().set("font-weight", "600");
+//		confirmButton.getStyle().set("font-size", "16px");
+//		confirmButton.getStyle().set("border", "none");
+//		confirmButton.getStyle().set("font-weight", "600");
+		
+		confirmButton.addClassName("add-button");
 
 		NativeButton cancelButton = new NativeButton("Cancel", event -> {
 			populateForm(new CommonConfig());
 			dialog.close();
 		});
+		cancelButton.addClassName("delete-button");
 
-		cancelButton.getStyle().set("color", "#4b483f");
-		cancelButton.getStyle().set("background-color", "#58d2cc");
-		cancelButton.getStyle().set("padding", "0.5rem");
-		cancelButton.getStyle().set("border-radius", "6px");
-		cancelButton.getStyle().set("font-size", "16px");
+//		cancelButton.getStyle().set("color", "#4b483f");
+//		cancelButton.getStyle().set("background-color", "#58d2cc");
+//		cancelButton.getStyle().set("padding", "0.5rem");
+//		cancelButton.getStyle().set("border-radius", "6px");
+//		cancelButton.getStyle().set("font-size", "16px");
 		cancelButton.getStyle().set("margin", "5px");
-		cancelButton.getStyle().set("border", "none");
-		cancelButton.getStyle().set("font-weight", "600");
+//		cancelButton.getStyle().set("border", "none");
+//		cancelButton.getStyle().set("font-weight", "600");
 
 		dialog.add(confirmButton, cancelButton);
 
@@ -238,11 +243,14 @@ public class CommonView extends Div implements AfterNavigationObserver {
 		buttonLayout.setWidthFull();
 		buttonLayout.setSpacing(true);
 
-		cancel.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
-		save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-		save.getStyle().set("background", "#58d2cc");
-		save.getStyle().set("border-radius", "6px");
-		save.getStyle().set("color", "#4b483f");
+//		cancel.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+//		save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+//		save.getStyle().set("background", "#58d2cc");
+//		save.getStyle().set("border-radius", "6px");
+//		save.getStyle().set("color", "#4b483f");
+		cancel.addClassName("delete-button");
+		save.addClassName("add-button");
+
 
 		buttonLayout.add(cancel, save);
 

@@ -56,7 +56,9 @@ public class ChannelConfigDaoImple implements ChannelConfigDao{
 	
 	private final String FETCH_PROCESS_VARIABLE = "select process, GROUP_CONCAT(variable) as variables from spw_process_config GROUP BY process";
 	
-	private final String FETCH_CHANNEL_VARIABLE_COUNT = "select c.instance, count(c.instance) as variableCount from spw_instance_config c inner join spw_instance m on c.instance = m.instance and m.alias = ? group by c.instance";
+	private final String FETCH_CHANNEL_VARIABLE_COUNT = "select c.instance, count(c.instance) as variableCount from spw_instance_config c inner join spw_instance m on c.instance = m.instance and m.process = ? and m.alias = ? group by c.instance";
+	
+	private final String DELETE_CHANNEL_BY_PIPELINE_ALIAS = "delete m, c from spw_instance m inner join spw_instance_config c on m.process = c.process and m.instance = c.instance where m.alias = ? and m.process = ?";
 	
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
@@ -343,12 +345,12 @@ public class ChannelConfigDaoImple implements ChannelConfigDao{
 	}
 
 	@Override
-	public List<UploadPageThreeMasterDTO> groupChannelByAlias(String alias) {
+	public List<UploadPageThreeMasterDTO> groupChannelByAlias(String pipeline, String alias) {
 		
 		List<UploadPageThreeMasterDTO> returnData = new ArrayList<UploadPageThreeMasterDTO>();
 		
 		try {
-			returnData = jdbcTemplate.query(FETCH_CHANNEL_VARIABLE_COUNT, new Object[]{alias}, new BeanPropertyRowMapper(UploadPageThreeMasterDTO.class));
+			returnData = jdbcTemplate.query(FETCH_CHANNEL_VARIABLE_COUNT, new Object[]{pipeline,alias}, new BeanPropertyRowMapper(UploadPageThreeMasterDTO.class));
 		} catch (Exception e) {
 			System.out.println(e);
 			return returnData;
@@ -364,6 +366,22 @@ public class ChannelConfigDaoImple implements ChannelConfigDao{
 		
 		try {
 			returnData = jdbcTemplate.query(FETCH_CHANNEL_ALL_BY_PIPELINE_CHANNEL, new Object[]{pipeline,channel}, new BeanPropertyRowMapper(ChannelConfig.class));
+		} catch (Exception e) {
+			System.out.println(e);
+			return returnData;
+		}
+		
+		return returnData;
+	}
+
+	@Override
+	public Boolean deleteChannelByPipelineAndAlias(String pipeline, String alias) {
+		
+		Boolean returnData = false;
+		
+		try {
+			jdbcTemplate.update(DELETE_CHANNEL_BY_PIPELINE_ALIAS, new Object[]{alias,pipeline});
+			returnData = true;
 		} catch (Exception e) {
 			System.out.println(e);
 			return returnData;
