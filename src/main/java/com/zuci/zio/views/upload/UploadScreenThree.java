@@ -127,7 +127,7 @@ public class UploadScreenThree extends AppLayout {
 
 	public void setChannelConfiguration(String alias) {
 
-		List<UploadPageThreeMasterDTO> channelVariableList = this.channelConfigDao.groupChannelByAlias(alias);
+		List<UploadPageThreeMasterDTO> channelVariableList = this.channelConfigDao.groupChannelByAlias(pipelineName,alias);
 
 		if (!channelVariableList.isEmpty()) {
 			channelName.setValue(channelVariableList.get(0).getInstance());
