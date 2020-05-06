@@ -101,7 +101,6 @@ public class UploadScreenOne extends AppLayout {
 //		next.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 		next.getStyle().set("margin-left", "auto");
 		next.getStyle().set("margin-bottom", "20px");
-
 		next.addClassName("delete-button");
 		
 		next.addClickListener(e -> {
@@ -293,6 +292,7 @@ public class UploadScreenOne extends AppLayout {
 
 			HorizontalLayout addField = new HorizontalLayout();
 			addField.getStyle().set("display", "table-column-group");
+			addField.getStyle().set("width", "100%");
 
 			TextField localVariableField = new TextField();
 			localVariableField.setPlaceholder("Variable");
@@ -349,6 +349,7 @@ public class UploadScreenOne extends AppLayout {
 		variableList.forEach((temp) -> {
 			HorizontalLayout addField = new HorizontalLayout();
 			addField.getStyle().set("display", "table-column-group");
+			addField.getStyle().set("width", "100%");
 
 			TextField localVariableField = new TextField();
 			localVariableField.setPlaceholder("Variable");
