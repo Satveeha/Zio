@@ -115,11 +115,12 @@ public class UploadScreenTwo extends AppLayout {
 		this.channelConfigDao = channelConfigDao;
 		this.commonConfigDao = commonConfigDao;
 
-		add.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-		add.getStyle().set("margin-left", "80%");
-		add.getStyle().set("background", "#58d2cc");
-		add.getStyle().set("border-radius", "6px");
-		add.getStyle().set("color", "#4b483f");
+//		add.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+	add.getStyle().set("margin-left", "auto");
+//		add.getStyle().set("background", "#58d2cc");
+//		add.getStyle().set("border-radius", "6px");
+//		add.getStyle().set("color", "#4b483f");
+		add.addClassName("add-button");
 
 		// Configure Object
 		binder = new Binder<>(ChannelConfig.class);
@@ -134,9 +135,9 @@ public class UploadScreenTwo extends AppLayout {
 		this.filePath = filePath;
 
 		next.setIconAfterText(true);
-		next.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+//		next.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 		next.getStyle().set("margin-left", "auto");
-		next.addClassName("delete-button");
+		next.addClassName("add-button");
 
 		next.addClickListener(e -> {
 			setContent(new UploadScreenThree(this.pipelineConfigDao, this.channelConfigDao, this.commonConfigDao,
@@ -144,7 +145,7 @@ public class UploadScreenTwo extends AppLayout {
 		});
 
 		prev.setIconAfterText(true);
-		prev.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+//		prev.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 		prev.getStyle().set("margin-left", "auto");
 		prev.addClassName("delete-button");
 
@@ -162,6 +163,8 @@ public class UploadScreenTwo extends AppLayout {
 
 		HorizontalLayout horizontalLayout = new HorizontalLayout();
 		horizontalLayout.getStyle().set("margin-left", "auto");
+		horizontalLayout.getStyle().set("margin-bottom", "20px");
+
 		// horizontalLayout.setWidthFull();
 		horizontalLayout.add(prev);
 		horizontalLayout.add(next);
@@ -187,13 +190,13 @@ public class UploadScreenTwo extends AppLayout {
 		editChannelConfig.setHeightByRows(true);
 		Grid.Column<ChannelConfig> instanceColumn = editChannelConfig.addColumn(ChannelConfig::getInstance)
 				.setHeader(new Html(
-						"<div style='font-weight:bold;font-size:16px;text-orientation: mixed;background:#f8ca34;color:#4b483f'>Channel</div>"));
+						"<div style='font-weight:bold;font-size:16px;text-orientation: mixed;background:#fff;color:#4b483f'>Channel</div>"));
 		Grid.Column<ChannelConfig> variableColumn = editChannelConfig.addColumn(ChannelConfig::getVariable)
 				.setHeader(new Html(
-						"<div style='font-weight:bold;font-size:16px;text-orientation: mixed;background:#f8ca34;color:#4b483f'>Variable</div>"));
+						"<div style='font-weight:bold;font-size:16px;text-orientation: mixed;background:#fff;color:#4b483f'>Variable</div>"));
 		Grid.Column<ChannelConfig> valueColumn = editChannelConfig.addColumn(ChannelConfig::getValue)
 				.setHeader(new Html(
-						"<div style='font-weight:bold;font-size:16px;text-orientation: mixed;background:#f8ca34;color:#4b483f'>Value</div>"));
+						"<div style='font-weight:bold;font-size:16px;text-orientation: mixed;background:#fff;color:#4b483f'>Value</div>"));
 
 		// editChannelConfig.addComponentColumn(iterateItem ->
 		// createTrashIcon(editChannelConfig, iterateItem)).setHeader("");
@@ -442,11 +445,14 @@ public class UploadScreenTwo extends AppLayout {
 		buttonLayout.setId("button-layout");
 		buttonLayout.setWidthFull();
 		buttonLayout.setSpacing(true);
-		cancel.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
-		save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-		save.getStyle().set("background", "#58d2cc");
-		save.getStyle().set("border-radius", "6px");
-		save.getStyle().set("color", "#4b483f");
+		cancel.addClassName("delete-button");
+		save.addClassName("add-button");
+
+//		cancel.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+//		save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+//		save.getStyle().set("background", "#58d2cc");
+//		save.getStyle().set("border-radius", "6px");
+//		save.getStyle().set("color", "#4b483f");
 
 		buttonLayout.add(cancel, save);
 		editorDiv.add(buttonLayout);

@@ -9,6 +9,7 @@
 }
 
 :host(:not([theme~="no-row-borders"])) [part="row"]:first-child [part~="header-cell"] {
-     background:#f8ca34 !important;
-     color:#fff !important;
+     background:#fff !important;
+     color:#696969 !important;
+     font-family: Lato, sans-serif !important;
 }

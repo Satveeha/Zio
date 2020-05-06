@@ -58,6 +58,22 @@
     margin-right:20px;
 }
 
+
+.add-button {
+	background: #fdc133;
+	color: #000;
+	border-radius: 500px;
+	padding-left: 2%;
+	padding-right: 2%;
+	padding-top: 4px;
+	padding-bottom: 4px;
+	font-family: Lato, sans-serif;
+	width: 120px;
+	min-width: fit-content;
+	max-width: -webkit-fill-available;
+	z-index:1;
+}
+
 .label-bold{
 	font-weight:600;
 	font-family: Lato, sans-serif;

@@ -161,10 +161,10 @@ public class UploadScreenThree extends AppLayout {
 		variableValueGrid.setHeightByRows(true);
 		Grid.Column<ChannelConfig> variableColumn = variableValueGrid.addColumn(ChannelConfig::getVariable)
 				.setHeader(new Html(
-						"<div style='font-weight:bold;font-size:16px;text-orientation: mixed;background:#f8ca34;color:#4b483f'>Variable</div>"));
+						"<div style='font-weight:bold;font-size:16px;text-orientation: mixed;background:#fff;color:#4b483f'>Variable</div>"));
 		Grid.Column<ChannelConfig> valueColumn = variableValueGrid.addColumn(ChannelConfig::getValue)
 				.setHeader(new Html(
-						"<div style='font-weight:bold;font-size:16px;text-orientation: mixed;background:#f8ca34;color:#4b483f'>Value</div>"));
+						"<div style='font-weight:bold;font-size:16px;text-orientation: mixed;background:#fff;color:#4b483f'>Value</div>"));
 		
 		HorizontalLayout horizontalLayout = new HorizontalLayout();
 		horizontalLayout.setWidthFull();

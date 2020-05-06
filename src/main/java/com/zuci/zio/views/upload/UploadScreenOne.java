@@ -98,8 +98,10 @@ public class UploadScreenOne extends AppLayout {
 		extractFolderPath = filePath;
 		
 		next.setIconAfterText(true);
-		next.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+//		next.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 		next.getStyle().set("margin-left", "auto");
+		next.getStyle().set("margin-bottom", "20px");
+
 		next.addClassName("delete-button");
 		
 		next.addClickListener(e -> {
@@ -373,11 +375,8 @@ public class UploadScreenOne extends AppLayout {
 			});
 			
 			Button makeCommon = new Button("Make Common");
-			
-			makeCommon.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-			makeCommon.getStyle().set("background", "#58d2cc");
-			makeCommon.getStyle().set("border-radius", "6px");
-			makeCommon.getStyle().set("color", "#4b483f");
+			makeCommon.addClassName("add-button");
+
 			
 			makeCommon.addClickListener(e -> {
 				makeAsCommon(localVariableField.getValue(), localValueField.getValue());
