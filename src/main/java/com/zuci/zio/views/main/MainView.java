@@ -88,18 +88,20 @@ public class MainView extends AppLayout {
 		Label logoLabel = new Label();
 		logoLabel.setText("ZIO");
 		logoLabel.getStyle().set("color", "#f8ca34");
-		logoLabel.getStyle().set("font-size", "18px");
+		logoLabel.getStyle().set("font-size", "30px");
 		logoLabel.getStyle().set("font-weight", "1000");
 		logoLabel.getStyle().set("text-align", "center");
 		logoLabel.getStyle().set("justify-content", "center");
-		logoLabel.getStyle().set("margin-left", "70px");
-		logoLabel.getStyle().set("margin-top", "-15px");
+		logoLabel.getStyle().set("margin-left", "auto");
+		logoLabel.getStyle().set("margin-right", "auto");
+		logoLabel.getStyle().set("margin-top", "-10px");
 
 		Image sidenavimage = new Image();
 		sidenavimage.setSrc("/icons/globe.svg");
-		sidenavimage.setWidth("47%");
+		sidenavimage.setWidth("26%");
 		sidenavimage.setHeight("52%");
-		sidenavimage.getStyle().set("margin-left", "25px");
+		sidenavimage.getStyle().set("margin-left", "auto");
+		sidenavimage.getStyle().set("margin-right", "auto");
 		sidenavimage.getStyle().set("border-radius", "50%");
 		sidenavimage.getStyle().set("padding", "8px");
 		image_layout.add(sidenavimage);
