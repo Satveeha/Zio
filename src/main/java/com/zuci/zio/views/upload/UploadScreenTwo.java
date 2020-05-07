@@ -81,8 +81,7 @@ public class UploadScreenTwo extends AppLayout {
 	private TextField instance = new TextField();
 	private TextField description = new TextField();
 	private TextField alias = new TextField();
-	private Button add = new Button("Add");
-	private Button cancel = new Button("Cancel");
+	private Button saveAndAdd = new Button("Save and Add");
 	private Button save = new Button("Save");
 
 	private VerticalLayout verticalLayout;
@@ -104,7 +103,7 @@ public class UploadScreenTwo extends AppLayout {
 	private Grid<EditPipelineConfig> grid2 = new Grid<>(EditPipelineConfig.class);
 
 	private List<String> currentlyAddedVariables = new ArrayList<String>();
-	private HashMap<String, String> varaiableValue = new HashMap<String, String>();
+	private HashMap<String, String> variableValue = new HashMap<String, String>();
 
 	private Button next = new Button("Next", new Icon(VaadinIcon.ANGLE_DOUBLE_RIGHT));
 	private Button prev = new Button("Prev", new Icon(VaadinIcon.ANGLE_DOUBLE_LEFT));
@@ -114,17 +113,6 @@ public class UploadScreenTwo extends AppLayout {
 		this.pipelineConfigDao = pipelineConfigDao;
 		this.channelConfigDao = channelConfigDao;
 		this.commonConfigDao = commonConfigDao;
-
-//		add.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-	add.getStyle().set("margin-left", "auto");
-//		add.getStyle().set("background", "#58d2cc");
-//		add.getStyle().set("border-radius", "6px");
-//		add.getStyle().set("color", "#4b483f");
-		add.addClassName("add-button");
-
-		// Configure Object
-		//binder = new Binder<>(ChannelConfig.class);
-		//binder.bindInstanceFields(this);
 
 		verticalLayout = new VerticalLayout();
 		verticalLayout.setHeightFull();
@@ -213,100 +201,77 @@ public class UploadScreenTwo extends AppLayout {
 			List<EditPipelineConfig> savedVariableValue = pipelineConfigDao.getProcessDetailsByPipelineAndAlias(this.pipelineName,selectedData.getAlias());
 			grid2.setItems(savedVariableValue);
 			
-			varaiableValue.clear();
+			variableValue.clear();
 			savedVariableValue.forEach(iterate -> {
-				varaiableValue.put(iterate.getVariable(), iterate.getValue());
+				variableValue.put(iterate.getVariable(), iterate.getValue());
 			});
 			
 		});
 
-		add.addClickListener(e -> {
-			ChannelConfig initializeFormVariable = new ChannelConfig();
-			//populateForm(initializeFormVariable);
+		save.addClickListener(e -> {
+			save();
+		});
+		
+		saveAndAdd.addClickListener(e -> {
+			save();
+			clearData();
 		});
 
-		save.addClickListener(e -> {
-			
-			if(this.channelConfigDao.deleteChannelByPipelineAndAlias(pipelineName, alias.getValue())) {
-				System.out.println(varaiableValue);
+		verticalLayout.add(channelGrid);
 
-				List<ChannelConfig> channelConfigList = new ArrayList<ChannelConfig>();
+	}
+	
+	void clearData() {
+		this.instance.setValue("");
+		this.description.setValue("");
+		this.alias.setValue("");
+		
+		variableValue.clear();
+		currentlyAddedVariables.clear();
+		
+		grid.setItems(pipelineConfigDao.findByPipeline(this.pipelineName));
+		grid2.setItems(new ArrayList<EditPipelineConfig>());
+	}
+	
+	void save() {
+		
+		if(this.channelConfigDao.deleteChannelByPipelineAndAlias(pipelineName, alias.getValue())) {
+			System.out.println(variableValue);
 
-				List<ChannelMaster> masterInstance = this.channelConfigDao.findByPipelineAndChannel(this.pipelineName,
-						this.instance.getValue());
+			List<ChannelConfig> channelConfigList = new ArrayList<ChannelConfig>();
 
-				if (masterInstance == null || masterInstance.isEmpty()) {
-					ChannelMaster newInstance = new ChannelMaster();
-					newInstance.setId(0L);
-					newInstance.setProcess(this.pipelineName);
-					newInstance.setInstance(this.instance.getValue());
-					newInstance.setDescription(description.getValue());
-					newInstance.setAlias(alias.getValue());
-					newInstance.setShortName("");
+			List<ChannelMaster> masterInstance = this.channelConfigDao.findByPipelineAndChannel(this.pipelineName,
+					this.instance.getValue());
 
-					ChannelMaster insertedInstance = this.channelConfigDao.insertInstance(newInstance);
+			if (masterInstance == null || masterInstance.isEmpty()) {
+				ChannelMaster newInstance = new ChannelMaster();
+				newInstance.setId(0L);
+				newInstance.setProcess(this.pipelineName);
+				newInstance.setInstance(this.instance.getValue());
+				newInstance.setDescription(description.getValue());
+				newInstance.setAlias(alias.getValue());
+				newInstance.setShortName("");
 
-					if (insertedInstance != null) {
-						/*
-						 * if (this.channelConfig == null) { this.channelConfig = new ChannelConfig();
-						 * this.channelConfig.setId(0L); this.channelConfig.setActive("Y");
-						 * this.channelConfig.setVersion(0); this.channelConfig.setSeedConfig(0); }else
-						 * if(this.channelConfig.getId() == null) { this.channelConfig = new
-						 * ChannelConfig(); this.channelConfig.setId(0L);
-						 * this.channelConfig.setActive("Y"); this.channelConfig.setVersion(0);
-						 * this.channelConfig.setSeedConfig(0); }
-						 */
+				ChannelMaster insertedInstance = this.channelConfigDao.insertInstance(newInstance);
 
-						if (description.getValue() == null || description.getValue().equals("") || alias.getValue() == null
-								|| alias.getValue().equals("") || this.instance.getValue() == null
-								|| this.instance.getValue().equals("")) {
-							Notification.show("Channel, Description or Alias should not be empty");
-						} else {
-							
-							varaiableValue.forEach((variable, value) -> {
-
-								this.channelConfig = new ChannelConfig();
-								this.channelConfig.setId(0L);
-								this.channelConfig.setActive("Y");
-								this.channelConfig.setVersion(0);
-								this.channelConfig.setSeedConfig(0);
-
-								this.channelConfig.setVariable(variable);
-								this.channelConfig.setValue(value);
-								
-								this.channelConfig.setInstance(this.instance.getValue());
-								this.channelConfig.setProcess(this.pipelineName);
-
-								channelConfigList.add(this.channelConfig);
-							});
-
-							List<ChannelConfig> insertData = this.channelConfigDao.insertBatch(channelConfigList);
-
-							// ChannelConfig insertData = this.channelConfigDao.insert(this.channelConfig);
-
-							if (insertData != null) {
-								channelGrid.setItems(channelConfigDao.findMasterByPipeline(this.pipelineName));
-
-								ChannelConfig initializeProcessInstanceData = new ChannelConfig();
-								//populateForm(initializeProcessInstanceData);
-
-								Notification.show("Saved Successfully!");
-							} else {
-								Notification.show("Saved Failure!");
-							}
-
-						}
-					} else {
-						Notification.show("Saved Failure!");
-					}
-				} else {
+				if (insertedInstance != null) {
+					/*
+					 * if (this.channelConfig == null) { this.channelConfig = new ChannelConfig();
+					 * this.channelConfig.setId(0L); this.channelConfig.setActive("Y");
+					 * this.channelConfig.setVersion(0); this.channelConfig.setSeedConfig(0); }else
+					 * if(this.channelConfig.getId() == null) { this.channelConfig = new
+					 * ChannelConfig(); this.channelConfig.setId(0L);
+					 * this.channelConfig.setActive("Y"); this.channelConfig.setVersion(0);
+					 * this.channelConfig.setSeedConfig(0); }
+					 */
 
 					if (description.getValue() == null || description.getValue().equals("") || alias.getValue() == null
 							|| alias.getValue().equals("") || this.instance.getValue() == null
 							|| this.instance.getValue().equals("")) {
 						Notification.show("Channel, Description or Alias should not be empty");
 					} else {
-						varaiableValue.forEach((variable, value) -> {
+						
+						variableValue.forEach((variable, value) -> {
 
 							this.channelConfig = new ChannelConfig();
 							this.channelConfig.setId(0L);
@@ -314,16 +279,18 @@ public class UploadScreenTwo extends AppLayout {
 							this.channelConfig.setVersion(0);
 							this.channelConfig.setSeedConfig(0);
 
-							this.channelConfig.setInstance(this.instance.getValue());
-							this.channelConfig.setProcess(this.pipelineName);
-
 							this.channelConfig.setVariable(variable);
 							this.channelConfig.setValue(value);
+							
+							this.channelConfig.setInstance(this.instance.getValue());
+							this.channelConfig.setProcess(this.pipelineName);
 
 							channelConfigList.add(this.channelConfig);
 						});
 
 						List<ChannelConfig> insertData = this.channelConfigDao.insertBatch(channelConfigList);
+
+						// ChannelConfig insertData = this.channelConfigDao.insert(this.channelConfig);
 
 						if (insertData != null) {
 							channelGrid.setItems(channelConfigDao.findMasterByPipeline(this.pipelineName));
@@ -335,17 +302,52 @@ public class UploadScreenTwo extends AppLayout {
 						} else {
 							Notification.show("Saved Failure!");
 						}
+
+					}
+				} else {
+					Notification.show("Saved Failure!");
+				}
+			} else {
+
+				if (description.getValue() == null || description.getValue().equals("") || alias.getValue() == null
+						|| alias.getValue().equals("") || this.instance.getValue() == null
+						|| this.instance.getValue().equals("")) {
+					Notification.show("Channel, Description or Alias should not be empty");
+				} else {
+					variableValue.forEach((variable, value) -> {
+
+						this.channelConfig = new ChannelConfig();
+						this.channelConfig.setId(0L);
+						this.channelConfig.setActive("Y");
+						this.channelConfig.setVersion(0);
+						this.channelConfig.setSeedConfig(0);
+
+						this.channelConfig.setInstance(this.instance.getValue());
+						this.channelConfig.setProcess(this.pipelineName);
+
+						this.channelConfig.setVariable(variable);
+						this.channelConfig.setValue(value);
+
+						channelConfigList.add(this.channelConfig);
+					});
+
+					List<ChannelConfig> insertData = this.channelConfigDao.insertBatch(channelConfigList);
+
+					if (insertData != null) {
+						channelGrid.setItems(channelConfigDao.findMasterByPipeline(this.pipelineName));
+
+						ChannelConfig initializeProcessInstanceData = new ChannelConfig();
+						//populateForm(initializeProcessInstanceData);
+
+						Notification.show("Saved Successfully!");
+					} else {
+						Notification.show("Saved Failure!");
 					}
 				}
-			}else {
-				Notification.show("Saved Failure!");
 			}
-
-		});
-
-		verticalLayout.add(add);
-
-		verticalLayout.add(channelGrid);
+		}else {
+			Notification.show("Saved Failure!");
+		}
 
 	}
 
@@ -402,7 +404,7 @@ public class UploadScreenTwo extends AppLayout {
 
 			for (EditPipelineConfig e : targetItems) {
 				currentlyAddedVariables.add(e.getVariable());
-				varaiableValue.put(e.getVariable(), e.getValue());
+				variableValue.put(e.getVariable(), e.getValue());
 			}
 		};
 
@@ -420,7 +422,7 @@ public class UploadScreenTwo extends AppLayout {
 			System.out.println("grid 1");
 
 			for (String removeVariable : currentlyAddedVariables) {
-				varaiableValue.remove(removeVariable);
+				variableValue.remove(removeVariable);
 			}
 
 		});
@@ -463,7 +465,7 @@ public class UploadScreenTwo extends AppLayout {
 		buttonLayout.setId("button-layout");
 		buttonLayout.setWidthFull();
 		buttonLayout.setSpacing(true);
-		cancel.addClassName("delete-button");
+		saveAndAdd.addClassName("delete-button");
 		save.addClassName("add-button");
 
 //		cancel.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
@@ -472,7 +474,7 @@ public class UploadScreenTwo extends AppLayout {
 //		save.getStyle().set("border-radius", "6px");
 //		save.getStyle().set("color", "#4b483f");
 
-		buttonLayout.add(cancel, save);
+		buttonLayout.add(saveAndAdd, save);
 		editorDiv.add(buttonLayout);
 	}
 
